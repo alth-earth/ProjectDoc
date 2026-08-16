@@ -164,15 +164,15 @@ cd /root/my_project/arctic_route_orchestrator && make check            # 发布�
 |---|---|---|
 | mur/dikson 12 类数据补齐 | DONE | land_sea_mask/wave/ice_type/ice_edge 补采完成；doctor 4168 项 PASS |
 | 144 h 回放 + bundle + RunContext | DONE | a-bundle-bf2ebf33681a08969a4b2dc0，1212 帧，12 类 complete |
-| orchestrator intake | PASS | 走廊/时域/12 类/代次全匹配 |
-| B 风险 build（0.625°×4.4° smoke） | PASS | 145 帧完整风险窗已提交 risk-store |
-| v3 四层 + 重规划 | BLOCKED | c_initial_planning：起点区域无可用的有限海洋数据（见交付说明 §14.4） |
-| D 消费 v3 输出 | BLOCKED | 无 v3 输出可消费；D 骨架自测 6 tests PASS |
-| 双备份 | PARTIAL | 工作区备份已刷新并 doctor PASS；/tmp 备份受写边界限制未做 |
+| orchestrator intake（corridor 2.2.0 外海起点） | PASS | 走廊/时域/12 类/代次全匹配 |
+| B 风险 build | PASS | 145 帧完整风险窗已提交 risk-store（r2/r3/r4） |
+| v3 四层 + 重规划 | BLOCKED | 三次真实运行均止于 c_initial_planning：任何网格 ≥34 个可航未知节点（数据侧缺口，见交付说明 §15.4） |
+| D 消费 v3 输出 | NOT RUN | 无 v3 输出可消费；D 骨架自测 6 tests PASS |
+| 双备份 | PASS | 工作区 + /tmp 双位置备份完成，均 doctor PASS（1212 项 0 错误） |
 
 证据与恢复点：`work_package_a/data/output/golden/EXECUTION_LOG_20260816.md`、
-`run-stage-report.json`（mur-v3-smoke-20260816 与 -r2）、
-`最终交付说明.md §14`。
+`run-stage-report.json`（mur-v3-smoke-20260816-r2/r3/r4）、
+`最终交付说明.md §15`。
 
 ## 6. 参数与科学接口规则
 
