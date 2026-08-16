@@ -22,9 +22,12 @@
 **科学精确度、真船标定、适航认证和业务化实时运行不是挑战杯工程验收项，也不得阻塞演示。**
 本系统仍禁止用于真实导航或安全决策；这一限制与“工程演示通过即成功”并不矛盾。
 
-当前进展（2026-08-15）：已交付 `tromso_isfjorden_august_2026_demo_v1` 冻结数据
-（12 类齐全、连续 144 h、`complete=true`），并生成 DatasetBundle/RunContext 与双位置备份；
-主走廊 168 h 数据、B/C/D 全链演示与重规划闭环尚未完成验收。
+当前进展（2026-08-16）：**Demo RC1 Frozen Baseline 已建立**。主走廊
+`murmansk_dikson_august_2026_demo_v1`（corridor 2.2.0，144 h）12 类齐全、
+`complete=true`；A TOPAZ originalGrid 重建、B 风险（hard-mask=land_sea_mask_plus_unknown_v1）、
+C v3 四层 + 6h 重规划、D 真实制品消费均 PASS；r6 首次完整 E2E、r7 业务级确定性复现。
+精确身份见 `work_package_a/docs/DEMO_RC1_BASELINE_20260816.md`。历史基线
+`tromso_isfjorden_august_2026_demo_v1` 仍保留为独立场景证据。
 
 核心功能链固定为：
 
@@ -64,12 +67,12 @@ D：可视化风险图、风险预测图、候选航线和指标
 
 | 模块 | 唯一职责 | 当前工程状态 | 挑战杯下一目标 |
 |---|---|---|---|
-| `arctic_route_contracts` | 共享走廊、场景、船型、时域和 RunContext | 0.3.0；合同与测试存在 | 保持共享事实稳定 |
-| A | 下载、留证、拆帧、标准化、QC、持久化和回放 | 0.4.2；工程门禁已通过；tromso 144 h 冻结数据已交付 | 补主走廊 168 h 或继续以 tromso 演示 |
-| B | 时间处理、逐小时风险、置信度、hard mask、环境速度因子 | 0.2.0；规则主线已实现 | 用冻结 A 数据生成合理风险序列 |
-| C | 最终船速、ETA、成本、路径搜索、发布和重规划 | 0.4.0；v2/v3 与重规划已实现 | 生成大体合理路线并完成重规划 |
-| D | 只读展示风险、路线和指标 | 骨架已建（v3/v2 读取、分组、状态机、快照 CLI，6 tests） | 完成页面/交互与断网演示 |
-| orchestrator | 只经公共 API 组织 A→B→C、报告和制品 | 阶段报告/超时/失败报告已实现；集成长运行未收口 | 形成稳定演示脚本并补验 v2/v3 |
+| `arctic_route_contracts` | 共享走廊、场景、船型、时域和 RunContext | 0.3.0；corridor 2.2.0 已冻结 | 保持共享事实稳定（RC1 冻结） |
+| A | 下载、留证、拆帧、标准化、QC、持久化和回放 | 0.4.2；mur RC1 数据已交付（TOPAZ originalGrid 重建） | RC1 冻结；仅 correctness/safety 修复 |
+| B | 时间处理、逐小时风险、置信度、hard mask、环境速度因子 | 0.2.0；RC1 风险窗已提交（unknown-navigable=0） | RC1 冻结；hard_reason 为 POST-RC1 |
+| C | 最终船速、ETA、成本、路径搜索、发布和重规划 | 0.4.0；v3 四层+6h 重规划已跑通（单目标 ≈96s） | RC1 冻结；可选性能优化 POST-RC1 |
+| D | 只读展示风险、路线和指标 | 0.1.0；真实 v3 制品离线消费 PASS（9 tests） | Live Demo 排练/UI |
+| orchestrator | 只经公共 API 组织 A→B→C、报告和制品 | 阶段报告+可中断 worker 超时已实现；r6/r7 完整 E2E PASS | worker 模式全链冒烟（pre-demo） |
 | experimental B | 隔离的反事实实验工程 | 工程卫生待修 | 真实主线完成后再最小修复 |
 
 边界不变：A 不算风险，B 不生成路线，C 不下载环境数据，D 不调用 B/C 内部函数。
@@ -421,6 +424,21 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 日常默认只跑 L0–L3；改 A/B/C/orchestrator 时按上游影响选择是否重算对应冻结制品；
 发布或演示前至少一次 L7。L0–L5 均不访问外网；真实下载只走 A 显式采集命令并产出冻结制品。
 本原则与 6.3/6.4 的制品失效规则配套执行。
+
+### 10.5 Demo RC1 当前实现要点（2026-08-16）
+
+- A：TOPAZ 5 类由 `originalGrid` 原生曲网格重建（`cmems-origg-97062ef099c4`，
+  20 km 最近邻阈值、水掩膜、跨陆防护、无外推；vxo/vyo 投影分量由 A 规范化旋转）。
+- B：`land_sea_mask_plus_unknown_v1`：source-unknown 节点置 hard（unknown→不可规划，
+  风险仍 NaN/confidence 0，fail-closed 不变）。
+- C：state=(node, 60min bucket, heading_code)；8 邻接、无等待；RiskSampler 预计算
+  numpy 数组 + bisect；heuristic 为可采纳下界；带 `C_ASTAR_PROGRESS_SECONDS` 心跳。
+- D：离线本地 schema registry（`arctic-route.local` 引用本地解析）+ v3 `layers`
+  数组解析；真实 initial/replanned fixtures 回归。
+- Orchestrator：worker 子进程 + watchdog 实现真正可中断 per-stage timeout；
+  心跳、TIMEOUT 报告、无孤儿进程（单测覆盖）。
+- 验证边界：r6/r7 完整 E2E 由旧内联路径产生；worker 路径机制已单测，
+  **worker-mode full RC1 E2E = NOT RUN**（pre-demo 必做）。
 
 ## 11. 历史架构蓝本的整合裁决
 

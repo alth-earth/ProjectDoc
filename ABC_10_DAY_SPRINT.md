@@ -163,16 +163,26 @@ cd /root/my_project/arctic_route_orchestrator && make check            # 发布�
 | 项 | 状态 | 说明 |
 |---|---|---|
 | mur/dikson 12 类数据补齐 | DONE | land_sea_mask/wave/ice_type/ice_edge 补采完成；doctor 4168 项 PASS |
-| 144 h 回放 + bundle + RunContext | DONE | a-bundle-bf2ebf33681a08969a4b2dc0，1212 帧，12 类 complete |
+| 144 h 回放 + bundle + RunContext | DONE | RC1：a-bundle-32cafad4ee280f286d8eb049，1212 帧，12 类 complete（早期 bf2ebf… 为历史版本） |
 | orchestrator intake（corridor 2.2.0 外海起点） | PASS | 走廊/时域/12 类/代次全匹配 |
 | B 风险 build | PASS | 145 帧完整风险窗已提交 risk-store（r2/r3/r4） |
 | v3 四层 + 重规划 | BLOCKED | 三次真实运行均止于 c_initial_planning：任何网格 ≥34 个可航未知节点（数据侧缺口，见交付说明 §15.4） |
 | D 消费 v3 输出 | NOT RUN | 无 v3 输出可消费；D 骨架自测 6 tests PASS |
 | 双备份 | PASS | 工作区 + /tmp 双位置备份完成，均 doctor PASS（1212 项 0 错误） |
+| 三层 NaN 溯源审计 | DONE | 根因：TOPAZ 矩形表示伪影（native 有限）为主 + wave 产品掩膜 + NEXTsim source 缺口；新增 coverage gate 工具 |
+| TOPAZ originalGrid 重建 + 保守 hard-mask | DONE | 22/28 原生有限；重建 5 类 TOPAZ；B 风险帧 unknown-navigable=0；连通性通过；新 bundle/intake PASS |
+| v3 r5 | BLOCKED（性能） | B PASS、C 越过 unknown 门进入真实搜索，>1h 未完成（C 规划性能卡点）；重规划/D 未执行 |
+| C 性能定位/优化 | DONE | 根因=每边风险采样 xarray 开销；sampler 预计算+bisect、planner 缓存；52→325 exp/s；144h 单目标 96s |
+| v3 r6 完整链 | PASS | 四层初始 + 6h 重规划原子发布；心跳正常；RSS≤4GB |
+| D 消费真实 v3 | PASS | initial/replanned 均 complete、4 层；离线 schema 适配 |
+| Demo RC1 冻结 + r7 复现 | DONE | r6/r7 业务级确定性一致；true per-stage timeout 实现+测试；D 真实 fixtures；offline audit NONE |
 
 证据与恢复点：`work_package_a/data/output/golden/EXECUTION_LOG_20260816.md`、
 `run-stage-report.json`（mur-v3-smoke-20260816-r2/r3/r4）、
-`最终交付说明.md §15`。
+`最终交付说明.md §15–§18`、`scripts/coverage_audit.py`、
+`scripts/rebuild_topaz_native.py`、`work_package_c/scripts/bench_initial_planning.py`、
+`mur-v3-smoke-20260816-r6/output/`、`mur-v3-smoke-20260816-r7/output/`、
+`DEMO_RC1_BASELINE_20260816.md`。
 
 ## 6. 参数与科学接口规则
 
@@ -263,3 +273,19 @@ sidecar 未完成，未进入正式 RiskFrame/store/C，是否启动是人工决
 - [实验 B handoff](work_package_b_experimental/work_package_b_experimental_handoff.md)
 
 本轮 Git 提交和同步由项目负责人在会话结束后手动执行；计划不再把 contracts 同步列为阻塞。
+
+## 12. Milestone: Demo RC1 established（2026-08-16）
+
+主链已跑通并冻结：A/B/C/D/v3/replan/D 消费 PASS；r6 首次完整 E2E、r7 业务级确定性复现；
+可中断 per-stage timeout（worker）已实现；offline 审计 NONE。
+
+### Pre-demo（必须）
+
+1. worker 模式全链冒烟（RC1 全链走新 timeout 路径一次）；
+2. Live Demo Mode 排练（冻结结果 + ≤2 min 小窗）；
+3. 恢复演练（两份同盘副本 → doctor → gate → D）；
+4. 独立备份（外部故障域路径提供后执行）。
+
+### Post-RC1
+
+- TD-2 hard_reason 语义；TD-4 可选 planner 优化；更多走廊/场景（Tromsø 迁移）。
