@@ -1,4 +1,5 @@
 # Top-level governance repository: track only root documentation.
+!/work_package_d
 /*
 !/*.md
 !/.gitignore
