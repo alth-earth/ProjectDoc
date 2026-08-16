@@ -216,8 +216,14 @@ A 的挑战杯定位是“**下载数据 + 预处理 + 标准化持久化**”�
 
 场景 `tromso_isfjorden_august_2026_demo_v1` 已交付：12 类齐全、连续 144 h
 （2026-08-11T06:00Z → 2026-08-17T06:00Z）、`complete=true`，DatasetBundle/RunContext 已生成，
-并双位置备份（`frozen_demo_backup/` 与 `/tmp/arctic_demo_backup/`）。交付细节、覆盖矩阵、
+并双位置备份（`frozen_demo_backup/` 与工作区内持久副本
+`frozen_demo_backup_secondary/`）。交付细节、覆盖矩阵、
 差距说明与恢复步骤见 [冻结演示数据集交付说明](work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md)。
+
+> 2026-08-16 更正：原约定的第二位置 `/tmp/arctic_demo_backup/` 在 WSL/容器重启后被清空
+> （实测 15:04 重启后消失），不能作为持久备份；第二备份改为工作区内持久路径
+> `frozen_demo_backup_secondary/`（与 `frozen_demo_backup/` 同盘）。如需真正的异盘/异地
+> 第二副本，需项目负责人指定持久目标路径（如外接盘挂载点），再更新本文与恢复说明。
 
 说明：首选 168 h 因 corridor 政策上限 144 h 未达成（非数据缺失）；`ocean_current` 显式使用
 detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小时对齐。
