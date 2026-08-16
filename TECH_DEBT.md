@@ -1,15 +1,15 @@
-# Technical Debt Register
+# 技术债登记
 
-Status: CURRENT
-Last Updated: 2026-08-16
-Scope: non-blocking items only
+状态：CURRENT（当前）
+最后更新：2026-08-16
+范围：仅非阻塞事项
 
-| ID | Item | Priority | RC1 Blocker | Reason | Suggested Next Step |
+| ID | 事项 | 优先级 | RC1 阻塞 | 原因 | 建议下一步 |
 |---|---|---|---|---|---|
-| TD-1 | Worker-mode full RC1 E2E not run | High | No | r6/r7 used old inline path; worker timeout path is unit-tested only | Pre-demo: run one full v3 via worker path |
-| TD-2 | `hard_reason` semantics (LAND vs DATA_UNAVAILABLE vs OTHER) | Medium | No | Both map to hard today; safe but not distinguishable in audit/UI | Post-RC1 contract change |
-| TD-3 | Independent/offsite backup | Medium | No | Both copies are same VHD | Requires external path |
-| TD-4 | Optional planner performance optimization | Low | No | 144h single objective ≈96s is acceptable | Only if demo timing requires |
-| TD-5 | Per-stage timeout not yet exercised on real full chain | High | No | Worker watchdog tested with fake workers | Covered by TD-1 |
+| TD-1 | worker 模式完整 RC1 E2E 未跑 | 高 | 否 | r6/r7 用旧内联路径；worker 超时路径仅单测 | 演示前：用 worker 路径完整跑一次 v3 |
+| TD-2 | `hard_reason` 语义（LAND / DATA_UNAVAILABLE / OTHER） | 中 | 否 | 当前两类都映射为 hard，安全但无法在审计/UI 区分 | RC1 后契约变更 |
+| TD-3 | 独立/异地备份 | 中 | 否 | 两份副本都在同一 VHD | 需要外部路径 |
+| TD-4 | 可选规划器性能优化 | 低 | 否 | 144h 单目标 ≈96s 已可接受 | 仅在演示耗时需要时 |
+| TD-5 | 超时机制未在真实全链上演练 | 高 | 否 | worker watchdog 仅用假 worker 测试 | 由 TD-1 覆盖 |
 
-Resolved items are NOT listed here; see `最终交付说明.md` Historical/Resolved.
+已解决的问题不在此列出；见 `最终交付说明.md` 的“历史已解决问题”。
