@@ -168,6 +168,11 @@ input.issue_time <= as_of_time <= 当前允许使用的 simulation_time
 `valid_time` 可以晚于当前模拟时刻，因为已经发布的预报可以描述未来；关键是其 `issue_time`
 在当时已经可见。稳定演示也保留这些字段，以便解释制品来源和重规划顺序。
 
+> 2026-08-17 时间语义审计补充：全链路时间字段的完整分类、canonical glossary、
+> 转换矩阵与不变量状态见
+> [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)；
+> 后续开发者速查见 [`TIME_MODEL_QUICK_REFERENCE.md`](TIME_MODEL_QUICK_REFERENCE.md)。
+
 ### 5.2 `scenario_id`、`generation_id` 与版本
 
 - `scenario_id` 标识完整演示/试验组合：走廊、船型、数据快照、时间窗和参数共同构成场景；
@@ -364,6 +369,16 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > 展示边界：当前仅 2 张 spatial 帧（frame 0/6），145 帧动态风险播放、
 > GEBCO basemap、Moving Ship、+6h Replan 动画属于 NEXT PHASE，不得写成
 > 已实现能力。
+
+> 2026-08-17（Temporal Semantics Audit）：145 risk frames = **单一
+> knowledge/as-of 快照 × 145 个逐小时 valid_time**，不是 145 个 simulation
+> tick 的滚动重算，**不能直接当播放器帧**；+6h replan = 模拟时钟推进到
+> simulation_start+6h + 同一风险窗后缀切片 + C 从 +6h 出发重规划（非数据
+> 刷新）；两场景均为 `retrospective_best_estimate`（knowledge_as_of 晚于
+> simulation_start）。正式路径无 future-data leakage；`knowledge_as_of ==
+> simulation_time` 为文档/测试级约束（frozen_forecast 只强制 as_of<=start）。
+> D/Viewer 目前不保留 as_of_time/scenario_mode（结构性 gap，下一阶段补）。
+> 权威：`TEMPORAL_SEMANTICS_AUDIT_20260817.md`。
 
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 

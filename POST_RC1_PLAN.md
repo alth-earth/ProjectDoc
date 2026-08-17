@@ -39,7 +39,10 @@
 - D 展示/交互完善（地图图层、基于冻结结果的风险动画）；
   → 已基本完成：离线地图图层（Availability/Risk/Level）、风险动画可选（frame 0/6 已可切换）；
   → 2026-08-17 审计后：Route Geospatial Integrity gate 已并入 preflight；
-    145 帧动态播放、GEBCO、Moving Ship 与 +6h Replan 动画明确进入 NEXT PHASE；
+    Temporal Semantics Audit 已完成（145 帧 = 单一知识快照 × valid_time，
+    不能直接当播放器帧；+6h replan = 时钟推进 + 同窗后缀重规划）；
+    Simulation-clock-driven Temporal Presentation Viewer、GEBCO、
+    Moving Ship 与 +6h Replan 事件明确进入 NEXT PHASE；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2

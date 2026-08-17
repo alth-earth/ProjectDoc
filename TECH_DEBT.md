@@ -9,9 +9,11 @@
 | ID | 事项 | 优先级 | 状态 | 说明 |
 |---|---|---|---|---|
 | TD-11 | Route Geospatial Integrity | ~~HIGH / BLOCKER~~ → **RESOLVED** | 2026-08-17 已建立机器 gate（48/48 PASS）并并入 demo preflight | 历史：审计前 Viewer 双投影导致视觉穿 LAND（见 `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`） |
-| TD-12 | GEBCO georeferenced Presentation View | HIGH | NEXT PHASE（未开始） | 需要 CRS/bbox/lon-lat transform/coastline/bathymetry；Land/sea 与风险帧对齐 |
-| TD-13 | 145-frame 动态 Risk Presentation Frames | HIGH | NEXT PHASE（未开始） | 当前仅 2 张 spatial 帧（frame 0/6），不得宣称 145 帧动画已完成 |
-| TD-14 | Simulation Clock / Ship / Replan Event | HIGH | NEXT PHASE（未开始） | P3–P5：Timeline、Moving Ship（视觉插值，不发明 risk frame）、+6h Replan 事件 |
+| TD-15 | Temporal Semantics Audit / canonical time model | ~~HIGH~~ → **RESOLVED / DOCUMENTED** | 2026-08-17 审计完成：issue_time/valid_time/knowledge_as_of/simulation_time 语义、145 帧结构、+6h replan、因果/事后模式、无泄漏 | 4 个结构性 gap 已记录（causal 相等非硬门、B 无显式 horizon、D 丢失 as_of/mode、route 无 mode） |
+| TD-16 | Simulation Snapshot schema | HIGH | NEXT PHASE（未开始） | 二维时间模型：simulation_time × forecast valid_time/lead；需合同设计，本轮未改 schema |
+| TD-17 | Rolling A→B→C→D replay pipeline | HIGH | NEXT PHASE（未开始） | 当前 145 帧是单一 knowledge 快照，不能直接当播放器帧；需每 tick 固定知识边界重算 |
+| TD-18 | Simulation-clock Viewer | HIGH | NEXT PHASE（未开始） | 主控 = simulation_time；区分 risk horizon（current/+6/+12/+24）与 C 四层 |
+| TD-19 | GEBCO real-world coastline integrity | HIGH | NEXT PHASE（未开始） | 需 CRS/bbox/transform/coastline/bathymetry；与风险帧对齐后复跑 Geo Integrity gate |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

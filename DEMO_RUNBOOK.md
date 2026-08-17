@@ -107,6 +107,11 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
    - 顶部双 badge：`FROZEN VALIDATED / LIVE COMPUTED`（结果来源）与
      `ROUTE GEO INTEGRITY: PASS`（路线地理完整性，独立维度）；
    - Coverage 面板解释 LAND、DATA_UNAVAILABLE、ice-free NOT_APPLICABLE；
+   - 时间语义：`Frame initial/replan` = 风险帧 valid_time
+     （06:00Z / 12:00Z），不是 simulation snapshot；当前演示为
+     `retrospective_best_estimate`（知识截止晚于模拟起点），不要表述成
+     “实时预测当时已发布”；完整说明见
+     `TEMPORAL_SEMANTICS_AUDIT_20260817.md`；
    - 全程离线：无 CDN、无 remote JS/CSS/fonts/map tiles/schema。
 
 诚实标识：冻结展示顶部 badge 为 `FROZEN VALIDATED`；现场计算为

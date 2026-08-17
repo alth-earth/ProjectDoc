@@ -24,6 +24,18 @@ LAND/DATA_UNAVAILABLE/角切/时间映射/投影一致性全部 0 违规）。�
 权威记录：[`ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md)，
 机器制品：`work_package_a/data/output/rc2-smoke/route-geospatial-integrity.json`。
 
+**Temporal Semantics Audit（2026-08-17，分支 `demo-engineering`）。**
+完成 A/B/C/D/Orchestrator/Frozen/Live/Viewer 全链路时间语义审计：
+`issue_time`=可见性门禁、`valid_time`=环境/预测有效时刻、
+`knowledge_as_of`=固定知识截止、`simulation_time`=仿真时刻；
+当前 145 risk frames = 单一 knowledge 快照 × 145 个 valid_time
+（**不能直接当播放器帧**）；+6h replan = 时钟推进 + 同窗后缀重规划
+（非数据刷新）；正式路径无 future-data leakage。
+状态 = **AUDITED / DOCUMENTED**（无 correctness blocker；4 个结构性 gap
+已记录）。权威：
+[`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)，
+速查：[`TIME_MODEL_QUICK_REFERENCE.md`](TIME_MODEL_QUICK_REFERENCE.md)。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -38,7 +50,8 @@ Demo Candidate 2
    在 Route Geospatial Integrity 审计前不可直接信任）
 
 Current blocker（Viewer 双投影导致视觉穿 LAND）= RESOLVED
-Next = GEBCO + 145-frame Temporal Presentation Viewer
+Temporal Semantics = AUDITED / DOCUMENTED
+Next = Simulation-clock-driven rolling A→B→C→D replay architecture
 ```
 
 ## 当前版本
@@ -81,6 +94,7 @@ Next = GEBCO + 145-frame Temporal Presentation Viewer
 | RC2 内存优化（consumer_view + 生命周期释放） | PASS（mur 4.18→2.81GB；Tromsø 144h 1.40→0.97GB） |
 | RC2 Frozen Baseline | ESTABLISHED（2026-08-17；Scenario B golden 见 WP A docs） |
 | Route Geospatial Integrity（新 gate） | PASS（2026-08-17；48/48 冻结路线；waypoint/edge/LAND/DU/角切/时间/投影 0 违规；机器制品 + 正式文档） |
+| Temporal Semantics（新审计） | AUDITED / DOCUMENTED（2026-08-17；issue_time/valid_time/knowledge_as_of/simulation_time 语义、145 帧结构、+6h replan、因果/事后模式、无泄漏；见时间审计文档） |
 | Demo Engineering | Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer；Viewer 双投影 bug 已修复） |
 
 ## 当前非阻塞技术债
@@ -92,9 +106,10 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 
 1. 本轮 Geo Integrity 修复/审计本地 commits（不 push；由操作者审核后手动推送）；
 2. Pre-demo：Live Demo 彩排、恢复演练、独立备份；
-3. NEXT PHASE（仅 integrity PASS 后）：GEBCO georeferenced basemap →
-   145 B 动态风险 Presentation Frames → Simulation Clock/Timeline →
-   Route ETA + Moving Ship → +6h Replanning Event。
+3. NEXT PHASE（仅 integrity PASS + Temporal Audit 完成后）：
+   Simulation Snapshot schema → rolling A→B→C→D replay → GEBCO →
+   Simulation-clock-driven Temporal Presentation Viewer（动态 B forecast ×
+   C 四层 × Moving Ship × Replanning Events）。
 
 > 历史事实保留：上一轮文档中的“Demo Candidate 2 ESTABLISHED（2026-08-17）”
 > 是审计前的历史结论，不作为当前状态；当前状态以本文件与

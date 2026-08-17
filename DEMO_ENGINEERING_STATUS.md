@@ -79,6 +79,18 @@
   经纬步长 × 统一 scale；不修改路线坐标、不伪造任何路径；
 - 回归：旧混合投影必然相交（测试 oracle），修复后像素相交 = 0。
 
+### 4.3 Temporal Semantics（2026-08-17 审计后）
+
+- Viewer 的 `Frame initial / Frame replan` 标签是 **risk 帧的 valid_time**
+  （06:00Z / 12:00Z），不是 simulation snapshot；
+- demo-state spatial 帧当前**不保存** `as_of_time` 与 `scenario_mode`
+  （结构性 gap，下一阶段 SimulationSnapshot 补齐）；
+- 两场景都是 `retrospective_best_estimate`：`knowledge_as_of`
+  （08-16 / 08-15）晚于 `simulation_start`（08-11 06:00Z）；
+- 完整语义见
+  [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)
+  与 [`TIME_MODEL_QUICK_REFERENCE.md`](TIME_MODEL_QUICK_REFERENCE.md)。
+
 ## 5. 技术彩排（Demo Candidate 2，2026-08-17）
 
 | Step | Runtime | Result |
@@ -105,12 +117,15 @@
 ## 7. 下一步
 
 - 当前能力边界：空间图层只有 2 张 presentation 帧（frame 0 = initial
-  departure、frame 6 = replan departure），**不是 145 帧动态风险动画**；
+  departure、frame 6 = replan departure；= risk valid_time 帧），**不是
+  145 帧动态风险动画，也不是 simulation snapshot**；
 - NEXT PHASE（仅 integrity PASS 后，本轮不实施）：
-  P1 GEBCO georeferenced basemap → P2 145 B 动态 Presentation Frames →
-  P3 Simulation Clock + Timeline（play/pause/scrub/1×/2×/4×/8×）→
-  P4 Route ETA + Moving Ship → P5 +6h Replanning Event（old route
-  faded/dashed、new route highlighted）→ P6 overlays（hard/ice/edge/grid）→
-  P7 Scenario/Objective UI 统一 → P8 Live Mode 整合（Scenario × Mode）→
-  P9 Pre-Demo Finalization（rehearsal、恢复演练、独立备份）；
+  P0 Simulation Snapshot schema（simulation_time × knowledge_as_of ×
+  scenario_mode × B horizon × C layers）→ P1 rolling A→B→C→D replay →
+  P2 GEBCO georeferenced basemap → P3 Simulation-clock Viewer + Timeline
+  （play/pause/scrub/1×/2×/4×/8×，主控 = simulation_time）→
+  P4 动态 B forecast（current/+6h/+12h/+24h）→ P5 动态 C routes +
+  Moving Ship → P6 +6h Replanning Event（old route faded/dashed、new route
+  highlighted）→ P7 overlays（hard/ice/edge/grid）→ P8 Scenario/Objective/
+  Mode UI（CAUSAL / RETROSPECTIVE 区分）→ P9 Pre-Demo Finalization；
 - 不引入第三场景；不做正式并发集成。
