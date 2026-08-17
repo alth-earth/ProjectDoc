@@ -91,3 +91,12 @@
 - 若起点区域无解：记录第二场景数据缺口（所需产品/量）并转 PRE-DEMO 其他项；
 - 全量测试（含 orchestrator integration 若时间允许）；
 - 文档/状态最终同步 + checkpoint commits + 普通 push。
+
+## 6. Git / Push 状态（2026-08-17 收尾）
+
+- RC1 基线：根仓库 `29aa74d`（GitHub main 已同步，操作者完成）；
+- RC2 分支：各仓库 `rc2-development`，checkpoint commits 已本地完成：
+  contracts `54ee071`、B `a1b2caa`、C `ccd1e53`、D `28a8eda`、
+  orchestrator `1225e32`、根仓库 `7259fa7`；
+- 远程 push：**未完成**——GitHub https 需要交互式凭据且环境无 credential
+  helper/gh；按项目约定不处理凭据，全部 commit 保留在本地 `rc2-development`。
