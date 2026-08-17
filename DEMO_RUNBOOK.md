@@ -112,6 +112,9 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
      `retrospective_best_estimate`（知识截止晚于模拟起点），不要表述成
      “实时预测当时已发布”；完整说明见
      `TEMPORAL_SEMANTICS_AUDIT_20260817.md`；
+   - Scenario Mode 诚实展示：页面显示 `mode retrospective_best_estimate`，
+     与 `simulation_start/end`、`knowledge_as_of` 一并可见；若未来进入
+     causal replay，将显示 `CAUSAL`；
    - 全程离线：无 CDN、无 remote JS/CSS/fonts/map tiles/schema。
 
 诚实标识：冻结展示顶部 badge 为 `FROZEN VALIDATED`；现场计算为

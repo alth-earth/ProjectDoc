@@ -14,6 +14,13 @@
 | TD-17 | Rolling A→B→C→D replay pipeline | HIGH | NEXT PHASE（未开始） | 当前 145 帧是单一 knowledge 快照，不能直接当播放器帧；需每 tick 固定知识边界重算 |
 | TD-18 | Simulation-clock Viewer | HIGH | NEXT PHASE（未开始） | 主控 = simulation_time；区分 risk horizon（current/+6/+12/+24）与 C 四层 |
 | TD-19 | GEBCO real-world coastline integrity | HIGH | NEXT PHASE（未开始） | 需 CRS/bbox/transform/coastline/bathymetry；与风险帧对齐后复跑 Geo Integrity gate |
+| TD-20 | knowledge cutoff vs max-source-issue distinction | ~~HIGH~~ → **AUDITED / DOCUMENTED** | 2026-08-17：契约层允许 `as_of > max issue`（A 单测证明）；orchestrator intake 强制相等（生产约定）；causal replay 需放开 | 下一轮改 intake：接受逻辑 knowledge_as_of + visible_record_set_digest |
+| TD-21 | causal equality enforcement（knowledge_as_of == simulation_time） | HIGH | NEXT PHASE（未开始） | 当前 frozen_forecast 只强制 as_of<=start；causal 模式需显式硬门 |
+| TD-22 | scenario_mode presentation propagation | ~~HIGH~~ → **RESOLVED** | 2026-08-17：demo-state + Viewer 展示 scenario_mode/simulation/knowledge_as_of | route/B 层仍不携带 mode（下一轮 contract proposal） |
+| TD-23 | rolling A visibility revision（normal tick + knowledge 前进） | HIGH | NEXT PHASE（未开始） | A 单层支持（same generation）；orchestrator 未端到端演练 |
+| TD-24 | event-driven B recompute（data_revision 变化才重算） | HIGH | NEXT PHASE（未开始） | 当前每 run 一次 full window |
+| TD-25 | event-driven C replan（replan policy 触发才重算） | HIGH | NEXT PHASE（未开始） | policy 已存在；rolling 路径未接入 |
+| TD-26 | causal-ready historical evidence | HIGH | NEXT PHASE（未开始） | 当前 A=19h / B=44h 末期窗口；需实时 publication evidence 采集 |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

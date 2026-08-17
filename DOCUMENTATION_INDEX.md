@@ -26,6 +26,8 @@
 - [Route Geospatial Integrity Audit 2026-08-17](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md) — 航线地理完整性机器审计与 Viewer 投影修复
 - [Temporal Semantics Audit 2026-08-17](TEMPORAL_SEMANTICS_AUDIT_20260817.md) — 全链路时间语义审计与 Simulation-Time 架构
 - [Time Model Quick Reference](TIME_MODEL_QUICK_REFERENCE.md) — 时间字段速查（后续开发者）
+- [Causal Replay Feasibility Audit 2026-08-17](CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md) — 严格因果回放可行性机器审计
+- [Simulation Replay Architecture](SIMULATION_REPLAY_ARCHITECTURE.md) — 滚动回放架构与 Snapshot/Manifest 候选设计
 
 ## 规划
 

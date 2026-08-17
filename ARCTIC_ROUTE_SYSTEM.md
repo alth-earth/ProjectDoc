@@ -380,6 +380,18 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > D/Viewer 目前不保留 as_of_time/scenario_mode（结构性 gap，下一阶段补）。
 > 权威：`TEMPORAL_SEMANTICS_AUDIT_20260817.md`。
 
+> 2026-08-17（Causal Replay Feasibility Audit）：严格 causal 扫描
+> （knowledge_as_of == simulation_time、issue_time <= simulation_time、
+> 1h tick × 145）结论：Scenario A ready 20/145（first 08-16T11:00Z，
+> longest 19h）、Scenario B ready 45/145（first 08-15T10:00Z，
+> longest 44h）——**严格 144h tick-by-tick causal replay 不被历史证据
+> 支持**。原因：多数归档记录 issue_time 为单次 conservative retrieval
+> （A 中位数延迟 59h、B 53.5h）。这是历史证据限制，不是软件 bug；契约层
+> 已能表达 knowledge_as_of > max_source_issue_time，生产 intake 的相等
+> 约束属架构约定，需下一轮放开。权威：
+> `CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`；
+> 架构设计：`SIMULATION_REPLAY_ARCHITECTURE.md`。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；

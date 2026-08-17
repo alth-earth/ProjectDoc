@@ -41,8 +41,10 @@
   → 2026-08-17 审计后：Route Geospatial Integrity gate 已并入 preflight；
     Temporal Semantics Audit 已完成（145 帧 = 单一知识快照 × valid_time，
     不能直接当播放器帧；+6h replan = 时钟推进 + 同窗后缀重规划）；
-    Simulation-clock-driven Temporal Presentation Viewer、GEBCO、
-    Moving Ship 与 +6h Replan 事件明确进入 NEXT PHASE；
+    Causal Replay Feasibility = PARTIAL（A 19h / B 44h 末期窗口）；
+    下一阶段 = short-window rolling replay MVP（Scenario B 起点
+    2026-08-15T10:00Z），全窗需 causal-ready 采集；Simulation-clock
+    Viewer、GEBCO、Moving Ship 明确进入 NEXT PHASE；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2

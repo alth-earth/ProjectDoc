@@ -91,6 +91,17 @@
   [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)
   与 [`TIME_MODEL_QUICK_REFERENCE.md`](TIME_MODEL_QUICK_REFERENCE.md)。
 
+### 4.4 Causal Replay Feasibility 与模式诚实展示（2026-08-17）
+
+- 机器审计：A ready 20/145（first 08-16T11:00Z，longest 19h）、
+  B ready 45/145（first 08-15T10:00Z，longest 44h）；严格 144h
+  tick-by-tick causal replay 不被历史证据支持（见
+  `CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`）；
+- demo-state 与 Viewer 现在显式展示 `scenario_mode`（
+  RETROSPECTIVE BEST ESTIMATE）、`simulation_start/end` 与
+  `knowledge_as_of`，避免把事后数据理解为当时预测；
+- 架构设计见 `SIMULATION_REPLAY_ARCHITECTURE.md`（DESIGN ONLY）。
+
 ## 5. 技术彩排（Demo Candidate 2，2026-08-17）
 
 | Step | Runtime | Result |
@@ -121,7 +132,8 @@
   145 帧动态风险动画，也不是 simulation snapshot**；
 - NEXT PHASE（仅 integrity PASS 后，本轮不实施）：
   P0 Simulation Snapshot schema（simulation_time × knowledge_as_of ×
-  scenario_mode × B horizon × C layers）→ P1 rolling A→B→C→D replay →
+  scenario_mode × B horizon × C layers）→ P1 short-window rolling replay
+  MVP（Scenario B 08-15T10:00Z 起 12–24h）→ P2 全窗需 causal-ready 采集 →
   P2 GEBCO georeferenced basemap → P3 Simulation-clock Viewer + Timeline
   （play/pause/scrub/1×/2×/4×/8×，主控 = simulation_time）→
   P4 动态 B forecast（current/+6h/+12h/+24h）→ P5 动态 C routes +
