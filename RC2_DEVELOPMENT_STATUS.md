@@ -132,9 +132,11 @@
   contracts `54ee071`、B `bc7d830`（a1b2caa→ice-free）、C `ccd1e53`、
   D `c49a135`（28a8eda→coverage 增强）、orchestrator `1225e32`、
   根仓库 `24ce821`（7259fa7→第二场景状态）；
-- 远程 push：本轮新 commit **未推送**——GitHub https 需要交互式凭据且环境无
-  credential helper/gh；按项目约定不处理凭据，全部 commit 保留在本地
-  `rc2-development`（上一轮 commit 已由操作者/外部环境同步至 origin）。
+- 本轮 ending commits：B `52c4e13`、D `0539f31`、orchestrator `886b300`、
+  根仓库 `7d4e2c4`；
+- 远程 push：**未推送**——沙箱代理 127.0.0.1:10808 不可达；命令级直连可达
+  GitHub 但仍要求交互式凭据（无 credential helper/gh）；按项目约定不处理
+  凭据，全部 commit 保留在本地 `rc2-development`。
 
 ## 7. 长任务可靠性实测（2026-08-17）
 
