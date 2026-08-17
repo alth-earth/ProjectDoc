@@ -129,10 +129,12 @@
 
 - RC1 基线：根仓库 `29aa74d`（GitHub main 已同步，操作者完成）；
 - RC2 分支：各仓库 `rc2-development`，checkpoint commits 已本地完成：
-  contracts `54ee071`、B `a1b2caa`、C `ccd1e53`、D `28a8eda`、
-  orchestrator `1225e32`、根仓库 `7259fa7`；
-- 远程 push：**未完成**——GitHub https 需要交互式凭据且环境无 credential
-  helper/gh；按项目约定不处理凭据，全部 commit 保留在本地 `rc2-development`。
+  contracts `54ee071`、B `bc7d830`（a1b2caa→ice-free）、C `ccd1e53`、
+  D `c49a135`（28a8eda→coverage 增强）、orchestrator `1225e32`、
+  根仓库 `24ce821`（7259fa7→第二场景状态）；
+- 远程 push：本轮新 commit **未推送**——GitHub https 需要交互式凭据且环境无
+  credential helper/gh；按项目约定不处理凭据，全部 commit 保留在本地
+  `rc2-development`（上一轮 commit 已由操作者/外部环境同步至 origin）。
 
 ## 7. 长任务可靠性实测（2026-08-17）
 
