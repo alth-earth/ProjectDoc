@@ -16,6 +16,10 @@
 4. **独立备份**：仅在外部故障域（如 `/mnt/d/...`、外接 SSD、NAS、远程主机）
    提供后执行，并同步更新恢复文档。
 
+> RC2 期间进展（2026-08-17）：第 1 项已完成——真实 worker 全链成功 ×3
+> （mur RC1 冻结 bundle、v3 四层 + 6h 重规划，业务结果与 r6 一致），
+> 真实 C 超时中断（45.2s，TIMEOUT 报告、无孤儿）也已验证；第 3/4 项仍按原计划保留。
+
 ## 演示前可选
 
 - D 展示/交互完善（地图图层、基于冻结结果的风险动画）；
@@ -23,9 +27,12 @@
 
 ## RC1 之后 / RC2
 
-- TD-2：`hard_reason` 语义（LAND / DATA_UNAVAILABLE / OTHER），非阻塞；
+- `hard_reason` 语义：**已实现**（B 每格原因 + C codec/schema + D coverage 摘要）；
+- coverage preflight 正式化：**已实现**（orchestrator 新阶段 + schema + gate）；
 - TD-4：可选规划器优化（仅当演示耗时需要时）；
-- 更多走廊/场景（按文档约定优先迁移 Tromsø）；
+- 更多走廊/场景（按文档约定优先迁移 Tromsø）：迁移链已打通，但现有冻结数据在
+  68.5–70.4°N 全带宽无可航单元，数据覆盖 BLOCKED；见
+  [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_STATUS.md)；
 - 生产化相关（校准、船型、政策层）。
 
 ## 明确不在范围内

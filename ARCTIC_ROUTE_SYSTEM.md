@@ -289,14 +289,21 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 
 | 项目 | 当前值 | 用途 |
 |---|---|---|
-| `corridor_id` | `tromso_to_isfjorden_outer` | 当前演示底座（已交付 144 h 冻结数据） |
+| `corridor_id` | `tromso_to_isfjorden_outer` | 迁移验证走廊（RC2 升 1.2.0） |
 | 配置范围 | 68.50–79.50°N，10.00–22.00°E | 数据裁剪 bbox |
-| 气象导航起点 | 69.75°N，19.00°E | 特罗姆瑟外海算法起点 |
-| 起点允许区域 | 69.40–70.00°N，18.00–20.50°E | 起点匹配/栅格修正范围 |
+| 气象导航起点 | 70.50°N，18.00°E | 挪威海外海算法起点（RC2 1.2.0） |
+| 起点允许区域 | 70.00–71.00°N，17.00–19.00°E | 起点匹配/栅格修正范围 |
 | 气象导航终点 | 78.15°N，13.00°E | 伊斯峡湾外部入口 |
 | 终点允许区域 | 77.90–78.40°N，12.00–16.50°E | 终点筛选/栅格修正范围 |
 | 朗伊尔城 AIS 参考点 | 78.22°N，15.65°E | 完整航次识别，不参与优化 |
 | 默认/允许时域 | 96 h / 72–144 h | 迁移与较短演示窗口 |
+
+> 2026-08-17（RC2）数据结论：现有冻结数据在 68.5–70.4°N 全带宽（10–22°E）无可航
+> 单元（多数 LAND，其余 DATA_UNAVAILABLE）；原 1.1.0 起点区域（18–20.5E/69.4–70N）
+> 与 1.2.0 外海起点区域（17–19E/70–71N）均不可规划。corridor 升 1.2.0（外海起点）
+> 并归档 1.1.0 事实；完成端到端迁移仍待新采集（挪威沿海带 ocean/ice/wave）或
+> 起点北移（>71.5°N）的设计决策。旧 `tromso_isfjorden_august_2026_demo_v1`
+> RunContext（1.1.0）与 1.2.0 配置不再兼容，回放需重新生成。
 
 AIS 可保留到朗伊尔城以识别完整航次，但伊斯峡湾内部和港内操纵轨迹不纳入气象导航算法的
 航路优化评价。这样既可用 AIS 检查海上航段，又不把复杂峡湾操纵错误地归因于气象规划。
@@ -307,7 +314,7 @@ AIS 可保留到朗伊尔城以识别完整航次，但伊斯峡湾内部和港�
 伊斯峡湾 144 h 冻结演示数据，因此当前演示以该航区为底座，主走廊数据补齐后优先切换。
 
 - ⚠️ 与现状不符：旧 `tromso_to_svalbard` 及朗伊尔城算法终点。依据：当前 corridor
-  `tromso_to_isfjorden_outer` v1.1.0 和本轮图示口径。
+  `tromso_to_isfjorden_outer` v1.2.0 和本轮图示口径。
 - ⚠️ 与现状不符：C 归档中的 69.65°N/18.95°E、78.22°N/15.63°E，以及旧长航线端点。
   依据：当前 contracts/A 配置与本轮两幅图一致，以上旧值仅保留归档审计。
 
@@ -430,15 +437,21 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 - A：TOPAZ 5 类由 `originalGrid` 原生曲网格重建（`cmems-origg-97062ef099c4`，
   20 km 最近邻阈值、水掩膜、跨陆防护、无外推；vxo/vyo 投影分量由 A 规范化旋转）。
 - B：`land_sea_mask_plus_unknown_v1`：source-unknown 节点置 hard（unknown→不可规划，
-  风险仍 NaN/confidence 0，fail-closed 不变）。
+  风险仍 NaN/confidence 0，fail-closed 不变）；RC2 起每格输出 `hard_reason`
+  （NONE/LAND/DATA_UNAVAILABLE/OTHER）与 `missing_input_variable_counts`。
 - C：state=(node, 60min bucket, heading_code)；8 邻接、无等待；RiskSampler 预计算
   numpy 数组 + bisect；heuristic 为可采纳下界；带 `C_ASTAR_PROGRESS_SECONDS` 心跳。
 - D：离线本地 schema registry（`arctic-route.local` 引用本地解析）+ v3 `layers`
-  数组解析；真实 initial/replanned fixtures 回归。
+  数组解析；真实 initial/replanned fixtures 回归；RC2 可消费
+  `planning-coverage-preflight.json`（`coverage` 子命令 / `snapshot --coverage`）。
 - Orchestrator：worker 子进程 + watchdog 实现真正可中断 per-stage timeout；
-  心跳、TIMEOUT 报告、无孤儿进程（单测覆盖）。
+  心跳、TIMEOUT 报告、无孤儿进程（单测覆盖）；RC2 新增 `coverage_preflight` 阶段，
+  B full commit 后、规划前发布 `planning-coverage-preflight.json`（schema v1，
+  gate=每帧 unknown_navigable_nodes==0；C fail-closed 不变）。
 - 验证边界：r6/r7 完整 E2E 由旧内联路径产生；worker 路径机制已单测，
-  **worker-mode full RC1 E2E = NOT RUN**（pre-demo 必做）。
+  RC2 已用真实 RC1 冻结 bundle 跑通 worker-mode full v3 E2E（成功 ×3，
+  业务结果与 r6 一致），并用真实四层 A* 验证 45.2s 可中断超时（TIMEOUT 报告、
+  无孤儿、无半成品）。
 
 ## 11. 历史架构蓝本的整合裁决
 

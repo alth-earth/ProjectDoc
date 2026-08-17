@@ -13,6 +13,9 @@
 [`work_package_a/docs/DEMO_RC1_BASELINE_20260816.md`](work_package_a/docs/DEMO_RC1_BASELINE_20260816.md)
 为权威。
 
+**RC2 功能完善阶段进行中（2026-08-17，分支 `rc2-development`）。**
+RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_STATUS.md)。
+
 ## 当前版本
 
 - contracts 0.3.0 / corridor 2.2.0 / 场景 murmansk_dikson_august_2026_demo_v1 v1.0.0
@@ -36,6 +39,17 @@
 | 离线运行时依赖审计 | PASS（无外部依赖） |
 | 同 VHD 备份副本 | PASS（非独立灾备） |
 
+## RC2 状态速览（2026-08-17）
+
+| 领域 | 状态 |
+|---|---|
+| hard_reason（LAND/DATA_UNAVAILABLE） | PASS（B 产生、C codec/schema、D 消费） |
+| coverage preflight 正式化 | PASS（orchestrator 阶段 + schema + gate，单测通过） |
+| RC1 golden regression | PASS（r6/r7 digest/checksums） |
+| D 解释性增强（coverage 命令） | PASS |
+| worker 真实冒烟（成功/超时） | PASS（成功 ×3；真实 C 45.2s 超时中断） |
+| 第二场景迁移 | PARTIAL（迁移链 PASS；数据覆盖 BLOCKED，见 RC2 状态） |
+
 ## 当前非阻塞技术债
 
 见 [`TECH_DEBT.md`](TECH_DEBT.md)，要点：TD-1 worker 模式全链冒烟；
@@ -43,10 +57,8 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 
 ## 下一步（按优先级）
 
-1. worker 模式完整 RC1 冒烟（演示前必做）；
-2. Live Demo 模式彩排；
-3. 基于两份同 VHD 副本做恢复演练；
-4. 提供外部路径后执行独立备份。
+1. RC2 checkpoint commits（普通 push）；
+2. Pre-demo：Live Demo 彩排、恢复演练、独立备份。
 
 详见 [`POST_RC1_PLAN.md`](POST_RC1_PLAN.md)。
 
