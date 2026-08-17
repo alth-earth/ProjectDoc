@@ -49,6 +49,10 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | D 解释性增强（coverage 命令） | PASS |
 | worker 真实冒烟（成功/超时） | PASS（成功 ×3；真实 C 45.2s 超时中断） |
 | 第二场景迁移 | PASS（corridor 1.2.0 + 无冰语义修复；coverage/连通/v2/v3 smoke/replan/D 全 PASS） |
+| Tromsø 144h qualification | PASS（v3 四层 + 6h 重规划 + D；145 帧 gate=true） |
+| 双场景 regression | PASS（RC1 golden + RC2 Scenario B 144h golden） |
+| 内存归因（4GB vs 0.8GB） | PASS（A 帧双份驻留 × bbox 差异；已量化） |
+| 2-worker 并发 benchmark | NOT BENEFICIAL（0.95×；保持串行） |
 
 ## 当前非阻塞技术债
 
@@ -58,7 +62,8 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 ## 下一步（按优先级）
 
 1. RC2 checkpoint commits（普通 push）；
-2. Pre-demo：Live Demo 彩排、恢复演练、独立备份。
+2. RC2 剩余项：144h 制品归档、可选 C 内存优化研究；
+3. Pre-demo：Live Demo 彩排、恢复演练、独立备份。
 
 详见 [`POST_RC1_PLAN.md`](POST_RC1_PLAN.md)。
 

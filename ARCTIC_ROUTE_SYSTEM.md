@@ -312,6 +312,21 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > （无冰水域将 ice_type/edge 中性化为 0，其余 unknown 仍 fail-closed）。
 > 修复后 72h 第二场景：coverage gate=true、start→goal 连通、v3 四层 + 6h
 > 重规划 + D 消费全部 PASS（详见 `RC2_DEVELOPMENT_STATUS.md` §3）。
+>
+> 2026-08-17（RC2 第二轮）：Tromsø 144h qualification PASS（145 帧 gate=true、
+> v3 四层 + 6h 重规划 + D），状态为 **RC2 Second Scenario Candidate**；
+> 内存 4GB vs 0.8GB 已归因（A 帧双份驻留 × bbox 差异）；2-worker 并发
+> benchmark 0.95× 无收益，正式路径保持串行。
+
+## 15.1 测试层级（L0–L3，2026-08-17 正式化）
+
+- **L0**：Ruff + targeted unit（秒级）；
+- **L1**：包级测试套件（分钟级）；
+- **L2**：真实数据 smoke / worker smoke / 第二场景 smoke（几分钟）；
+- **L3**：完整 v2/v3、RC1 + RC2 全量 regression（几十分钟）。
+
+规则：小改跑 L0/L1；功能完成跑 L2；milestone/跨模块大改跑 L3；不机械重复
+30–40 分钟 L3。
 
 AIS 可保留到朗伊尔城以识别完整航次，但伊斯峡湾内部和港内操纵轨迹不纳入气象导航算法的
 航路优化评价。这样既可用 AIS 检查海上航段，又不把复杂峡湾操纵错误地归因于气象规划。

@@ -145,3 +145,67 @@
 - DeepSeek stream 中断一次（用户侧报告）：先核查原进程/日志/制品，确认
   进程已退出且无有效结果后才重启，未发生重复并发执行；
 - Agent-level 轮询采用 ~240s 间隔；任务心跳 `C_ASTAR_PROGRESS_SECONDS` 保留。
+
+## 8. 本轮（2026-08-17 第二轮）P0–P5 结果
+
+### P0 ice-free 语义硬化（PASS）
+
+- 阈值权威来源：A `arctic_route_data/derivations.py` 的
+  `ICE_EDGE_CONCENTRATION_THRESHOLD = 0.15`（`derive_sea_ice_type` 将
+  <15% 定义为 open water/ice_type=0；`derive_sea_ice_edge` 用 ≥15% 定义冰）。
+- B 谓词改为与 A 一致的严格 open-water：`isfinite & (0 <= siconc < 0.15)`；
+  0.149 中性化、0.150/0.151 不中性化、NaN/负数 fail-closed（边界测试覆盖）。
+- Provenance：B 帧 attrs 新增 `ice_free_neutralized_input_counts` +
+  `ice_free_predicate`（变量/运算符/阈值/来源/语义）；coverage preflight 每帧
+  新增可选 `ice_free_neutralized_nodes`；D coverage 摘要暴露该值。
+- 语义口径：`NaN + trusted open-water predicate => NOT_APPLICABLE（中性 0）`；
+  `NaN + 无可靠证据 => DATA_UNAVAILABLE（hard/fail-closed）`。
+
+### P1 Tromsø 144h qualification（PASS）
+
+- 输入：`tromso_isfjorden_august_2026_demo_v1`（144h）、bundle
+  `a-bundle-e1e3365fdf9922dcaad0b79e`、RunContext `run-…0a0006`（corridor 1.2.0）、
+  ice-free 策略 + smoke grid v1；
+- stage：init 252.4s / b_build 12.1s / coverage_preflight / endpoint /
+  c_initial 410.2s / suffix 3.3s / c_replanning 373.5s；EXIT=0；
+- coverage：145/145 帧 gate=true，navigable=255 恒定，unknown-navigable=0，
+  ice_free_neutralized=57/帧（72–144h 后段无变化，未出现冰缘漂移导致的阈值抖动）；
+  0/72/144h 连通性均 PASS；
+- 制品：initial `layer-set-sha256-e135e32d…`、replanned
+  `layer-set-sha256-6e101345…`；推荐 full_voyage 909.8km/52.4h → 827.7km/47.9h，
+  hard=0；D consume PASS；
+- 状态：**RC2 Second Scenario Candidate（ESTABLISHED）**，不视为 Frozen Baseline。
+
+### P2 双场景 regression（PASS）
+
+- Scenario A：`scripts/rc1_golden_regression.py` PASS（r6/r7 digest/checksums）；
+- Scenario B：`scripts/rc2_second_scenario_regression.py` PASS（144h v3 +
+  coverage + D + golden digest，golden 见
+  `data/output/rc2-smoke/rc2-tromso-144h-golden.json`）；
+- 比较口径：business-semantic（compute_ms/generated_at/plan_id 允许不同）。
+
+### P3 内存归因（4GB vs 0.8GB，已量化）
+
+- 同口径（worker 内 `ru_maxrss`）：RC1 worker 峰值 4.18GB；Tromsø 72h 0.80GB；
+  Tromsø 144h 1.40GB。
+- 检查点（intake→B build）：mur 2.62GB→3.92GB；Tromsø 144h 0.89GB→1.30GB。
+- 主因：A ready 帧原生数组差异（mur bbox 55°经度 vs tromso 12°；如
+  ocean_current 1.34MB vs 0.24MB/帧，ice_type 2.31MB vs 0.74MB/帧）≈3× 基数；
+  PreparedWindow 驻留（intake）+ `BInputEnvelope.verified_build_snapshot()`
+  深拷贝（+1.3GB mur / +0.4GB tromso）双份保留；B 风险帧/C 规划状态占比很小。
+- 结论：4GB 由 A 帧双份驻留 × mur 更大 bbox 驱动，非规划器状态爆炸。
+
+### P4 2-worker 并发 feasibility（NOT BENEFICIAL）
+
+| Mode | Wall | Peak RSS/worker | 合计 RSS | Output equality |
+|---|---:|---:|---:|---|
+| Serial（1×v2 72h） | 490s | 800.9MB | 0.80GB | 基准 |
+| 2-worker（同时 2×v2 72h） | 516s | 800.4/800.8MB | 1.60GB | 与串行业务完全一致 |
+
+- 结论：**NOT BENEFICIAL**（0.95×，无加速），内存安全（1.6GB）但无收益；
+  正式路径保持串行，2-worker 仅为显式 benchmark，不合并。
+
+### P5 文档/测试/提交
+
+- B 57 tests、D 12、orchestrator 18（非集成）、contracts 18、C 141；Ruff 全绿；
+- 本轮 commits 见 §6 更新。

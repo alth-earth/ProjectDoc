@@ -33,6 +33,7 @@
 - 更多走廊/场景（按文档约定优先迁移 Tromsø）：**已打通**——corridor 1.2.0 +
   `land_sea_mask_plus_unknown_ice_free_v1` 无冰语义修复后，72h 第二场景
   coverage gate、连通性、v3 四层 + 6h 重规划、D 消费全部 PASS；
+  **Tromsø 144h qualification = PASS**（RC2 Second Scenario Candidate，非冻结）；
 - 生产化相关（校准、船型、政策层）。
 
 ## 明确不在范围内
