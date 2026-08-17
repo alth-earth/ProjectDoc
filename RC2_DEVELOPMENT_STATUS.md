@@ -211,3 +211,43 @@
 
 - B 57 tests、D 12、orchestrator 18（非集成）、contracts 18、C 141；Ruff 全绿；
 - 本轮 commits 见 §6 更新。
+
+## 9. 本轮（2026-08-17 第三轮）Performance & Stabilization
+
+### 内存优化（P1，已采用）
+
+- A 新增 `StandardDataFrame.consumer_view()`：元数据浅拷贝 + 共享只读数组
+  （帧数组构造即只读），B `verified_build_snapshot()` 改用共享视图，不再深拷贝
+  1212 帧；新增 mutation-safety 测试（共享内存、只读、结构隔离、digest 一致）；
+- orchestrator 在 B 完成后释放 `build_request/envelope`，endpoint 后释放
+  `PreparedWindow`（`replace(intake, prepared_window=None)`）；
+- 效果（worker 内 `ru_maxrss` 同口径）：
+  - RC1（mur v3）：B 构建峰值 3915MB → 2666MB；全链峰值 4181MB → 2810MB（−33%）；
+  - Tromsø 144h：1399MB → 970MB（−31%）；
+  - 业务输出与优化前完全一致（Scenario A/B 均验证）。
+
+### 公平并发 benchmark（P3/P4）
+
+- 同一 Tromsø 72h 风险窗、相同工作量（fastest + low_risk 两个 objective）：
+
+| Mode | Wall | CPU | Peak RSS | 业务一致 |
+|---|---:|---:|---:|---|
+| Serial | 134.9s | 134.6s | 143.8MB | 基准 |
+| 2-worker（子进程） | 91.0s | — | 269.4MB（合计） | 一致 |
+| 2-worker（ProcessPool prototype） | 90.6s | — | 326MB（合计） | 一致 |
+
+- Speedup = 134.9 / 91.0 ≈ **1.48×**（prototype 1.49×）；
+- 结论：**objective 级并发有明确 latency/throughput 收益，内存极低**；
+  但正式 v3 集成需先完成 timeout/lease/atomic-publication 硬化，
+  状态 = `EXPERIMENTAL / NOT ADOPTED`，正式路径保持串行。
+
+### Scenario B r2（P5，PASS）
+
+- 同 run_id/bundle/policy 第二次完整 144h：layer-set digest 与业务输出与 r1
+  完全一致；coverage/ice-free provenance 一致；峰值 RSS 970MB；
+- `rc2_second_scenario_regression.py`（含 golden）PASS。
+
+### RC2 Frozen（P6）
+
+**RC2 Frozen Baseline = ESTABLISHED（2026-08-17）**，见
+`work_package_a/docs/RC2_BASELINE_20260817.md`。

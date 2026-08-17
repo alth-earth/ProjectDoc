@@ -35,7 +35,7 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | D 真实 v3 制品消费 | PASS |
 | 业务语义确定性可复现（r6 与 r7） | PASS |
 | 可中断 per-stage 超时机制 | PASS（单元测试） |
-| worker 模式完整 RC1 E2E | NOT RUN |
+| worker 模式完整 RC1 E2E | PASS（真实 worker 全链 ×3 + 真实 C 超时中断） |
 | 离线运行时依赖审计 | PASS（无外部依赖） |
 | 同 VHD 备份副本 | PASS（非独立灾备） |
 
@@ -53,6 +53,8 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | 双场景 regression | PASS（RC1 golden + RC2 Scenario B 144h golden） |
 | 内存归因（4GB vs 0.8GB） | PASS（A 帧双份驻留 × bbox 差异；已量化） |
 | 2-worker 并发 benchmark | NOT BENEFICIAL（0.95×；保持串行） |
+| RC2 内存优化（consumer_view + 生命周期释放） | PASS（mur 4.18→2.81GB；Tromsø 144h 1.40→0.97GB） |
+| RC2 Frozen Baseline | ESTABLISHED（2026-08-17；Scenario B golden 见 WP A docs） |
 
 ## 当前非阻塞技术债
 
@@ -61,8 +63,8 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 
 ## 下一步（按优先级）
 
-1. RC2 checkpoint commits（普通 push）；
-2. RC2 剩余项：144h 制品归档、可选 C 内存优化研究；
+1. RC2 checkpoint commits（本地；不 push）；
+2. RC2 剩余项：正式 v3 2-worker 集成（可选、EXPERIMENTAL）；
 3. Pre-demo：Live Demo 彩排、恢复演练、独立备份。
 
 详见 [`POST_RC1_PLAN.md`](POST_RC1_PLAN.md)。

@@ -318,6 +318,13 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > 内存 4GB vs 0.8GB 已归因（A 帧双份驻留 × bbox 差异）；2-worker 并发
 > benchmark 0.95× 无收益，正式路径保持串行。
 
+> 2026-08-17（RC2 第三轮）：RC2 Frozen Baseline ESTABLISHED（Scenario B golden，
+> 权威 `work_package_a/docs/RC2_BASELINE_20260817.md`）。内存优化采用
+> `StandardDataFrame.consumer_view()`（共享只读数组）+ PreparedWindow/envelope
+> 生命周期释放：mur 4.18→2.81GB、Tromsø 144h 1.40→0.97GB，业务不变。
+> 公平 objective 级并发 benchmark：2-worker speedup ≈1.48×、内存极低，
+> 状态 EXPERIMENTAL / 正式路径串行。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；

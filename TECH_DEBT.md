@@ -8,9 +8,9 @@
 |---|---|---|---|---|---|
 | TD-3 | 独立/异地备份 | 中 | 否 | 两份副本都在同一 VHD | 需要外部路径 |
 | TD-4 | 可选规划器性能优化 | 低 | 否 | 144h 单目标 ≈96s 已可接受 | 仅在演示耗时需要时 |
-| TD-7 | RC1 内存 footprint 优化（可选） | 低 | 否 | 4GB 主因 A 帧双份驻留 × mur 大 bbox；并发无收益 | 若需演示内存余量：A 帧流式/释放 PreparedWindow 副本 |
+| TD-8 | 正式 v3 objective 级 2-worker 集成（可选） | 低 | 否 | prototype 1.48×；需 timeout/lease/atomic-publication 硬化 | 仅当演示 stage 耗时需要时 |
 
-已解决的问题不在此列出；TD-1/TD-2/TD-5（worker 全链、hard_reason、真实超时）
-与 TD-6（第二走廊数据覆盖：经无冰语义修复后 coverage/连通/C smoke 全 PASS）
-已于 RC2 实现并移除，见
+已解决的问题不在此列出；TD-1/TD-2/TD-5（worker 全链、hard_reason、真实超时）、
+TD-6（第二走廊数据覆盖）与 TD-7（RC1 内存 footprint：consumer_view + 生命周期
+释放，mur 4.18→2.81GB）已于 RC2 实现并移除，见
 `最终交付说明.md` 的“历史已解决问题”与 `RC2_DEVELOPMENT_STATUS.md`。
