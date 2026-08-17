@@ -305,6 +305,14 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > 起点北移（>71.5°N）的设计决策。旧 `tromso_isfjorden_august_2026_demo_v1`
 > RunContext（1.1.0）与 1.2.0 配置不再兼容，回放需重新生成。
 
+> 2026-08-17（RC2 第二轮）根因定位与解决：缺口主要来自 NEXTsim 的
+> ice_type/ice_edge 在无冰水域原生全 NaN（物理语义：无冰→无冰型/冰缘），
+> 而非挪威沿岸无数据（TOPAZ6 起点区域原生有限率 93%）。因此**不北移走廊、
+> 不新下载**；B 新增 RC2 专属策略 `land_sea_mask_plus_unknown_ice_free_v1`
+> （无冰水域将 ice_type/edge 中性化为 0，其余 unknown 仍 fail-closed）。
+> 修复后 72h 第二场景：coverage gate=true、start→goal 连通、v3 四层 + 6h
+> 重规划 + D 消费全部 PASS（详见 `RC2_DEVELOPMENT_STATUS.md` §3）。
+
 AIS 可保留到朗伊尔城以识别完整航次，但伊斯峡湾内部和港内操纵轨迹不纳入气象导航算法的
 航路优化评价。这样既可用 AIS 检查海上航段，又不把复杂峡湾操纵错误地归因于气象规划。
 

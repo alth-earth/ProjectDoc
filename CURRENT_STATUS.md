@@ -48,7 +48,7 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | RC1 golden regression | PASS（r6/r7 digest/checksums） |
 | D 解释性增强（coverage 命令） | PASS |
 | worker 真实冒烟（成功/超时） | PASS（成功 ×3；真实 C 45.2s 超时中断） |
-| 第二场景迁移 | PARTIAL（迁移链 PASS；数据覆盖 BLOCKED，见 RC2 状态） |
+| 第二场景迁移 | PASS（corridor 1.2.0 + 无冰语义修复；coverage/连通/v2/v3 smoke/replan/D 全 PASS） |
 
 ## 当前非阻塞技术债
 
