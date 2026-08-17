@@ -23,6 +23,7 @@
 - [最终交付说明.md](最终交付说明.md)
 - [Demo RC1 基线](work_package_a/docs/DEMO_RC1_BASELINE_20260816.md) — RC1 精确标识符权威
 - [RC2 基线](work_package_a/docs/RC2_BASELINE_20260817.md) — RC2 多场景冻结基线权威
+- [Route Geospatial Integrity Audit 2026-08-17](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md) — 航线地理完整性机器审计与 Viewer 投影修复
 
 ## 规划
 

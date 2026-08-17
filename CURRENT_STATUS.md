@@ -16,6 +16,31 @@
 **RC2 功能完善阶段进行中（2026-08-17，分支 `rc2-development`）。**
 RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_STATUS.md)。
 
+**Route Geospatial Integrity（2026-08-17，分支 `demo-engineering`）。**
+针对“Viewer 航线视觉穿过 LAND 但 Hard violations=0 / Coverage Gate=PASS”
+的矛盾完成独立机器审计：**OVERALL = PASS**（48/48 冻结路线，waypoint/edge/
+LAND/DATA_UNAVAILABLE/角切/时间映射/投影一致性全部 0 违规）。根因是 Viewer
+格子与路线使用两套不同投影导致像素空间错位（Case C，坐标变换 bug），已最小修复。
+权威记录：[`ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md)，
+机器制品：`work_package_a/data/output/rc2-smoke/route-geospatial-integrity.json`。
+
+## 当前状态重定义（审计后）
+
+```text
+RC1 = FROZEN
+RC2 = FROZEN
+
+Demo Candidate 1 = ESTABLISHED
+
+Demo Candidate 2
+= GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT
+  （历史上一轮的“ESTABLISHED / Pre-Demo Finalization”结论
+   在 Route Geospatial Integrity 审计前不可直接信任）
+
+Current blocker（Viewer 双投影导致视觉穿 LAND）= RESOLVED
+Next = GEBCO + 145-frame Temporal Presentation Viewer
+```
+
 ## 当前版本
 
 - contracts 0.3.0 / corridor 2.2.0 / 场景 murmansk_dikson_august_2026_demo_v1 v1.0.0
@@ -55,7 +80,8 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | 2-worker 并发 benchmark | NOT BENEFICIAL（0.95×；保持串行） |
 | RC2 内存优化（consumer_view + 生命周期释放） | PASS（mur 4.18→2.81GB；Tromsø 144h 1.40→0.97GB） |
 | RC2 Frozen Baseline | ESTABLISHED（2026-08-17；Scenario B golden 见 WP A docs） |
-| Demo Engineering | Demo Candidate 2 ESTABLISHED（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer） |
+| Route Geospatial Integrity（新 gate） | PASS（2026-08-17；48/48 冻结路线；waypoint/edge/LAND/DU/角切/时间/投影 0 违规；机器制品 + 正式文档） |
+| Demo Engineering | Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer；Viewer 双投影 bug 已修复） |
 
 ## 当前非阻塞技术债
 
@@ -64,9 +90,15 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 
 ## 下一步（按优先级）
 
-1. RC2 checkpoint commits（本地；不 push）；
-2. RC2 剩余项：正式 v3 2-worker 集成（可选、EXPERIMENTAL）；
-3. Pre-demo：Live Demo 彩排、恢复演练、独立备份。
+1. 本轮 Geo Integrity 修复/审计本地 commits（不 push；由操作者审核后手动推送）；
+2. Pre-demo：Live Demo 彩排、恢复演练、独立备份；
+3. NEXT PHASE（仅 integrity PASS 后）：GEBCO georeferenced basemap →
+   145 B 动态风险 Presentation Frames → Simulation Clock/Timeline →
+   Route ETA + Moving Ship → +6h Replanning Event。
+
+> 历史事实保留：上一轮文档中的“Demo Candidate 2 ESTABLISHED（2026-08-17）”
+> 是审计前的历史结论，不作为当前状态；当前状态以本文件与
+> `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md` 为准。
 
 详见 [`POST_RC1_PLAN.md`](POST_RC1_PLAN.md)。
 

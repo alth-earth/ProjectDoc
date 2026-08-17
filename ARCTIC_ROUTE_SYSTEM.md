@@ -71,7 +71,7 @@ D：可视化风险图、风险预测图、候选航线和指标
 | A | 下载、留证、拆帧、标准化、QC、持久化和回放 | 0.4.2；mur RC1 数据已交付（TOPAZ originalGrid 重建） | RC1 冻结；仅 correctness/safety 修复 |
 | B | 时间处理、逐小时风险、置信度、hard mask、环境速度因子 | 0.2.0；RC1 风险窗已提交（unknown-navigable=0） | RC1 冻结；hard_reason 为 POST-RC1 |
 | C | 最终船速、ETA、成本、路径搜索、发布和重规划 | 0.4.0；v3 四层+6h 重规划已跑通（单目标 ≈96s） | RC1 冻结；可选性能优化 POST-RC1 |
-| D | 只读展示风险、路线和指标 | 0.1.0；真实 v3 制品离线消费 PASS（9 tests） | Live Demo 排练/UI |
+| D | 只读展示风险、路线和指标 | 0.1.0；真实 v3 制品离线消费 + Route Geospatial Integrity gate PASS（36 tests，2026-08-17） | NEXT PHASE：GEBCO / 145-frame / Moving Ship |
 | orchestrator | 只经公共 API 组织 A→B→C、报告和制品 | 阶段报告+可中断 worker 超时已实现；r6/r7 完整 E2E PASS | worker 模式全链冒烟（pre-demo） |
 | experimental B | 隔离的反事实实验工程 | 工程卫生待修 | 真实主线完成后再最小修复 |
 
@@ -350,6 +350,21 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 - Compare 模式同时绘制 initial/replanned 并显示真实 Δ 指标；
 - 展示层不侵入 A/B/C 核心；离线运行无外部依赖。
 
+> 2026-08-17（Route Geospatial Integrity 审计，Demo Candidate 2 状态修正）：
+> Viewer 曾出现“航线视觉穿过 LAND 但 Hard violations=0 / Coverage Gate=PASS”。
+> 独立机器审计结论：C 制品 waypoints = 完整搜索路径（无降采样），48/48 冻结
+> 路线在数据空间 0 违规（waypoint/edge/LAND/DU/角切/时间映射）；根因是
+> **Viewer 坐标变换 bug**——格子用独立 x/y 拉伸、路线用等比投影，非正方形
+> 场景下错位，导致地理正确的路线在像素空间穿过 LAND/DU 格子（旧相交
+> A=252、B=72）。已最小修复：格子与路线共用同一 `project()`，并建立正式
+> **Route Geospatial Integrity Gate**（`demo geo-integrity` 机器制品 +
+> `demo preflight` 硬门 + Viewer 独立 `ROUTE GEO INTEGRITY` badge）。
+> 当前状态：**Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING
+> CHECKPOINT**；完整证据见 `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`。
+> 展示边界：当前仅 2 张 spatial 帧（frame 0/6），145 帧动态风险播放、
+> GEBCO basemap、Moving Ship、+6h Replan 动画属于 NEXT PHASE，不得写成
+> 已实现能力。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；
@@ -359,6 +374,9 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 
 规则：小改跑 L0/L1；功能完成跑 L2；milestone/跨模块大改跑 L3；不机械重复
 30–40 分钟 L3。
+
+Route Geospatial Integrity gate 属于 Demo preflight 常驻 L1/L2 检查
+（`demo geo-integrity`，~0.5s，只读冻结制品与风险帧）。
 
 AIS 可保留到朗伊尔城以识别完整航次，但伊斯峡湾内部和港内操纵轨迹不纳入气象导航算法的
 航路优化评价。这样既可用 AIS 检查海上航段，又不把复杂峡湾操纵错误地归因于气象规划。

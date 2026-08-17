@@ -2,7 +2,19 @@
 
 状态：CURRENT（当前）
 最后更新：2026-08-17
-范围：仅非阻塞事项
+范围：非阻塞事项 + NEXT PHASE（地理时序 Demo Viewer 阶段）
+
+## HIGH / NEXT PHASE（Route Geospatial Integrity PASS 后）
+
+| ID | 事项 | 优先级 | 状态 | 说明 |
+|---|---|---|---|---|
+| TD-11 | Route Geospatial Integrity | ~~HIGH / BLOCKER~~ → **RESOLVED** | 2026-08-17 已建立机器 gate（48/48 PASS）并并入 demo preflight | 历史：审计前 Viewer 双投影导致视觉穿 LAND（见 `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`） |
+| TD-12 | GEBCO georeferenced Presentation View | HIGH | NEXT PHASE（未开始） | 需要 CRS/bbox/lon-lat transform/coastline/bathymetry；Land/sea 与风险帧对齐 |
+| TD-13 | 145-frame 动态 Risk Presentation Frames | HIGH | NEXT PHASE（未开始） | 当前仅 2 张 spatial 帧（frame 0/6），不得宣称 145 帧动画已完成 |
+| TD-14 | Simulation Clock / Ship / Replan Event | HIGH | NEXT PHASE（未开始） | P3–P5：Timeline、Moving Ship（视觉插值，不发明 risk frame）、+6h Replan 事件 |
+
+> 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
+> correctness 审计范围。
 
 | ID | 事项 | 优先级 | RC1 阻塞 | 原因 | 建议下一步 |
 |---|---|---|---|---|---|
@@ -16,4 +28,7 @@
 TD-6（第二走廊数据覆盖）与 TD-7（RC1 内存 footprint：consumer_view + 生命周期
 释放，mur 4.18→2.81GB）已于 RC2 实现并移除；Demo Viewer 交互（地图图层、
 风险着色、Compare 模式、Live 进度）已于 Demo Candidate 2 完成并移除，见
-`DEMO_ENGINEERING_STATUS.md` 与 `最终交付说明.md` 的“历史已解决问题”。
+`DEMO_ENGINEERING_STATUS.md` 与 `最终交付说明.md` 的“历史已解决问题”；
+TD-11（Route Geospatial Integrity，含 Viewer 双投影修复）已于 2026-08-17
+审计轮实现并移除（机器制品：
+`work_package_a/data/output/rc2-smoke/route-geospatial-integrity.json`）。

@@ -8,10 +8,16 @@
 ## 1. 阶段定位
 
 - **Demo Candidate 1 = ESTABLISHED（2026-08-17）**；
-- **Demo Candidate 2 = ESTABLISHED（2026-08-17）**；
+- **Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT
+  （2026-08-17，Route Geospatial Integrity 审计后）**；
 - 建立在 RC2 Frozen Baseline 之上，不修改 RC1/RC2 frozen core；
 - 双模式明确区分：Full Validation Mode（真实完整计算 17–26 min）
   与 Live Demo Mode（冻结结果 + 现场 ≤2 min 真实小窗重规划）。
+
+> 历史事实：2026-08-17 较早轮次曾把 Candidate 2 记为 `ESTABLISHED`。
+> 在 Viewer 出现“航线视觉穿过 LAND 但 Hard violations=0”后，该结论被
+> 独立 Route Geospatial Integrity 审计取代（见
+> [`ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md)）。
 
 ## 2. 分支与来源
 
@@ -36,9 +42,10 @@
 | LAND / DATA_UNAVAILABLE / OTHER 图例与说明 | PASS（与 risk 分开） |
 | Scenario A/B 交互切换 | PASS（地图/指标/coverage 同步更新） |
 | Route Layer/Objective 选择（4 层 × 3 目标） | PASS |
+| **Route Geospatial Integrity gate（机器审计 48/48）** | **PASS**（2026-08-17 新增；waypoint/edge/LAND/DU/角切/时间映射/投影一致性 0 违规） |
 | Live Demo 操作与进度反馈（按钮 + elapsed/stage + indeterminate） | PASS（UI 触发真实计算） |
 | Live Demo（真实 C 小窗重规划，≈57s，LIVE_COMPUTED） | PASS |
-| Demo Preflight（冻结/校验/内存/端口） | PASS |
+| Demo Preflight（冻结/校验/Route Geospatial Integrity/内存/端口） | PASS（11 项；gate FAIL 则 READY FOR DEMO 不输出） |
 | 本地只读 Viewer（localhost、无 CDN、无 remote JS/CSS/fonts/tiles） | PASS |
 | 失败降级（live TIMEOUT/FAIL 透明、冻结结果仍可看） | PASS（API 显式 FAIL，不冒充成功） |
 
@@ -51,12 +58,34 @@
 - ice-free NOT_APPLICABLE 仍以可信计数 + 解释呈现（帧内无逐格标记，不伪造坐标）；
 - 路线 geometry 直接来自 frozen/live 制品的 waypoints，不做平滑/移动。
 
+### 4.1 Route Geospatial Integrity（2026-08-17 审计后）
+
+- 审计链：C 制品 waypoints（= 完整搜索路径，无降采样）→ D loader →
+  demo-state → Viewer；
+- 检查项：waypoint 网格身份与邻接、距离/ETA 可复算、waypoint hard（ETA）、
+  edge hard（C 同款 3 采样 + ≤10 km 密集采样）、对角角切（正交侧格）、
+  ETA→frame 时间映射、Viewer 投影一致性（像素空间相交=0）；
+- 结果：Scenario A/B 各 24 路线（initial 12 + replanned 12），48/48 PASS，
+  机器制品 `route-geospatial-integrity.json`；
+- 上一轮“Hard violations=0”只说明 C 搜索未接受 hard 边；“Coverage Gate
+  PASS”只说明可航节点无 unknown 风险；二者都不是路线地理完整性结论。
+
+### 4.2 Viewer 修复（Case C：坐标变换 bug）
+
+- 根因：旧 Viewer 路线用等比投影、格子用独立 x/y 拉伸投影，两套变换在
+  非正方形场景下错位（A 纵向、B 横向），使地理正确的路线在屏幕上穿过
+  LAND/DU 格子（旧像素相交 A=252、B=72）；
+- 修复：格子中心与路线共用同一 `project(lon, lat)`，格子尺寸改用真实
+  经纬步长 × 统一 scale；不修改路线坐标、不伪造任何路径；
+- 回归：旧混合投影必然相交（测试 oracle），修复后像素相交 = 0。
+
 ## 5. 技术彩排（Demo Candidate 2，2026-08-17）
 
 | Step | Runtime | Result |
 |---|---:|---|
-| demo preflight | <1s | PASS（10/10，含 spatial 帧校验） |
-| demo build（A+B frozen + live） | <1s | PASS（3 scenarios，demo-state ≈400KB） |
+| demo preflight | <1s | PASS（11/11，含 Route Geospatial Integrity gate） |
+| demo geo-integrity | <1s | PASS（48/48 routes，viewer_px=0；机器制品 route-geospatial-integrity.json） |
+| demo build（A+B frozen + live） | <1s | PASS（3 scenarios，demo-state ≈400KB，每场景含 geo_integrity 摘要） |
 | demo serve（viewer/state/API） | <1s | PASS（HTTP 200） |
 | Scenario A 加载（frozen，396 节点） | 即时 | PASS |
 | Scenario B 加载（frozen，341 节点，ice-free=57） | 即时 | PASS |
@@ -68,11 +97,20 @@
 ## 6. 诚实标识
 
 - `result_origin = FROZEN_VALIDATED / LIVE_COMPUTED`；
+- `geo_integrity = PASS / FAIL / NOT_RUN` 是**独立维度**，与
+  `result_origin` 分开展示（Viewer 顶部双 badge）；
 - viewer 顶部 badge 明确区分；live 场景 coverage 复用冻结窗口并有 note 说明；
 - live TIMEOUT/FAIL 直接显示错误，不静默回退到旧结果。
 
 ## 7. 下一步
 
-- Pre-demo final：按 `DEMO_RUNBOOK.md` 走完整答辩流程、恢复演练、独立备份；
-- Demo next：已收敛；可选风险时间动画（frame selector 已支持 2 帧）；
+- 当前能力边界：空间图层只有 2 张 presentation 帧（frame 0 = initial
+  departure、frame 6 = replan departure），**不是 145 帧动态风险动画**；
+- NEXT PHASE（仅 integrity PASS 后，本轮不实施）：
+  P1 GEBCO georeferenced basemap → P2 145 B 动态 Presentation Frames →
+  P3 Simulation Clock + Timeline（play/pause/scrub/1×/2×/4×/8×）→
+  P4 Route ETA + Moving Ship → P5 +6h Replanning Event（old route
+  faded/dashed、new route highlighted）→ P6 overlays（hard/ice/edge/grid）→
+  P7 Scenario/Objective UI 统一 → P8 Live Mode 整合（Scenario × Mode）→
+  P9 Pre-Demo Finalization（rehearsal、恢复演练、独立备份）；
 - 不引入第三场景；不做正式并发集成。

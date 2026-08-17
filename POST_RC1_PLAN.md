@@ -27,10 +27,19 @@
 > Compare initial→replanned 真实 Δ、Live 按钮与进度反馈；
 > 见 `DEMO_ENGINEERING_STATUS.md` 与 `DEMO_RUNBOOK.md`。
 
+> Demo Engineering 更正（2026-08-17，Route Geospatial Integrity 审计）：
+> Viewer 曾出现“航线视觉穿过 LAND 但 Hard violations=0 / Coverage Gate=PASS”。
+> 经独立机器审计确认：C 路线与制品/数据层全部 PASS（48/48），根因是 Viewer
+> 格子与路线使用两套投影（坐标变换 bug），已最小修复；审计后状态 =
+> **Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT**。
+> 见 `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`。
+
 ## 演示前可选
 
 - D 展示/交互完善（地图图层、基于冻结结果的风险动画）；
   → 已基本完成：离线地图图层（Availability/Risk/Level）、风险动画可选（frame 0/6 已可切换）；
+  → 2026-08-17 审计后：Route Geospatial Integrity gate 已并入 preflight；
+    145 帧动态播放、GEBCO、Moving Ship 与 +6h Replan 动画明确进入 NEXT PHASE；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2

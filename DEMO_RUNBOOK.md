@@ -23,10 +23,12 @@
 cd /root/my_project/work_package_a && ./.venv/bin/python -m arctic_route_data.cli doctor --data-root data
 cd /root/my_project/arctic_route_orchestrator && ./.venv/bin/python scripts/offline_demo_audit.py
 cd /root/my_project/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo preflight
+cd /root/my_project/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo geo-integrity
 ```
 
-预期：doctor `ok:true`；审计输出 `外部网络依赖 = NONE`；preflight 输出
-`READY FOR DEMO`。
+预期：doctor `ok:true`；审计输出 `外部网络依赖 = NONE`；geo-integrity 输出
+`OVERALL = PASS`；preflight 输出 `READY FOR DEMO`（preflight 已内含
+Route Geospatial Integrity gate，gate FAIL 时不输出 READY FOR DEMO）。
 
 ## 模式 A — 完整验证模式（约 25–30 分钟）
 
@@ -60,7 +62,9 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
    ```
    demo-state 现在同时携带每场景 2 帧真实经纬度风险帧
    （frame 0 = initial departure，frame 6 = replan departure），
-   Viewer 据此绘制 Availability / Risk 图层，不依赖任何在线地图服务。
+   Viewer 据此绘制 Availability / Risk 图层，不依赖任何在线地图服务；
+   每个场景还携带 `geo_integrity` 摘要（PASS/FAIL/NOT_RUN），
+   与 `result_origin` 分开展示。
 2. 现场实时小窗重规划（真实 C，≈60s，LIVE_COMPUTED）：
    ```bash
    cd /root/my_project/work_package_d
@@ -100,6 +104,8 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
    - Scenario A/B 标签切换；
    - Phase = Compare initial → replanned（真实 Δ 指标表 + 双路线 overlay）；
    - Map layer = Availability / Risk score / Risk level；Frame = initial / replan；
+   - 顶部双 badge：`FROZEN VALIDATED / LIVE COMPUTED`（结果来源）与
+     `ROUTE GEO INTEGRITY: PASS`（路线地理完整性，独立维度）；
    - Coverage 面板解释 LAND、DATA_UNAVAILABLE、ice-free NOT_APPLICABLE；
    - 全程离线：无 CDN、无 remote JS/CSS/fonts/map tiles/schema。
 
@@ -111,6 +117,10 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；
   冻结结果仍可继续展示，操作者说明“现场实时 smoke 本次未完成”。
+- **Route Geospatial Integrity FAIL**：`demo preflight` 会失败并列出违规；
+  不要用“看起来没穿 LAND”当作通过依据，先按
+  `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md` 的 violation type 定位
+  层（waypoint/edge/角切/时间/投影），修复后重跑 geo-integrity 与 preflight。
 - **D 出现 schema 错误**：使用本地 schema
   `work_package_c/schemas/four-layer-route-plan-set-v3.schema.json`；D 离线解析。
 - **无网络**：演示链路不需要网络；若导入失败，检查代理环境，必要时对单条命令
