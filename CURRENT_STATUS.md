@@ -1,7 +1,7 @@
 # 当前状态
 
 状态：CURRENT（当前）
-最后更新：2026-08-16
+最后更新：2026-08-17
 适用范围：整个北极航线项目
 权威字段：当前里程碑与状态矩阵
 
@@ -55,7 +55,7 @@ RC1 保持冻结；RC2 状态见 [`RC2_DEVELOPMENT_STATUS.md`](RC2_DEVELOPMENT_S
 | 2-worker 并发 benchmark | NOT BENEFICIAL（0.95×；保持串行） |
 | RC2 内存优化（consumer_view + 生命周期释放） | PASS（mur 4.18→2.81GB；Tromsø 144h 1.40→0.97GB） |
 | RC2 Frozen Baseline | ESTABLISHED（2026-08-17；Scenario B golden 见 WP A docs） |
-| Demo Engineering | Demo Candidate ESTABLISHED（冻结 A/B 展示 + live 57.6s 真实重规划 + preflight + 本地 viewer） |
+| Demo Engineering | Demo Candidate 2 ESTABLISHED（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer） |
 
 ## 当前非阻塞技术债
 

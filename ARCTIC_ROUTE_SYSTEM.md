@@ -325,23 +325,29 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > 公平 objective 级并发 benchmark：2-worker speedup ≈1.48×、内存极低，
 > 状态 EXPERIMENTAL / 正式路径串行。
 
-### 15.2 Demo Engineering（2026-08-17，Demo Candidate）
+### 15.2 Demo Engineering（2026-08-17，Demo Candidate 2）
 
 ```text
 RC2 Frozen Artifacts (Scenario A/B)
         ↓
-D / Demo Adapter (identity/checksum/digest 校验)
+D / Demo Adapter (identity/checksum/digest 校验 + 冻结 risk-store 空间帧)
         ↓
-demo-state.json (FROZEN_VALIDATED / LIVE_COMPUTED)
+demo-state.json (FROZEN_VALIDATED / LIVE_COMPUTED + spatial + phase_deltas)
         ↓
-本地只读 Viewer (localhost, 无 CDN, 离线)
+本地只读 Viewer (localhost, 无 CDN, 离线; SVG 经纬度地图)
+        ↑
+POST/GET /api/live/*（页面按钮 → 真实 worker → 状态轮询 → LIVE 结果）
 
 Live 小窗重规划：frozen committed risk window → 真实 C → worker watchdog
 → d.live-result.v1 (LIVE_COMPUTED) → D/Viewer
 ```
 
 - Full Validation Mode 保留（真实完整计算 17–26 min）；
-- Live Demo Mode ≤2 min（实测 57.6s），诚实区分 frozen/live；
+- Live Demo Mode ≤2 min（实测 ≈56–58s），诚实区分 frozen/live；
+- Viewer 空间图层全部来自真实风险帧坐标（frame 0/6），LAND 与
+  DATA_UNAVAILABLE 独立着色、与 risk 图层分离；ice-free NOT_APPLICABLE
+  以计数 + 解释呈现，不伪造逐格位置；
+- Compare 模式同时绘制 initial/replanned 并显示真实 Δ 指标；
 - 展示层不侵入 A/B/C 核心；离线运行无外部依赖。
 
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）

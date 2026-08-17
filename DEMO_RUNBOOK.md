@@ -2,7 +2,7 @@
 
 状态：CURRENT（当前）
 最后更新：2026-08-17
-适用范围：比赛/验收演示执行（Demo Candidate，基于 RC2 Frozen Baseline）
+适用范围：比赛/验收演示执行（Demo Candidate 2，基于 RC2 Frozen Baseline）
 
 ## 前置条件
 
@@ -58,6 +58,9 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
      --config configs/demo_frozen_sources.json \
      --output /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json
    ```
+   demo-state 现在同时携带每场景 2 帧真实经纬度风险帧
+   （frame 0 = initial departure，frame 6 = replan departure），
+   Viewer 据此绘制 Availability / Risk 图层，不依赖任何在线地图服务。
 2. 现场实时小窗重规划（真实 C，≈60s，LIVE_COMPUTED）：
    ```bash
    cd /root/my_project/work_package_d
@@ -77,6 +80,28 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
      --port 8123
    ```
    浏览器打开 `http://127.0.0.1:8123/`（仅本机，离线）。
+
+   更常用的现场流程（无需手工合并 live）：
+   ```bash
+   cd /root/my_project/work_package_d
+   ./.venv/bin/python -m arctic_route_display.cli demo build \
+     --config configs/demo_frozen_sources.json \
+     --output /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json
+   ./.venv/bin/python -m arctic_route_display.cli demo serve \
+     --state /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json \
+     --port 8123
+   ```
+   在页面 Scenario B 点击 **Run Live Replanning**：
+   按钮通过本地 `/api/live/start` 启动真实 worker，页面显示
+   elapsed/stage 与 indeterminate 进度；完成后自动把 `LIVE COMPUTED`
+   结果加载进 viewer（新标签或原位更新），失败则明确显示 TIMEOUT/FAIL。
+
+4. 演示要点：
+   - Scenario A/B 标签切换；
+   - Phase = Compare initial → replanned（真实 Δ 指标表 + 双路线 overlay）；
+   - Map layer = Availability / Risk score / Risk level；Frame = initial / replan；
+   - Coverage 面板解释 LAND、DATA_UNAVAILABLE、ice-free NOT_APPLICABLE；
+   - 全程离线：无 CDN、无 remote JS/CSS/fonts/map tiles/schema。
 
 诚实标识：冻结展示顶部 badge 为 `FROZEN VALIDATED`；现场计算为
 `LIVE COMPUTED`；live 失败（TIMEOUT/FAIL）会明确显示，不会伪装成功。

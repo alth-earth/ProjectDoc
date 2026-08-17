@@ -20,14 +20,17 @@
 > （mur RC1 冻结 bundle、v3 四层 + 6h 重规划，业务结果与 r6 一致），
 > 真实 C 超时中断（45.2s，TIMEOUT 报告、无孤儿）也已验证；第 3/4 项仍按原计划保留。
 
-> Demo Engineering 进展（2026-08-17）：Demo Candidate ESTABLISHED——
+> Demo Engineering 进展（2026-08-17）：Demo Candidate 1 → **Demo Candidate 2**——
 > frozen A/B 加载、双场景展示、coverage/hard-reason/ice-free 解释、
-> live 真实小窗重规划（57.6s）、demo preflight 与本地 viewer 均 PASS；
+> live 真实小窗重规划（≈57s）、demo preflight 与本地 viewer 均 PASS；
+> Candidate 2 新增离线经纬度地图（真实风险帧坐标）、Availability/Risk 图层、
+> Compare initial→replanned 真实 Δ、Live 按钮与进度反馈；
 > 见 `DEMO_ENGINEERING_STATUS.md` 与 `DEMO_RUNBOOK.md`。
 
 ## 演示前可选
 
 - D 展示/交互完善（地图图层、基于冻结结果的风险动画）；
+  → 已基本完成：离线地图图层（Availability/Risk/Level）、风险动画可选（frame 0/6 已可切换）；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2
