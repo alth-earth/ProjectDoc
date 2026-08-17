@@ -20,6 +20,11 @@
 > （mur RC1 冻结 bundle、v3 四层 + 6h 重规划，业务结果与 r6 一致），
 > 真实 C 超时中断（45.2s，TIMEOUT 报告、无孤儿）也已验证；第 3/4 项仍按原计划保留。
 
+> Demo Engineering 进展（2026-08-17）：Demo Candidate ESTABLISHED——
+> frozen A/B 加载、双场景展示、coverage/hard-reason/ice-free 解释、
+> live 真实小窗重规划（57.6s）、demo preflight 与本地 viewer 均 PASS；
+> 见 `DEMO_ENGINEERING_STATUS.md` 与 `DEMO_RUNBOOK.md`。
+
 ## 演示前可选
 
 - D 展示/交互完善（地图图层、基于冻结结果的风险动画）；

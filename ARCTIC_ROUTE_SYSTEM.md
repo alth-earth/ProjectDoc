@@ -325,6 +325,25 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > 公平 objective 级并发 benchmark：2-worker speedup ≈1.48×、内存极低，
 > 状态 EXPERIMENTAL / 正式路径串行。
 
+### 15.2 Demo Engineering（2026-08-17，Demo Candidate）
+
+```text
+RC2 Frozen Artifacts (Scenario A/B)
+        ↓
+D / Demo Adapter (identity/checksum/digest 校验)
+        ↓
+demo-state.json (FROZEN_VALIDATED / LIVE_COMPUTED)
+        ↓
+本地只读 Viewer (localhost, 无 CDN, 离线)
+
+Live 小窗重规划：frozen committed risk window → 真实 C → worker watchdog
+→ d.live-result.v1 (LIVE_COMPUTED) → D/Viewer
+```
+
+- Full Validation Mode 保留（真实完整计算 17–26 min）；
+- Live Demo Mode ≤2 min（实测 57.6s），诚实区分 frozen/live；
+- 展示层不侵入 A/B/C 核心；离线运行无外部依赖。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；
