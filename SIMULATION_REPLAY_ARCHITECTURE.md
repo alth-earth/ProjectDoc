@@ -1,6 +1,10 @@
 # Simulation Replay Architecture（候选设计，2026-08-17）
 
-> 状态：**DESIGN ONLY**（不修改 production contracts，不实现播放器）
+> 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18）**
+> 已实现：replay models/digests/runner/validation/inspector；真实 12h/24h/44h
+> Scenario B 回放 PASS（engine level）；C 四层因风险窗 < ETA 保持
+> PLANNING-HORIZON ARCHITECTURE BLOCKER（诚实 fail-closed）。
+> 详细结果：[`CAUSAL_REPLAY_MVP_20260818.md`](CAUSAL_REPLAY_MVP_20260818.md)
 > 依据：`CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`、
 > `TEMPORAL_SEMANTICS_AUDIT_20260817.md`
 
@@ -19,6 +23,17 @@
 - 不每小时盲目全量重跑 B/C；
 - 不降低 issue_time 门禁、不补造 publication time；
 - 不重生成 RC1/RC2 frozen baseline。
+
+## 2.1 Implementation Status（2026-08-18）
+
+| 组件 | 状态 |
+|---|---|
+| SimulationSnapshot / ReplayManifest | IMPLEMENTED（orchestrator-local schema） |
+| visible / B-relevant digest | IMPLEMENTED（A 排序规则） |
+| Causal replay runner（tick/B reuse/suffix/snapshot/checkpoint） | IMPLEMENTED |
+| Replay validation + inspector CLI | IMPLEMENTED |
+| 真实 12h/24h/44h Scenario B replay | PASS（engine；C blocker 如实记录） |
+| C 四层路线 | BLOCKED：风险窗 44h < ETA ~48h；layered 依赖 full_voyage 锚点 |
 
 ## 3. Canonical Time Model
 

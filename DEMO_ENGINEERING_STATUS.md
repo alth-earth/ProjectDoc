@@ -102,6 +102,16 @@
   `knowledge_as_of`，避免把事后数据理解为当时预测；
 - 架构设计见 `SIMULATION_REPLAY_ARCHITECTURE.md`（DESIGN ONLY）。
 
+### 4.5 Causal Replay Engine MVP（2026-08-18，Strategy B）
+
+- 真实 Scenario B 因果回放：12h=13 snapshots/31s、24h=25/91s、
+  44h=45/317s，engine + validation PASS，determinism 13/13 digest 一致；
+- C 四层：风险窗 44h < ETA ~48h → 真实 `PlanningHorizonExceeded`
+  （v3 + v2 probe），记录为 PLANNING-HORIZON ARCHITECTURE BLOCKER；
+- 命令：`causal_replay_mvp.py --replay-id X --window-hours N`；
+  `replay_inspect.py <manifest>`；详见
+  `CAUSAL_REPLAY_MVP_20260818.md`。
+
 ## 5. 技术彩排（Demo Candidate 2，2026-08-17）
 
 | Step | Runtime | Result |

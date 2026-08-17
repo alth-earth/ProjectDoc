@@ -57,6 +57,17 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
 - `seek()/rewind/jump`：**generation++**，缓存按新时刻重解析；
 - 正式 +6h 前推 = same generation（`_advance_clock_without_seek`）。
 
+## Replay 修订语义（2026-08-18 实测）
+
+- `data_revision`：A 可见集合变化才 +1（Scenario B 回放中恒为 1）；
+- `b_input_revision`：B relevant 集合变化才 +1（同样恒为 1）；
+- `risk_revision`：B 重建才 +1（回放中 1 次构建，后续 suffix 复用内容）；
+- `plan_revision`：replan policy 触发 C 重算才 +1（当前 C 层 blocker，
+  保持 0）；
+- Snapshot 可每小时存在，B/C revision 不必每小时变化；
+- 确定性：B RiskFrame `generated_at` 必须用 knowledge 时刻（非墙钟），
+  snapshot/manifest semantic digest 才可复现（实测 13/13 一致）。
+
 ## 因果检查清单（改代码时）
 
 1. 新增数据读取路径：先 `issue_time <= knowledge_as_of`；

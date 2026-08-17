@@ -45,6 +45,9 @@
     下一阶段 = short-window rolling replay MVP（Scenario B 起点
     2026-08-15T10:00Z），全窗需 causal-ready 采集；Simulation-clock
     Viewer、GEBCO、Moving Ship 明确进入 NEXT PHASE；
+  → 2026-08-18：Causal Replay Engine MVP ESTABLISHED（真实 12h/24h/44h
+    Scenario B 回放）；C 四层 = PLANNING-HORIZON BLOCKER（风险窗 < ETA），
+    下一阶段先解除该 blocker 再做 Viewer；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2

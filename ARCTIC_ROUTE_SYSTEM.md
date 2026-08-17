@@ -392,6 +392,13 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > `CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`；
 > 架构设计：`SIMULATION_REPLAY_ARCHITECTURE.md`。
 
+> 2026-08-18（Causal Replay Engine MVP）：Strategy B 引擎落地并真实运行
+> Scenario B 12h/24h/44h 回放（engine PASS、determinism 13/13）；C 四层
+> 因因果风险窗 44h < 航线 ETA ~48h 真实 fail-closed（v3 + v2 均
+> PlanningHorizonExceeded）→ 记录为 PLANNING-HORIZON ARCHITECTURE
+> BLOCKER，不伪造未来风险。Strategy A（retrospective）保持冻结兜底。
+> 权威：`CAUSAL_REPLAY_MVP_20260818.md`。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；

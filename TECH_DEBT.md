@@ -22,6 +22,14 @@
 | TD-25 | event-driven C replan（replan policy 触发才重算） | HIGH | NEXT PHASE（未开始） | policy 已存在；rolling 路径未接入 |
 | TD-26 | causal-ready historical evidence | HIGH | NEXT PHASE（未开始） | 当前 A=19h / B=44h 末期窗口；需实时 publication evidence 采集 |
 
+2026-08-18 更新：
+
+| ID | 事项 | 优先级 | 状态 | 说明 |
+|---|---|---|---|---|
+| TD-27 | Causal Replay Engine MVP（runner/models/digests/validation） | ~~HIGH~~ → **ESTABLISHED** | 真实 12h/24h/44h Scenario B 回放 PASS（engine + determinism 13/13） | `arctic_route_orchestrator/replay/`；C 层 blocker 见下 |
+| TD-28 | C planning-horizon blocker（风险窗 44h < ETA ~48h；layered 依赖 full_voyage 锚点） | **HIGH / BLOCKER** | 真实 fail-closed（v3 + v2 probe） | 需 replay-local 子层规划或短窗 C 合同 proposal；禁止伪造未来风险 |
+| TD-29 | B suffix window identity per tick（内容复用但 window digest 变化） | 中 | DOCUMENTED | 事件以 B_REUSED 表达；下一轮可考虑 stable window identity |
+
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。
 

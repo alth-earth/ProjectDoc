@@ -48,6 +48,16 @@ replay 不被历史证据支持（PARTIAL）**；原因是多数记录 `issue_ti
 架构设计：[`SIMULATION_REPLAY_ARCHITECTURE.md`](SIMULATION_REPLAY_ARCHITECTURE.md)，
 机器制品：`causal-replay-feasibility.json`。
 
+**Causal Replay Engine MVP（2026-08-18，分支 `demo-engineering`）。**
+Strategy B 主路径落地并真实运行：
+`arctic_route_orchestrator/src/arctic_route_orchestrator/replay/`（models/
+digests/runner/route_integrity/validation）+ `causal_replay_mvp.py` +
+`replay_inspect.py`；Scenario B 因果回放
+12h=13 snapshots/31s、24h=25/91s、44h=45/317s 全部 PASS（engine + 机器
+验证 + 确定性 13/13 digest 一致）；C 四层因风险窗 44h < ETA ~48h 真实
+fail-closed（PLANNING-HORIZON ARCHITECTURE BLOCKER，未伪造）。权威：
+[`CAUSAL_REPLAY_MVP_20260818.md`](CAUSAL_REPLAY_MVP_20260818.md)。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -64,7 +74,8 @@ Demo Candidate 2
 Current blocker（Viewer 双投影导致视觉穿 LAND）= RESOLVED
 Temporal Semantics = AUDITED / DOCUMENTED
 Causal Replay Feasibility = PARTIAL（A 19h / B 44h 末期窗口）
-Next = short-window rolling replay MVP（Scenario B，起点 08-15T10:00Z）
+Strategy B = CAUSAL REPLAY ENGINE MVP ESTABLISHED（engine；C 层 blocker）
+Next = 解除 C planning-horizon blocker → replay-driven Presentation Viewer
 ```
 
 ## 当前版本
@@ -109,6 +120,7 @@ Next = short-window rolling replay MVP（Scenario B，起点 08-15T10:00Z）
 | Route Geospatial Integrity（新 gate） | PASS（2026-08-17；48/48 冻结路线；waypoint/edge/LAND/DU/角切/时间/投影 0 违规；机器制品 + 正式文档） |
 | Temporal Semantics（新审计） | AUDITED / DOCUMENTED（2026-08-17；issue_time/valid_time/knowledge_as_of/simulation_time 语义、145 帧结构、+6h replan、因果/事后模式、无泄漏；见时间审计文档） |
 | Causal Replay Feasibility（新机器审计） | PARTIAL（2026-08-17；A ready 20/145 first 08-16T11:00Z longest 19h；B ready 45/145 first 08-15T10:00Z longest 44h；全窗 tick-by-tick 不被历史证据支持；无软件 bug） |
+| Causal Replay Engine MVP（Strategy B） | ESTABLISHED（2026-08-18；真实 12h/24h/44h PASS；确定性 13/13；C 四层 = PLANNING-HORIZON BLOCKER，fail-closed） |
 | Scenario Mode / Temporal Provenance（D 诚实展示） | PASS（2026-08-17；demo-state 与 Viewer 展示 scenario_mode/simulation/knowledge_as_of） |
 | Demo Engineering | Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer；Viewer 双投影 bug 已修复） |
 
@@ -119,11 +131,11 @@ TD-2 hard_reason 语义；TD-3 独立备份目标；TD-4 可选规划优化。
 
 ## 下一步（按优先级）
 
-1. 本轮 Causal Feasibility / 架构本地 commits（不 push；由操作者审核后手动推送）；
-2. NEXT：short-window rolling replay MVP（Scenario B 08-15T10:00Z 起 12–24h；
-   SimulationSnapshot + ReplayManifest 设计落地）；
-3. 并行：建立 causal-ready 采集（实时 publication evidence），为全窗 replay
-   提供证据；Pre-demo 彩排/恢复演练/独立备份。
+1. 本轮 Causal Replay Engine MVP 本地 commits（不 push；由操作者审核后手动推送）；
+2. NEXT：解除 C planning-horizon blocker（replay-local 子层规划或短窗 C
+   合同 proposal）→ replay-driven Presentation Viewer；
+3. 并行：causal-ready 采集（实时 publication evidence）→ 全窗 replay；
+   Pre-demo 彩排/恢复演练/独立备份。
 
 > 历史事实保留：上一轮文档中的“Demo Candidate 2 ESTABLISHED（2026-08-17）”
 > 是审计前的历史结论，不作为当前状态；当前状态以本文件与
