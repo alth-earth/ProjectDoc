@@ -44,11 +44,11 @@
 | ID | 事项 | 优先级 | 状态 | 说明 |
 |---|---|---|---|---|
 | TD-32 | v3 four-layer main_corridor contract edge | ~~HIGH~~ → **RESOLVED** | destination-anchor 层 ceiling 改为 `min(request horizon, layer ceiling)`；真实 77h 窗口实验复现旧失败并证明 72h cap 全 PASS（路由与 full_voyage 逐位一致、integrity PASS）；C 单测 97 PASS，RC1/RC2 frozen regression PASS | 生产 C 最小修正 commit `0186caa` |
-| TD-33 | 集成回放性能 | 中 | **IMPROVED** | objective 级 1/2/3 worker：157.2s / 100.9s / 80.5s（speedup 1.56×/1.95×，结果逐位一致）；3h v3 same-vessel smoke ≈13.4min、RSS 824MB；12h 权威结果见 MVP 报告 §20 |
+| TD-33 | 集成回放性能 | 中 | **IMPROVED** | objective 级 1/2/3 worker：157.2s / 100.9s / 80.5s（speedup 1.56×/1.95×，结果逐位一致）；3h v3 smoke ≈13.4min；**12h v3+3w 权威 = 2071.4s（~34.5min），与旧 v2 串行 12h（~36–38min）持平但包含完整 v3 四层**；详见 MVP 报告 §20.6 |
 | TD-34 | Revision semantics 拆分（data / b_input / risk_content / risk_window / observation_sequence / plan / navigation） | ~~HIGH~~ → **RESOLVED** | runner 不再用 observation_sequence 冒充 data_revision；honest replan reasons 已机器验证（smoke 每 tick `time`，无伪造 DATA） | C 合同 `observation.data_revision == input_revision` 保留，replay 适配层翻译 |
 | TD-35 | Semantic digest 硬化（risk / route 业务内容敏感，墙钟不敏感） | ~~HIGH~~ → **RESOLVED** | mutation tests：route waypoint 改 → digest 变；risk payload 改 → digest 变；generated_at/runtime 改 → digest 不变 | `risk_semantic_digest` NaN-safe 确定性序列化 |
 | TD-36 | NavigationExecutionState（同船 replan origin） | **HIGH / v1 ESTABLISHED** | node-aligned v1：replan origin = accepted route 最后到达 waypoint（显式 snap tolerance、无 teleport、completed_track 不可变、switch-gate 拒绝不采纳）；到达后无 replan origin | edge-interior 起点 / 任意 lon/lat start / production contract 后续 |
-| TD-37 | 受控 objective 级并行 | **HIGH / ESTABLISHED** | replay-local ProcessPoolExecutor，tick/layer/B 严格串行；3h v3 smoke RSS 824MB（3 workers）健康 | 默认长验证 3 workers；内存红线 6–6.5GiB 不变 |
+| TD-37 | 受控 objective 级并行 | **HIGH / ESTABLISHED** | replay-local ProcessPoolExecutor，tick/layer/B 严格串行；3h smoke 与 12h 权威均 3 workers，组合峰值 ≈3.10GiB（<4.5–5GiB 红线）；并行/串行业务结果逐位一致 | 默认 3 workers；内存红线 6–6.5GiB 不变 |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

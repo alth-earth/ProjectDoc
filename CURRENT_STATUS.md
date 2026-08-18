@@ -70,7 +70,7 @@ plan_revision 1→13、12×REPLAN_TRIGGERED、validation PASS；
 determinism 13/13 digest 一致（generated_at 墙钟不同）。性能：
 12h≈36–38min、RSS≈824MB、C 规划占耗时 ≥95%。
 
-**Strategy B Semantic Hardening（2026-08-18 第三轮，进行中）。**
+**Strategy B Semantic Hardening（2026-08-18 第三轮）。**
 Revision 语义拆分与 honest replan reasons（`observation_sequence` 不再冒充
 `data_revision`；无新增数据时每 tick 只报 `time`）；semantic digest 硬化
 （risk/route 业务内容 mutation 敏感、墙钟不敏感，mutation tests PASS）；
@@ -80,7 +80,11 @@ tests + RC1/RC2 frozen regression PASS）；NavigationExecutionState v1
 （node-aligned same-vessel replan origin、completed track 不可变、无
 teleport）；objective 级 1/2/3 worker benchmark = 157.2s/100.9s/80.5s
 （结果逐位一致）；3h v3 same-vessel smoke PASS（4 snapshots、validation
-PASS、RSS≈824MB）。12h 权威回放运行中。权威：
+PASS、RSS≈824MB）；**12h 权威 same-vessel v3 回放 = PASS**（13 snapshots、
+2071.4s、
+plan_revision 1→6、replan 全 `time`、completed-track 单调、validation
+全 PASS）；**determinism = PASS**（13/13 snapshot digest + manifest digest
+一致）。权威：
 [`STRATEGY_B_SEMANTIC_HARDENING_20260818.md`](STRATEGY_B_SEMANTIC_HARDENING_20260818.md)。
 
 ## 当前状态重定义（审计后）

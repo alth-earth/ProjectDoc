@@ -171,10 +171,10 @@ validation       = snapshots / replay / manifest 全 PASS
 发现 `completed_track shrank`：replan 采纳新计划后，历史段被新计划覆盖而缩短
 （违反“历史不可重写”）。已修复：`merge_completed_track` 追加式合并（只增不
 减，按 lon/lat/eta 去重），回归测试 PASS（commit `809b38b`）。
-最终权威运行 `sb-c-sem-hard-12hb`：
+最终权威运行 `sb-c-sem-hard-12hc`（digest identity 泄漏修复后）：
 
 ```text
-snapshot_count        = 13；total = 2113.9s（~35.2min）；mean tick = 162.6s
+snapshot_count        = 13；total = 2071.4s（~34.5min）；mean tick = 159.3s
 v3 four-layer         = SUPPORTED 全段（12 routes/tick）
 B builds              = 1；B reuse = 12；risk_content = 1；risk_window = 13
 REPLAN_TRIGGERED      = 5（time only）；ROUTE_CHANGED = 5；PLAN_REUSED = 7
@@ -183,13 +183,30 @@ navigation            = node [5,7]→[11,7]；remaining 909.7→665.1km；
                         completed_track 1→7 单调；no teleport
 route integrity       = PASS（末 tick 12 routes）
 validation            = 13/13 snapshot + replay + manifest 全 PASS
-peak parent RSS       = 823.6MB；组合峰值 ≈3.10GiB
+peak parent RSS       = 823.1MB；组合峰值 ≈3.10GiB
 ```
 
-## 8. Determinism（复跑中）
+## 8. Determinism（PASS）
 
-`sb-c-sem-hard-12hb-det` 独立复跑（同一配置、workers=3），完成后对比
-13/13 snapshot semantic digest 与 manifest semantic digest。
+首轮对比（`12hb` vs `12hb-det`）暴露两个 digest 泄漏：
+
+1. `replay_id`（执行身份）进入了 semantic digest → 已加入排除集；
+2. `RISK_WINDOW_ADVANCED` 事件的 description 携带 suffix window commit id
+   （内容身份含 B 帧墙钟 `generated_at`）→ 改为稳定业务文本
+   `"suffix window advanced"`；窗口推进仍通过 `risk_window_revision` 进入
+   digest。
+
+修复 commit `aa95b66`，新增 identity-insensitive / business-sensitive
+regression tests。最终权威对 = `sb-c-sem-hard-12hc`（默认输出根，
+2071.4s）与同一 replay_id 的独立输出根复跑（2049.3s）：
+
+```text
+snapshot semantic digest：13/13 IDENTICAL
+manifest semantic digest：IDENTICAL（e25f6fb5…）
+risk semantic digest：13/13 identical
+route semantic digest：13/13 identical（4 layers × 3 objectives）
+generated_at / window commit id / replay_id：允许且实际不同（已排除）
+```
 
 ## 9. Known Limitations / Gaps
 

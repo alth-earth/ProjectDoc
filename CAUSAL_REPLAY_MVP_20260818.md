@@ -284,6 +284,11 @@ manifest semantic digest 完全一致
 已修复的确定性问题：B RiskFrame `generated_at` 曾用墙钟进入内容身份 →
 改为 knowledge 时刻（tick），并规范 snapshot digest 计算（排除自身字段）。
 
+第三轮（same-vessel v3 + 3 workers）：独立输出根、同一 replay_id 复跑，
+13/13 snapshot semantic digest 与 manifest semantic digest 完全一致；
+额外修复两个 identity 泄漏（`replay_id`、`RISK_WINDOW_ADVANCED`
+description 中的窗口 commit id），并新增 mutation 回归测试。
+
 ## 17. Resource Profile
 
 ```text
@@ -390,13 +395,14 @@ validation       = snapshots / replay / manifest 全 PASS
 
 #### 12h authoritative replay（workers=3，v3 four-layer）
 
-权威运行 `sb-c-sem-hard-12hb`（completed-track 追加修复后；首轮
-`sb-c-sem-hard-12h` 因该 invariant FAIL 作废并作为 reproducer）：
+权威运行 `sb-c-sem-hard-12hc`（completed-track 追加修复 + digest
+identity 泄漏修复后；早期 `12h`/`12hb` 轮因 invariant FAIL / digest
+泄漏作废并作为 reproducer）：
 
 ```text
 snapshot_count        = 13（10:00Z → 22:00Z）
-total duration        = 2113.9s（~35.2min）
-mean tick             = 162.6s（tick0=298.4s；replan tick 117–190s，
+total duration        = 2071.4s（~34.5min）
+mean tick             = 159.3s（tick0=268.9s；replan tick 118–169s，
                           horizon 缩短后逐 tick 变快）
 v3 four-layer         = SUPPORTED 全 13 tick（4 层 × 3 目标 = 12 routes/tick）
 B builds              = 1；B reuse = 12
@@ -412,7 +418,10 @@ navigation            = ACTIVE 全段；node [5,7]→[11,7] 单调推进；
 route integrity       = 末 tick 12 routes 全 PASS（LAND=0 / DU=0 /
                         hard=0 / corner=0）
 validation            = 13/13 snapshot PASS + replay PASS + manifest PASS
-peak parent RSS       = 823.6MB；组合峰值（3 workers）≈3.10GiB
+peak parent RSS       = 823.1MB；组合峰值（3 workers）≈3.10GiB
                         （低于 4.5–5GiB 并发红线，无 swap）
 ```
+
+Determinism：同一 replay_id、不同输出根独立复跑，13/13 snapshot
+semantic digest 与 manifest semantic digest 对比结果见 §16（第三轮）。
 ```
