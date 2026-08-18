@@ -48,6 +48,9 @@
   → 2026-08-18：Causal Replay Engine MVP ESTABLISHED（真实 12h/24h/44h
     Scenario B 回放）；C 四层 = PLANNING-HORIZON BLOCKER（风险窗 < ETA），
     下一阶段先解除该 blocker 再做 Viewer；
+  → 2026-08-18 第二轮：三窗口解耦（77h causal forecast）；v2
+    complete-route C 规划 PASS 并集成 12h 回放；v3 four-layer =
+    main_corridor contract-edge blocker（下一轮 C 合同 proposal）；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2

@@ -112,6 +112,15 @@
   `replay_inspect.py <manifest>`；详见
   `CAUSAL_REPLAY_MVP_20260818.md`。
 
+### 4.6 Causal Planning Horizon Resolution（2026-08-18 第二轮）
+
+- 三窗口解耦：replay（发布）≠ risk forecast（77h，至 08-18T15:00Z）≠
+  planning（有效 77h）；
+- v2 complete-route C 规划 PASS 并集成 12h 回放（plan_revision 1→13、
+  REPLAN_TRIGGERED×12、route integrity PASS）；
+- v3 four-layer = main_corridor contract-edge blocker（cap 无余量）；
+  性能：12h≈36–38min、RSS≈824MB（详见 MVP 报告 §20）。
+
 ## 5. 技术彩排（Demo Candidate 2，2026-08-17）
 
 | Step | Runtime | Result |

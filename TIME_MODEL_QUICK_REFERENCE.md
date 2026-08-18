@@ -62,11 +62,23 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
 - `data_revision`：A 可见集合变化才 +1（Scenario B 回放中恒为 1）；
 - `b_input_revision`：B relevant 集合变化才 +1（同样恒为 1）；
 - `risk_revision`：B 重建才 +1（回放中 1 次构建，后续 suffix 复用内容）；
-- `plan_revision`：replan policy 触发 C 重算才 +1（当前 C 层 blocker，
-  保持 0）；
+- `plan_revision`：replan policy 触发 C 重算才 +1（12h 集成回放 1→13；
+  v2 complete-route 为当前因果规划路径）；
 - Snapshot 可每小时存在，B/C revision 不必每小时变化；
-- 确定性：B RiskFrame `generated_at` 必须用 knowledge 时刻（非墙钟），
-  snapshot/manifest semantic digest 才可复现（实测 13/13 一致）。
+- 确定性：`generated_at` 恢复为墙钟 provenance；semantic digest 排除
+  wall-clock 与 resource/route 等派生身份，实测 13/13 snapshot digest +
+  manifest digest 一致。
+
+## 三窗口（2026-08-18 落地）
+
+- `replay window`：发布多少 snapshots（与预测能力无关）；
+- `risk forecast window`：B 因果可见输入共同支持的 valid 范围
+  （Scenario B = 08-15T10:00Z → 08-18T15:00Z，77h）；
+- `planning window`：C 实际可用 risk 范围（≤ risk forecast end）；
+- `valid_time > simulation_time` 不是泄漏；因果门禁只有
+  `issue_time <= knowledge_as_of`；
+- v2 complete-route 因果规划 PASS；v3 four-layer 受 main_corridor
+  cap=full_recommended ETA 约束（contract edge，待 proposal）。
 
 ## 因果检查清单（改代码时）
 

@@ -30,6 +30,15 @@
 | TD-28 | C planning-horizon blocker（风险窗 44h < ETA ~48h；layered 依赖 full_voyage 锚点） | **HIGH / BLOCKER** | 真实 fail-closed（v3 + v2 probe） | 需 replay-local 子层规划或短窗 C 合同 proposal；禁止伪造未来风险 |
 | TD-29 | B suffix window identity per tick（内容复用但 window digest 变化） | 中 | DOCUMENTED | 事件以 B_REUSED 表达；下一轮可考虑 stable window identity |
 
+2026-08-18 第二轮更新：
+
+| ID | 事项 | 优先级 | 状态 | 说明 |
+|---|---|---|---|---|
+| TD-30 | Replay/Risk/Planning 三窗口解耦 | ~~HIGH~~ → **RESOLVED** | common causal valid end=08-18T15:00Z（77h）；c907455 44h cap 判定为 scoping gap | preflight 输出三窗口；runner 已解耦 |
+| TD-31 | v2 complete-route causal planning | ~~HIGH~~ → **ESTABLISHED** | 12h 集成 PASS（plan_revision 1→13、route integrity PASS） | v3 four-layer 失败时 fallback；`--v2-only` 可跳过 v3 |
+| TD-32 | v3 four-layer main_corridor contract edge | **HIGH** | 真实 blocker（cap=full_recommended ETA≈50.5h，低风险目标无余量） | 需 C 合同 proposal（余量语义 / horizon-limited partial plan），本轮不改 C |
+| TD-33 | 集成回放性能（12h≈36–38min，RSS≈824MB） | 中 | DOCUMENTED | C 规划占 ≥95%；可选项：objective 并发 / replan 频率评审（下一轮） |
+
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。
 

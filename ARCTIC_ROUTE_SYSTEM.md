@@ -399,6 +399,14 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > BLOCKER，不伪造未来风险。Strategy A（retrospective）保持冻结兜底。
 > 权威：`CAUSAL_REPLAY_MVP_20260818.md`。
 
+> 2026-08-18（Causal Planning Horizon Resolution）：Replay / Risk
+> Forecast / Planning 三窗口正式解耦（common causal valid end =
+> 2026-08-18T15:00Z，77h）；v2 complete-route C 规划真实 PASS（ETA≈
+> 50.45h，route integrity PASS）并集成 12h 回放（plan_revision 1→13）；
+> v3 four-layer 仍被 main_corridor 内部 cap（full_recommended ETA≈50.5h）
+> 阻塞——v3 合同边缘 + 数据 horizon 硬上限，非 replay scoping bug。
+> 详见 `CAUSAL_REPLAY_MVP_20260818.md`。
+
 ## 15.1 测试层级（L0–L3，2026-08-17 正式化）
 
 - **L0**：Ruff + targeted unit（秒级）；

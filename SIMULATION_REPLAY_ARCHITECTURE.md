@@ -33,7 +33,9 @@
 | Causal replay runner（tick/B reuse/suffix/snapshot/checkpoint） | IMPLEMENTED |
 | Replay validation + inspector CLI | IMPLEMENTED |
 | 真实 12h/24h/44h Scenario B replay | PASS（engine；C blocker 如实记录） |
-| C 四层路线 | BLOCKED：风险窗 44h < ETA ~48h；layered 依赖 full_voyage 锚点 |
+| Causal forecast window 解耦 | IMPLEMENTED（common end 77h；replay ≠ risk ≠ planning window） |
+| v2 complete-route C 规划 | IMPLEMENTED + 12h 集成 PASS（route integrity PASS） |
+| v3 four-layer C 规划 | BLOCKED（main_corridor cap=full_recommended ETA≈50.5h，其他 objective 无余量） |
 
 ## 3. Canonical Time Model
 

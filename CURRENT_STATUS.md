@@ -58,6 +58,18 @@ digests/runner/route_integrity/validation）+ `causal_replay_mvp.py` +
 fail-closed（PLANNING-HORIZON ARCHITECTURE BLOCKER，未伪造）。权威：
 [`CAUSAL_REPLAY_MVP_20260818.md`](CAUSAL_REPLAY_MVP_20260818.md)。
 
+**Causal Planning Horizon Resolution（2026-08-18 第二轮）。**
+Replay Window 与 Risk Forecast Window 已解耦：
+common causal valid end = `2026-08-18T15:00Z`（77h，非 replay_end 44h）；
+`c907455` 的 44h cap 判定为 replay scoping gap（已修复）。真实 C：
+**v2 complete-route = PASS**（ETA≈50.45h，route integrity PASS）；
+**v3 four-layer = main_corridor 内部 cap 阻塞**（cap=full_recommended
+ETA≈50.5h，low_risk/fastest 无余量 → PlanningHorizonExceeded；v3 合同
+边缘 + 数据 horizon 硬上限）。12h 集成回放：13 snapshots、
+plan_revision 1→13、12×REPLAN_TRIGGERED、validation PASS；
+determinism 13/13 digest 一致（generated_at 墙钟不同）。性能：
+12h≈36–38min、RSS≈824MB、C 规划占耗时 ≥95%。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -75,7 +87,8 @@ Current blocker（Viewer 双投影导致视觉穿 LAND）= RESOLVED
 Temporal Semantics = AUDITED / DOCUMENTED
 Causal Replay Feasibility = PARTIAL（A 19h / B 44h 末期窗口）
 Strategy B = CAUSAL REPLAY ENGINE MVP ESTABLISHED（engine；C 层 blocker）
-Next = 解除 C planning-horizon blocker → replay-driven Presentation Viewer
+Strategy B C 规划 = v2 complete-route PASS；v3 four-layer = contract-edge blocker
+Next = v3 合同 proposal / replay Presentation Viewer
 ```
 
 ## 当前版本
@@ -121,6 +134,7 @@ Next = 解除 C planning-horizon blocker → replay-driven Presentation Viewer
 | Temporal Semantics（新审计） | AUDITED / DOCUMENTED（2026-08-17；issue_time/valid_time/knowledge_as_of/simulation_time 语义、145 帧结构、+6h replan、因果/事后模式、无泄漏；见时间审计文档） |
 | Causal Replay Feasibility（新机器审计） | PARTIAL（2026-08-17；A ready 20/145 first 08-16T11:00Z longest 19h；B ready 45/145 first 08-15T10:00Z longest 44h；全窗 tick-by-tick 不被历史证据支持；无软件 bug） |
 | Causal Replay Engine MVP（Strategy B） | ESTABLISHED（2026-08-18；真实 12h/24h/44h PASS；确定性 13/13；C 四层 = PLANNING-HORIZON BLOCKER，fail-closed） |
+| Causal Planning Horizon（第二轮） | RESOLVED（window 解耦；common end 77h；v2 complete-route PASS；v3 four-layer = main_corridor contract-edge blocker，非 scoping bug） |
 | Scenario Mode / Temporal Provenance（D 诚实展示） | PASS（2026-08-17；demo-state 与 Viewer 展示 scenario_mode/simulation/knowledge_as_of） |
 | Demo Engineering | Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING CHECKPOINT（冻结 A/B 展示 + 真实经纬度风险/数据质量地图 + Compare 模式 + Live 按钮/进度 + preflight + 离线 viewer；Viewer 双投影 bug 已修复） |
 

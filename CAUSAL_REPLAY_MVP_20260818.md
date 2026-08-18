@@ -1,10 +1,69 @@
 # Scenario B Causal Replay Engine MVP（2026-08-18）
 
-> 状态：**CAUSAL REPLAY ENGINE MVP = ESTABLISHED（ENGINE LEVEL）**
-> C 规划层：**PLANNING-HORIZON ARCHITECTURE BLOCKER（真实 fail-closed）**
+> 状态（第二轮，2026-08-18）：**CAUSAL REPLAY ENGINE + ROUTE PLANNING
+> MVP = ESTABLISHED**
+> - Causal forecast window 已与 replay window 解耦（common end
+>   `2026-08-18T15:00Z`，77h）；
+> - **v2 complete-route C 规划 = PASS**（真实 route，ETA ≈ 50.45h，
+>   3 目标 × 13 ticks 全部 Route Geospatial Integrity PASS）；
+> - **v3 four-layer = 仍被 main_corridor 内部 cap 阻塞**
+>   （cap = full_recommended ETA ≈ 50.5h < 72h anchor，low_risk/fastest
+>   目标需要更多余量 → PlanningHorizonExceeded；这是 v3 合同边缘 +
+>   数据 horizon 硬上限的组合，非 replay scoping bug）；
+> - 12h 集成回放：13 snapshots、plan_revision 1→13、
+>   12×REPLAN_TRIGGERED/ROUTE_CHANGED、validation PASS；
+> - Determinism：13/13 snapshot digest + manifest digest 一致，
+>   `generated_at`（墙钟）不同。
 > 机器产物：`work_package_a/data/output/rc2-smoke/causal-replay-mvp/`
 
-## 1. Executive Summary
+## 0. 第二轮结论（Window Decoupling + C Integration）
+
+### 0.1 三窗口语义（已落地）
+
+```text
+Replay Window         = 发布多少 snapshots（12h / 24h / 44h 可选）
+Risk Forecast Window  = B 因果可见输入共同支持的 valid 范围
+                        = 2026-08-15T10:00Z → 2026-08-18T15:00Z（77h）
+Planning Window       = C 可用 risk 范围（= risk forecast end，77h；
+                        场景合同 horizon 96h 仅用于 corridor 对齐）
+```
+
+代码位置：`runner.py` 的 `risk_forecast_end` / `planning_valid_end` /
+`_replay_configuration` / `_c_run_context`；preflight 输出
+`risk_forecast_window` / `planning_window_candidate` /
+`common_causal_valid_end`。
+
+### 0.2 c907455 Review
+
+- 它把 B requested_end 与 C maximum_elapsed 都 cap 到 replay_end（44h），
+  同时 C 查询必须匹配已提交窗口 → 是当时 44h blocker 的直接原因；
+- 但解耦到 77h 后 v3 仍在 main_corridor 失败（见 0.4），因此：
+  **44h blocker = REPLAY SCOPING GAP（已修复）；77h 下的 v3 blocker =
+  v3 合同边缘 + 数据 horizon 硬上限（真实）**。
+
+### 0.3 Existing C 真实结果
+
+```text
+v2 complete-route（fastest/low_risk/recommended）：PASS
+  ETA ≈ 50.45h ≤ 77h causal forecast
+  route integrity：LAND=0 / DU=0 / hard=0 / corner=0（逐目标）
+
+v3 four-layer：FAIL（main_corridor_24_72h）
+  layer_elapsed = min(77h, 72h, full_end-start) ≈ 50.5h
+  anchor = destination（full ETA < 72h）
+  fastest/low_risk 需 >50.5h → PlanningHorizonExceeded
+```
+
+### 0.4 最终 blocker 分类
+
+```text
+不是 replay scoping bug（已解耦验证）
+不是 C 算法正确性 bug（v2 同参数成功）
+是 v3 layered 合同边缘：main_corridor cap = full_recommended ETA，
+  其他 objective 无余量；数据 horizon 77h 无法放大 cap
+```
+
+## 1. Executive Summary（第一轮保留）
 
 Strategy B 主路径首次在真实 Scenario B 数据上运行：
 
@@ -222,9 +281,57 @@ manifest semantic digest 完全一致
 ## 19. Next Step
 
 ```text
-1. 解除 C planning-horizon blocker：
-   - 评估 replay-local 子层规划（executable/rolling 独立锚点）
-   - 或引入可证明的短窗 C 合同（需 contract proposal）
-2. causal-ready 采集（实时 publication evidence）→ 全窗回放
-3. Replay-driven Presentation Viewer（下一阶段）
+1. 保留 v2 complete-route 为因果回放主规划路径（已集成、已审计）；
+2. v3 four-layer：合同 proposal（main_corridor 余量语义或
+   horizon-limited partial plan），本轮不改 C；
+3. causal-ready 采集（实时 publication evidence）→ 全窗回放；
+4. Replay-driven Presentation Viewer（下一阶段）。
+
+## 20. 性能分析 / 耗时分析（2026-08-18 实测）
+
+### 20.1 12h 集成回放总耗时
+
+| run | snapshots | total (s) | mean tick (s) | peak RSS (MB) |
+|---|---:|---:|---:|---:|
+| sb-c-12h3 | 13 | 2169 | 166.9 | 824 |
+| det1b | 13 | 2244 | 171.1 | 824 |
+| det2b | 13 | 2218 | 175.5 | 824 |
+
+### 20.2 分阶段耗时
+
+```text
+tick0（A 解析 + B 77h build + v2 初始 3 目标）  ≈ 245–255s
+重规划 tick（v2 3 目标，horizon 76→65h）        ≈ 155–193s（中位 ~164s）
+引擎开销（digest/suffix/snapshot/checkpoint）    ≈ 2–5s/tick
+B build 次数                                     1（后续 12 tick 全复用）
+```
+
+### 20.3 C 搜索画像（A* 日志）
+
+```text
+每 objective：expanded ≈ 9k–20k，rate ≈ 270–345 exp/s
+fastest/recommended：≈ 30–90s；low_risk：≈ 60–120s（风险权重更高，
+  需探索更多低风险路径）
+max_bucket：44–50（ETA 桶 ≈ 48h + 余量）
+```
+
+### 20.4 内存与磁盘
+
+```text
+峰值 RSS ≈ 824MB（远低于 6GiB 红线；与纯 engine 轮 649MB 相比
+  +27% 来自 C planner）
+无 OOM / swap；磁盘产物 ≈ MB 级（snapshots 为小型 JSON，
+  risk frames 内容寻址共享）
+```
+
+### 20.5 对比与结论
+
+```text
+纯 engine 回放（无 C）：12h=31s、24h=91s、44h=317s
+集成 C 回放（v2 complete-route）：12h≈36–38min
+→ C 规划占耗时 ≥95%；引擎开销可忽略
+→ 每 tick 固定成本 ≈ 3 目标 × ~55s 平均搜索 + 引擎 2–5s
+→ 未来优化方向（不在本轮）：objective 并发（EXPERIMENTAL）、
+  或 replan policy 降低 TIME 频率（需合同评审）
+```
 ```

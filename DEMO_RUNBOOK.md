@@ -130,6 +130,10 @@ cd /root/my_project/arctic_route_orchestrator
 说明：当前 MVP 的 C 四层因因果风险窗 < 航线 ETA 保持 NOT_READY（诚实
 fail-closed）；详见 `CAUSAL_REPLAY_MVP_20260818.md`。
 
+2026-08-18 更新：因果 forecast 窗口已解耦至 77h；`--v2-only` 模式跑
+v2 complete-route 真实规划（12h 集成 PASS）；v3 four-layer 仍为
+main_corridor contract-edge blocker。
+
 诚实标识：冻结展示顶部 badge 为 `FROZEN VALIDATED`；现场计算为
 `LIVE COMPUTED`；live 失败（TIMEOUT/FAIL）会明确显示，不会伪装成功。
 完整 17–26 min 验证链路仍保留为 Mode A，供“系统真的会算”的证明。
