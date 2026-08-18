@@ -39,8 +39,8 @@ stationary-vessel / cumulative-distance 机器校验。
 
 | repo | branch | HEAD | origin | ahead/behind | working tree |
 |---|---|---|---|---|---|
-| root | demo-engineering | 957820c（本轮完成后更新） | origin/demo-engineering | 0 | `work_package_d/`（历史遗留未跟踪） |
-| arctic_route_orchestrator | demo-engineering | 946c7b4（本轮完成后更新） | origin/demo-engineering | ahead | clean |
+| root | demo-engineering | 7f7aa8f | origin/demo-engineering | ahead 1 | `work_package_d/`（历史遗留未跟踪） |
+| arctic_route_orchestrator | demo-engineering | fee3491 | origin/demo-engineering | ahead 2 | clean |
 | work_package_c | demo-engineering | 42e951c | origin/demo-engineering | 0 | clean |
 | work_package_a | demo-engineering | c6d0718 | origin/demo-engineering | 0 | clean |
 | work_package_b | demo-engineering | 6269420 | origin/demo-engineering | 0 | clean |
@@ -303,7 +303,14 @@ orchestrator:
   946c7b4 perf: add causal replay pre-planning gate and vessel motion audit
 ```
 
-（后续 checkpoint commit 以 Git log 为准。）
+```text
+root:
+  7f7aa8f docs: establish strategy B performance hardening and moving-vessel status
+
+orchestrator:
+  946c7b4 perf: add causal replay pre-planning gate and vessel motion audit
+  fee3491 docs: record strategy B performance hardening and 24h validation
+```
 
 ## 18. Push
 
