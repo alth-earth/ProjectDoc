@@ -160,3 +160,17 @@
   highlighted）→ P7 overlays（hard/ice/edge/grid）→ P8 Scenario/Objective/
   Mode UI（CAUSAL / RETROSPECTIVE 区分）→ P9 Pre-Demo Finalization；
 - 不引入第三场景；不做正式并发集成。
+
+## 8. Strategy B 第三轮状态（2026-08-18 Semantic Hardening）
+
+- 因果回放引擎 + v3 four-layer 规划 = **ESTABLISHED**（destination-anchor
+  contract edge 已解决，真实 77h 窗口四层全 PASS + integrity PASS）；
+- NavigationExecutionState v1（node-aligned same-vessel replan origin）=
+  ESTABLISHED，3h smoke PASS；
+- objective 级 1/2/3 worker 受控并行 = ESTABLISHED（157.2s / 100.9s /
+  80.5s，结果逐位一致），长验证默认 3 workers；
+- Revision/digest 语义硬化 = PASS（mutation tests）；
+- 12h 权威回放（v3 + 3 workers）结果见
+  [`CAUSAL_REPLAY_MVP_20260818.md`](CAUSAL_REPLAY_MVP_20260818.md) §20.6；
+- 最终 Presentation Viewer / GEBCO / moving-ship 动画仍属下一阶段
+  （NavigationExecutionState 是后端 correctness，不是 UI）。

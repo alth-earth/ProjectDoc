@@ -30,6 +30,7 @@
 - [Simulation Replay Architecture](SIMULATION_REPLAY_ARCHITECTURE.md) — 滚动回放架构与 Snapshot/Manifest 候选设计
 - [Causal Replay MVP 2026-08-18](CAUSAL_REPLAY_MVP_20260818.md) — Scenario B 短窗因果回放引擎真实结果
 - [Simulation Replay Architecture](SIMULATION_REPLAY_ARCHITECTURE.md) — 三窗口语义 + v2/v3 规划集成现状
+- [Strategy B Semantic Hardening 2026-08-18](STRATEGY_B_SEMANTIC_HARDENING_20260818.md) — revision/digest 硬化、v3 合同解决、NavigationExecutionState、多核 benchmark
 
 ## 规划
 

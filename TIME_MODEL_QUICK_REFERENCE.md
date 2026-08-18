@@ -61,13 +61,21 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
 
 - `data_revision`：A 可见集合变化才 +1（Scenario B 回放中恒为 1）；
 - `b_input_revision`：B relevant 集合变化才 +1（同样恒为 1）；
-- `risk_revision`：B 重建才 +1（回放中 1 次构建，后续 suffix 复用内容）；
-- `plan_revision`：replan policy 触发 C 重算才 +1（12h 集成回放 1→13；
-  v2 complete-route 为当前因果规划路径）；
+- `risk_content_revision`（= `risk_revision`）：B 业务内容重建才 +1
+  （回放中 1 次构建，后续 suffix 复用内容）；
+- `risk_window_revision`：Planner 可见 suffix window 身份推进才 +1
+  （内容不变但窗口前移是合法的 presentation 变化）；
+- `observation_sequence`：向 ReplanTriggerEvaluator 提交的观察序号
+  （C 合同 `data_revision == input_revision` 的单调 fence；不是业务
+  data revision，replay 事件层做诚实翻译）；
+- `plan_revision`：switch gate 采纳新 route 才 +1（C 重算但候选被拒绝时
+  不 +1）；
+- `navigation_state_revision`：已执行船舶位置/状态推进才 +1；
 - Snapshot 可每小时存在，B/C revision 不必每小时变化；
 - 确定性：`generated_at` 恢复为墙钟 provenance；semantic digest 排除
-  wall-clock 与 resource/route 等派生身份，实测 13/13 snapshot digest +
-  manifest digest 一致。
+  wall-clock 与 resource/route 等派生身份，且包含纯业务
+  `risk_semantic_digest` / `route_semantic_digest`（mutation tests PASS）；
+  实测 13/13 snapshot digest + manifest digest 一致。
 
 ## 三窗口（2026-08-18 落地）
 
@@ -77,8 +85,9 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
 - `planning window`：C 实际可用 risk 范围（≤ risk forecast end）；
 - `valid_time > simulation_time` 不是泄漏；因果门禁只有
   `issue_time <= knowledge_as_of`；
-- v2 complete-route 因果规划 PASS；v3 four-layer 受 main_corridor
-  cap=full_recommended ETA 约束（contract edge，待 proposal）。
+- v2 complete-route 因果规划 PASS；v3 four-layer **RESOLVED**
+  （destination-anchor 层 ceiling = min(request horizon, layer ceiling)；
+  真实 77h 窗口四层全 PASS + integrity PASS）。
 
 ## 因果检查清单（改代码时）
 

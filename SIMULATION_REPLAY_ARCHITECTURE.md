@@ -35,7 +35,11 @@
 | 真实 12h/24h/44h Scenario B replay | PASS（engine；C blocker 如实记录） |
 | Causal forecast window 解耦 | IMPLEMENTED（common end 77h；replay ≠ risk ≠ planning window） |
 | v2 complete-route C 规划 | IMPLEMENTED + 12h 集成 PASS（route integrity PASS） |
-| v3 four-layer C 规划 | BLOCKED（main_corridor cap=full_recommended ETA≈50.5h，其他 objective 无余量） |
+| v3 four-layer C 规划 | RESOLVED（第三轮：destination-anchor 层 ceiling 放宽；真实 77h 窗口四层全 PASS；生产 C 修正 commit 0186caa） |
+| Revision semantics 拆分 | IMPLEMENTED（data / b_input / risk_content / risk_window / observation_sequence / plan / navigation） |
+| Semantic digest 硬化 | IMPLEMENTED（risk/route 业务 digest + mutation tests） |
+| NavigationExecutionState v1 | IMPLEMENTED（node-aligned same-vessel replan origin） |
+| Objective-level 并行（1/2/3 worker） | IMPLEMENTED + benchmark（157.2s/100.9s/80.5s，结果逐位一致） |
 
 ## 3. Canonical Time Model
 
@@ -159,7 +163,7 @@ Viewer 流程：`Manifest → Snapshot(t) → Presentation Resources`，不自�
 
 ## 13. Ship State
 
-只设计，不实现：
+第三轮已实现 v1（replay-local，node-aligned），设计目标不变：
 
 ```text
 completed_track          = executed route waypoints with eta <= simulation_time
@@ -169,6 +173,11 @@ current_executable_route = executable_0_6h（当前生效）
 superseded_future_route  = 被 replan 替换的旧未来计划
 latest_planned_route     = 最新 full_voyage / rolling
 ```
+
+v1 明确限制：replan origin 只能是 grid node（C planner 合同），当前实现
+使用 accepted route 最后到达 waypoint snap 到最近可通航 node（显式
+tolerance + `snap_adjustment_km` 记录）；edge-interior 任意起点、连续
+NavigationExecutionState production contract 与 moving-ship 动画属后续。
 
 ## 14. Artifact Reuse
 

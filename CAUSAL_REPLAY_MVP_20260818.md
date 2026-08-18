@@ -63,6 +63,32 @@ v3 four-layer：FAIL（main_corridor_24_72h）
   其他 objective 无余量；数据 horizon 77h 无法放大 cap
 ```
 
+### 0.5 第三轮更新（2026-08-18 Semantic Hardening）
+
+```text
+v3 four-layer contract edge = RESOLVED
+  destination-anchor 层 ceiling = min(request horizon, layer ceiling)
+  真实 77h 窗口：旧 cap 复现 PlanningHorizonExceeded；
+  72h 候选 cap 下四层 × 3 目标全 PASS，main_corridor 与 full_voyage
+  路由逐位一致，Route Geospatial Integrity 全 PASS
+  生产 C 最小修正 commit 0186caa；C 97 tests + RC1/RC2 regression PASS
+
+Revision semantics = RESOLVED
+  data / b_input / risk_content / risk_window / observation_sequence /
+  plan / navigation 已拆分；honest replan reasons 机器验证
+
+Semantic digests = HARDENED（mutation tests PASS）
+
+NavigationExecutionState = v1 ESTABLISHED（node-aligned same-vessel）
+
+Objective parallelism = ESTABLISHED（1/2/3 worker benchmark：
+  157.2s / 100.9s / 80.5s，结果逐位一致；长验证默认 3）
+
+3h same-vessel v3 smoke = PASS（4 snapshots，validation PASS，
+  RSS≈824MB）
+12h authoritative replay = 见 §20.6（本轮运行）
+```
+
 ## 1. Executive Summary（第一轮保留）
 
 Strategy B 主路径首次在真实 Scenario B 数据上运行：
@@ -333,5 +359,60 @@ max_bucket：44–50（ETA 桶 ≈ 48h + 余量）
 → 每 tick 固定成本 ≈ 3 目标 × ~55s 平均搜索 + 引擎 2–5s
 → 未来优化方向（不在本轮）：objective 并发（EXPERIMENTAL）、
   或 replan policy 降低 TIME 频率（需合同评审）
+```
+
+### 20.6 第三轮：Semantic Hardening + 受控多核（2026-08-18 实测）
+
+#### objective 级并行 benchmark（同一真实 77h request，3 objectives）
+
+| workers | wall (s) | speedup vs 1 | extra vs 2 | parent RSS (MB) | child RSS max (MB) | 业务结果 |
+|---|---:|---:|---:|---:|---:|---|
+| 1（串行） | 157.2 | 1.00× | – | 132 | – | baseline |
+| 2 | 100.9 | 1.56× | – | 93 | 112 | 与串行逐位一致 |
+| 3 | 80.5 | 1.95× | 1.25× | 94 | 113 | 与串行逐位一致 |
+
+#### 3h same-vessel v3 smoke（workers=3）
+
+```text
+snapshot_count   = 4（10:00Z → 13:00Z，1h tick）
+v3 four-layer    = SUPPORTED（4 层 × 3 目标，plan_revision=1）
+B builds         = 1；B reuse = 3；risk_content_revision=1；
+                   risk_window_revision=4
+replan policy    = 每 tick TIME 触发；switch gate 拒绝候选 →
+                   PLAN_REUSED（无伪造 DATA；无 ROUTE_CHANGED）
+navigation       = ACTIVE；node [5,7]→[6,7]；remaining 909→856km；
+                   completed_track 单调；no teleport
+total duration   = 801.0s（~13.4min）
+mean tick        = 200.3s（tick0=262.2s，replan ≈177–183s）
+peak parent RSS  = 823.6MB（3 workers，远低于 4.5–5GiB 并发红线）
+validation       = snapshots / replay / manifest 全 PASS
+```
+
+#### 12h authoritative replay（workers=3，v3 four-layer）
+
+权威运行 `sb-c-sem-hard-12hb`（completed-track 追加修复后；首轮
+`sb-c-sem-hard-12h` 因该 invariant FAIL 作废并作为 reproducer）：
+
+```text
+snapshot_count        = 13（10:00Z → 22:00Z）
+total duration        = 2113.9s（~35.2min）
+mean tick             = 162.6s（tick0=298.4s；replan tick 117–190s，
+                          horizon 缩短后逐 tick 变快）
+v3 four-layer         = SUPPORTED 全 13 tick（4 层 × 3 目标 = 12 routes/tick）
+B builds              = 1；B reuse = 12
+risk_content_revision = 1（内容全程复用）
+risk_window_revision  = 13（每 tick suffix 前移）
+replan evaluations    = 12；REPLAN_TRIGGERED = 5（time only）
+ROUTE_CHANGED         = 5（14:00 / 16:00 / 18:00 / 20:00 / 22:00）
+PLAN_REUSED           = 7（policy 触发但 switch gate 拒绝候选）
+plan_revision         = 1 → 6
+navigation            = ACTIVE 全段；node [5,7]→[11,7] 单调推进；
+                        remaining 909.7→665.1km 单调下降；
+                        completed_track 1→7 只增不减；无 teleport
+route integrity       = 末 tick 12 routes 全 PASS（LAND=0 / DU=0 /
+                        hard=0 / corner=0）
+validation            = 13/13 snapshot PASS + replay PASS + manifest PASS
+peak parent RSS       = 823.6MB；组合峰值（3 workers）≈3.10GiB
+                        （低于 4.5–5GiB 并发红线，无 swap）
 ```
 ```
