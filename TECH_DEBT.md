@@ -50,6 +50,15 @@
 | TD-36 | NavigationExecutionState（同船 replan origin） | **HIGH / v1 ESTABLISHED** | node-aligned v1：replan origin = accepted route 最后到达 waypoint（显式 snap tolerance、无 teleport、completed_track 不可变、switch-gate 拒绝不采纳）；到达后无 replan origin | edge-interior 起点 / 任意 lon/lat start / production contract 后续 |
 | TD-37 | 受控 objective 级并行 | **HIGH / ESTABLISHED** | replay-local ProcessPoolExecutor，tick/layer/B 严格串行；3h smoke 与 12h 权威均 3 workers，组合峰值 ≈3.10GiB（<4.5–5GiB 红线）；并行/串行业务结果逐位一致 | 默认 3 workers；内存红线 6–6.5GiB 不变 |
 
+2026-08-19（Strategy B Performance Hardening）更新：
+
+| ID | 事项 | 优先级 | 状态 | 说明 |
+|---|---|---|---|---|
+| TD-38 | 集成回放性能（12h） | 中 | **IMPROVED** | interval=2h pre-planning gate：旧 2071.4s → 1306.8s（speedup 1.59×，约 21.8min）；C candidate 13→8、rejected 7→2、pre-gate skip 5；业务轨迹与旧 12h 13/13 一致（plan_revision 1→6、route/risk digest 全等） | 仍可进一步研究 DAG 调度取消 layer barrier 与 recommended-first lazy 模式 |
+| TD-38a | 24h 扩展验证 | 中 | **PASS（optional）** | 24h interval=2h：1743.2s（约 29min）、25 snapshots、candidate 14、accepted 12、rejected 2、skip 11、plan_revision 1→12、validation PASS、12h 前缀与权威 12h 13/13 一致 | 44h 因语义稳定与资源优先不再本轮跑 |
+| TD-39 | waypoint-aligned pre-gate | 中 | **EXPERIMENT / NOT ADOPTED** | 真实数据 route waypoint ETA 非整点（12:17/14:34...），只按 waypoint 对齐会在 12h 内全 skip、plan 卡在 1，不等价旧 accepted 序列 | 已保留 `--replan-waypoint-aligned-only` 开关与测试作为实验；生产 gate = interval 版 |
+| TD-40 | 连续船位（moving-vessel）字段 | 中 | **ESTABLISHED / REPLAY-LOCAL** | NavigationExecutionState 暴露 current_edge_index/segment ETAs/effective_speed_knots/executed & cumulative distance；validation stationary-vessel + cumulative 单调 PASS | Viewer 下一阶段直接消费后端船位，不自行插值；edge-interior replan 起点属 production contract 后续 |
+
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。
 

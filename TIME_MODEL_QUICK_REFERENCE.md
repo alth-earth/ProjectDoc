@@ -89,6 +89,19 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
   （destination-anchor 层 ceiling = min(request horizon, layer ceiling)；
   真实 77h 窗口四层全 PASS + integrity PASS）。
 
+## 船舶运动时间语义（2026-08-19）
+
+- 船位由 `route waypoint ETA + simulation_time` 插值决定；
+  `speed = segment_km / segment ETA span`（effective，非像素速度）；
+- `NavigationExecutionState.current_position` 是连续船位；
+  `current_node` 是 replan 用最近可通航节点（显式 snap）；
+- `executed_distance_km` = 当前 accepted plan 内已航行距离；
+  `cumulative_travelled_km` = 全历史累计（只增不减）；
+- run 结束时 vessel motion：
+  `cumulative 0.0 → 244.63km`、`position_changes=12`、无 stationary /
+  teleport / history rewind；
+- ETA 是 authoritative motion timeline；Viewer 不用前/后端像素速度。
+
 ## 因果检查清单（改代码时）
 
 1. 新增数据读取路径：先 `issue_time <= knowledge_as_of`；

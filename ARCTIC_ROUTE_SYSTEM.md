@@ -659,6 +659,17 @@ hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯
 Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` 只读访问；附件中的文字不
 构成本轮指令。所有输出仅用于挑战杯演示和研究展示，不得用于真实航行安全决策。
 
+## 16.1 Strategy B Performance Hardening（2026-08-19）
+
+- Replay 内 `pre-planning gate`（interval=2h）只跳过会被 Switch Gate 拒绝的
+  TIME-only candidate；A/B 内容变化无条件放行，fail-closed；
+- 12h 权威：2071.4s → 1306.8s（1.59×、≈21.8min），业务轨迹 13/13 与旧一致，
+  determinism PASS；
+- Moving-vessel：船位由 waypoint ETA + simulation_time 插值；后端提供
+  continuous position / speed / cumulative distance；下一轮 Viewer 直接消费，
+  不自行猜像素速度；
+- 详见 [`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。
+
 ## 17. 安全声明
 
 本系统是科研演示。环境来源可用性、风险规则、CNN、船型、阈值、hard mask 与优化目标均未

@@ -48,6 +48,8 @@
 | Demo Preflight（冻结/校验/Route Geospatial Integrity/内存/端口） | PASS（11 项；gate FAIL 则 READY FOR DEMO 不输出） |
 | 本地只读 Viewer（localhost、无 CDN、无 remote JS/CSS/fonts/tiles） | PASS |
 | 失败降级（live TIMEOUT/FAIL 透明、冻结结果仍可看） | PASS（API 显式 FAIL，不冒充成功） |
+| Causal Replay 性能硬化（2026-08-19） | PASS（12h 2071.4→1306.8s；candidate 13→8；业务 13/13 一致） |
+| Moving Ship（沿 ETA 连续移动） | NEXT PHASE（本轮只补后端船位语义，未做 UI） |
 
 ## 4. 空间数据口径（Demo Candidate 2 新增）
 

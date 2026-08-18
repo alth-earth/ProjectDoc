@@ -87,6 +87,22 @@ plan_revision 1→6、replan 全 `time`、completed-track 单调、validation
 一致）。权威：
 [`STRATEGY_B_SEMANTIC_HARDENING_20260818.md`](STRATEGY_B_SEMANTIC_HARDENING_20260818.md)。
 
+**Strategy B Performance Hardening（2026-08-19 第四轮）。**
+Replan 成本审计：旧 12h = 13 candidate、6 accepted、7 rejected（rejected
+≈52% candidate 计算时间）。新增 replay-local pre-planning gate（interval
+版）：TIME-only 且 accepted plan 未满 2h 时跳过 C，A/B 内容变化无条件放行
+（fail-closed、不替代 Switch Gate）。**12h 权威回放：2071.4s → 1306.8s
+（≈21.8min，speedup 1.59×，节省 ≈12.7min）**；C candidate 13→8、
+rejected 7→2、pre-gate skip 5；业务轨迹与旧 12h 13/13 逐一一致
+（plan_revision 1→6、route/risk digest 全等）；determinism PASS
+（manifest + 13/13 snapshot + risk/route digest 一致，wall-clock 允许不同）。
+Moving-vessel 语义补齐：NavigationExecutionState 增加 current_edge_index、
+segment ETAs、effective_speed_knots、executed/cumulative distance，
+validation 增加 stationary-vessel 与 cumulative 单调检查。权威：
+[`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。
+可选 24h 扩展验证亦完成：`1743.2s`、25 snapshots、plan_revision 1→12、
+validation PASS、12h 前缀与权威 12h 一致 13/13。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -103,9 +119,10 @@ Demo Candidate 2
 Current blocker（Viewer 双投影导致视觉穿 LAND）= RESOLVED
 Temporal Semantics = AUDITED / DOCUMENTED
 Causal Replay Feasibility = PARTIAL（A 19h / B 44h 末期窗口）
-Strategy B = CAUSAL REPLAY ENGINE MVP ESTABLISHED（engine；C 层 blocker）
-Strategy B C 规划 = v2 complete-route PASS；v3 four-layer = contract-edge blocker
-Next = v3 合同 proposal / replay Presentation Viewer
+Strategy B = CAUSAL REPLAY ENGINE + SAME-VESSEL ROUTE PLANNING MVP ESTABLISHED
+Strategy B C 规划 = v3 four-layer + same-vessel navigation PASS
+Strategy B 性能 = 12h ≈21.8min（1.59×）；moving-vessel semantics PASS
+Next = three-window Viewer + moving ship execution（下一轮）
 ```
 
 ## 当前版本

@@ -138,6 +138,26 @@ main_corridor contract-edge blocker。
 `LIVE COMPUTED`；live 失败（TIMEOUT/FAIL）会明确显示，不会伪装成功。
 完整 17–26 min 验证链路仍保留为 Mode A，供“系统真的会算”的证明。
 
+## 模式 C — Causal Replay（Strategy B，2026-08-19 性能配置）
+
+```bash
+cd /root/my_project/arctic_route_orchestrator
+TMPDIR=/root/my_project/.runtime/causal-replay-mvp/tmp \
+XDG_CACHE_HOME=/root/my_project/.runtime/causal-replay-mvp/cache \
+.venv/bin/python scripts/causal_replay_mvp.py \
+  --replay-id sb-perf-12h-gate2 \
+  --window-hours 12 \
+  --planning-workers 3 \
+  --replan-min-interval-hours 2 \
+  --parallel-pool-mode percall
+```
+
+- 12h 约 22min（旧约 34.5min）；业务轨迹与旧 13/13 一致；
+- 每个跳过 tick 会发布 `REPLAN_SKIPPED`；数据/风险变化仍无条件重规划；
+- determinism 复跑：用 `--output-root
+  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/<det-root>`
+  + 相同 `--replay-id`，然后比对 manifest 与 snapshot digest。
+
 ## 故障恢复
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；

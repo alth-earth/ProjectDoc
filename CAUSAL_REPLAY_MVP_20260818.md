@@ -425,3 +425,61 @@ peak parent RSS       = 823.1MB；组合峰值（3 workers）≈3.10GiB
 Determinism：同一 replay_id、不同输出根独立复跑，13/13 snapshot
 semantic digest 与 manifest semantic digest 对比结果见 §16（第三轮）。
 ```
+
+### 20.7 第四轮：Performance Hardening + Moving-Vessel（2026-08-19 实测）
+
+#### Replan 成本（旧 12h `sb-c-sem-hard-12hc`）
+
+```text
+C candidate = 13（initial 1 + replan 12）
+accepted    = 6（initial + 5）
+rejected    = 7
+rejected 计算占比 ≈ 52%（tick_seconds 口径）
+```
+
+#### Pre-planning gate（`--replan-min-interval-hours 2`）
+
+```text
+语义：TIME-only 且 accepted plan 未满 2h → REPLAN_SKIPPED
+      A/B content 变化、剩余 horizon 不足 → 无条件放行（fail-closed）
+```
+
+#### 12h authoritative（`sb-perf-12h-gate2`）
+
+```text
+total               = 1306.8s（≈21.8min）vs 旧 2071.4s（≈34.5min）
+speedup            = 1.59×；节省 ≈12.7min
+C candidate        = 8（initial 1 + replan 7）
+accepted           = 6；rejected = 2；pre-gate skip = 5
+plan_revision      = 1 → 6（与旧完全一致）
+peak RSS           = 823.9MB parent；组合 ≈3.1GiB
+业务等价性          = 13/13 snapshot 逐项一致；route/risk digest 全等
+```
+
+#### Determinism（独立根复跑 1264.8s）
+
+```text
+manifest semantic digest = IDENTICAL
+snapshot digest          = 13/13 IDENTICAL
+risk / route digest      = IDENTICAL
+wall-clock               = DIFFERENT（允许）
+```
+
+#### Moving-Vessel 语义
+
+```text
+新增字段：current_edge_index / segment ETAs / effective_speed_knots /
+speed_source / executed_distance_km / cumulative_travelled_km
+12h：cumulative 0.0 → 244.63km；position_changes=12；
+     无 stationary / teleport / completed-track rewind
+```
+
+#### 24h extended（`sb-perf-24h-gate2`，optional）
+
+```text
+snapshots = 25；total = 1743.2s（≈29.1min）
+C candidate = 14；accepted = 12；rejected = 2；pre-gate skip = 11
+plan_revision = 1 → 12
+12h 前缀 vs 权威 12h：13/13 无差异
+cumulative 0.0 → 489.26km；position_changes = 24；validation PASS
+```

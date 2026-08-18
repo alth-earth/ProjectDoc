@@ -243,6 +243,35 @@ CAUSAL 标识
 当前历史证据只能支持末期短窗（A 19h / B 44h）→ MVP 从
 `2026-08-15T10:00Z`（Scenario B）开始。
 
+## 17.1 Performance Hardening（2026-08-19）
+
+瓶颈定位：12h 回放耗时的 ≥95% 是 C 规划；其中一半以上的 C candidate 最终被
+Switch Gate 拒绝（旧 12h：13 candidate → 7 rejected）。
+
+Pre-planning gate（replay-local，不替代 Switch Gate）：
+
+```text
+  time-only + accepted-plan-age < interval（2h）
+  → REPLAN_SKIPPED，不启动 C
+
+  A data / B risk-content 变化 → 始终放行
+  route 剩余 horizon 不足 interval → 不放行（fail-closed）
+```
+
+真实结果：
+
+```text
+12h candidate:   13 → 8
+12h wall time:   2071.4s → 1306.8s（1.59×）
+business:        13/13 snapshot 与旧 run 逐一一致
+```
+
+保持的边界：
+
+- Replay ticks 仍严格串行；并行只限单次 C request 内三个 objective；
+- 跳过的是“会重新生成同一份被拒 candidate”的 work，不是跳过业务决策；
+- 每个跳过 tick 均发布 `REPLAN_SKIPPED` 事件并计入 summary，可审计。
+
 ## 18. Viewer Contract
 
 - 主控：`simulation_time`；

@@ -216,3 +216,13 @@ generated_at / window commit id / replay_id：允许且实际不同（已排除�
   replay 在适配层做诚实翻译（C contract proposal 可后续解耦）；
 - Full 144h historical causal replay 仍不被当前 provenance 支持；
 - GEBCO L2 coastline / 最终 Viewer / moving-ship 动画仍属后续阶段。
+
+## 9.1 追加：Performance Hardening（2026-08-19）
+
+第三轮结束时 12h ≈34.5min；第四轮先审计 replan 成本得到 13 candidate /
+7 rejected（rejected ≈52%），再以 `--replan-min-interval-hours 2`
+pre-planning gate 把 12h 降到 1306.8s（≈21.8min，1.59×），C candidate
+13→8、rejected 7→2、pre-gate skip 5。业务轨迹与旧 12h 13/13 逐一一致
+（plan_revision 1→6、route/risk digest 全等）。独立根 determinism 二跑
+PASS。Moving-vessel 字段与校验见
+[`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。

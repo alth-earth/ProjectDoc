@@ -51,6 +51,12 @@
   → 2026-08-18 第二轮：三窗口解耦（77h causal forecast）；v2
     complete-route C 规划 PASS 并集成 12h 回放；v3 four-layer =
     main_corridor contract-edge blocker（下一轮 C 合同 proposal）；
+  → 2026-08-18 第三轮：v3 four-layer contract edge RESOLVED（生产 C 最小
+    修正）；NavigationExecutionState v1 + 3-worker objective 并行；
+    12h same-vessel v3 PASS（2071.4s）；
+  → 2026-08-19 第四轮：replan pre-planning gate（interval=2h）把 12h
+    降到 1306.8s（1.59×，≈21.8min），业务 13/13 与旧一致、determinism
+    PASS；Moving-vessel 后端语义就绪（边缘字段 + stationary 校验）；
 - 性能遥测（把 benchmark 表格持久化到 `data/output/golden/`）。
 
 ## RC1 之后 / RC2
