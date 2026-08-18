@@ -39,7 +39,7 @@ stationary-vessel / cumulative-distance 机器校验。
 
 | repo | branch | HEAD | origin | ahead/behind | working tree |
 |---|---|---|---|---|---|
-| root | demo-engineering | 7f7aa8f | origin/demo-engineering | ahead 1 | `work_package_d/`（历史遗留未跟踪） |
+| root | demo-engineering | 本轮最后一列 | origin/demo-engineering | 以 Git status 为准 | `work_package_d/`（历史遗留未跟踪） |
 | arctic_route_orchestrator | demo-engineering | fee3491 | origin/demo-engineering | ahead 2 | clean |
 | work_package_c | demo-engineering | 42e951c | origin/demo-engineering | 0 | clean |
 | work_package_a | demo-engineering | c6d0718 | origin/demo-engineering | 0 | clean |
@@ -304,12 +304,8 @@ orchestrator:
 ```
 
 ```text
-root:
-  7f7aa8f docs: establish strategy B performance hardening and moving-vessel status
-
-orchestrator:
-  946c7b4 perf: add causal replay pre-planning gate and vessel motion audit
-  fee3491 docs: record strategy B performance hardening and 24h validation
+详见 `git log` / `git status`（本轮 root + orchestrator 各若干本地 commit；
+全部仓库均保持在 `demo-engineering`，origin 均未改写）。
 ```
 
 ## 18. Push
