@@ -34,6 +34,9 @@
 - [Strategy B Performance Hardening 2026-08-19](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md) — replan 成本审计、pre-planning gate、12h 2071.4→1306.8s、moving-vessel 语义、determinism
 - [Strategy B Ship Motion Semantics 2026-08-19](STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md) — physical/planner 分离、route-ETA speed、deferred adoption、no-teleport
 - [Strategy B Viewer Foundation 2026-08-19](STRATEGY_B_VIEWER_FOUNDATION_20260819.md) — latest-HEAD 联合基线 12h、Presentation Adapter/Contract、adoption audit、GEBCO/L2 foundation
+- [Engineering Run Report Standard](ENGINEERING_RUN_REPORT_STANDARD.md) — 本轮起权威最终报告模板：固定 15 区块 + Key Delta / Claim Matrix / 成熟度等级 / 术语标准化
+- [Strategy B Viewer MVP 2026-08-19](STRATEGY_B_VIEWER_MVP_20260819.md) — GEBCO L2 demo preflight PASS、Replay-driven Viewer MVP、极性修正、resource/git 摘要
+- [Viewer README](arctic_route_orchestrator/viewer/README.md) — viewer 构建/运行/控件/debug 说明
 
 ## 规划
 

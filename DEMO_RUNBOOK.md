@@ -178,6 +178,31 @@ cd /root/my_project/arctic_route_orchestrator
 - 最新 HEAD 权威 12h = `sb-viewer-baseline-12h(-det)`：
   validation/route integrity/determinism 全 PASS。
 
+## 模式 E — Replay-driven Viewer（Strategy B，2026-08-19）
+
+```bash
+cd /root/my_project/arctic_route_orchestrator
+.venv/bin/python viewer/build_basemap.py \
+  --data-root /root/my_project/work_package_a/data \
+  --route-id tromso_to_isfjorden_outer
+.venv/bin/python scripts/replay_viewer_preflight.py \
+  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
+  --data-root /root/my_project/work_package_a/data \
+  --route-id tromso_to_isfjorden_outer \
+  --output /root/my_project/work_package_a/data/output/rc2-smoke/replay-viewer-preflight.json
+.venv/bin/python viewer/build_bundle.py \
+  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
+  --preflight /root/my_project/work_package_a/data/output/rc2-smoke/replay-viewer-preflight.json \
+  --cadence-seconds 60
+.venv/bin/python scripts/replay_viewer_serve.py --root viewer \
+  --manifest /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
+  --port 8131
+```
+
+打开 `http://127.0.0.1:8131/`。无 server 单文件：
+`.venv/bin/python viewer/embed.py --viewer-dir viewer` 后打开
+`viewer/index_self_contained.html`。说明见 `viewer/README.md`。
+
 ## 故障恢复
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；

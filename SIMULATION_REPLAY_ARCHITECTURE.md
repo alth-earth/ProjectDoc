@@ -210,6 +210,20 @@ Viewer（只消费 presentation state + 60 FPS 平滑，不猜业务速度）
 （rev2–5，另有 rev6 22:00 决策窗口外待生效）、决策时刻全部 mid-edge、
 跨 adoption 无跳变。
 
+## 13.2 Viewer MVP + L2 Preflight（2026-08-19）
+
+- Presentation preflight：`replay/preflight.py` 把 artifact validation、L2
+  GEBCO coastline、canonical EPSG:4326 transform、layer coverage 合并为
+  `presentation_eligible` 唯一 verdict；`replay_viewer_preflight.py` CLI；
+- L2 gate 改为 raster-cell traversal（mask grid，oversample <= 2x cell），
+  不再按固定经纬度步长采样；语义对齐项目规范 `1=sea, 0=land_or_coast`；
+- Viewer MVP 只消费 `viewer/bundle.json`（由 Presentation Adapter 生成）：
+  Simulation Clock 驱动 basemap/route/track/vessel/pending；浏览器 60 FPS
+  仅在 backend segment 上插值，不维护业务速度；`viewer/` 含 build_basemap /
+  build_bundle / embed / render_proof / app.js；
+- 真实 Scenario B 12h：L2 = 5 route revisions + completed tracks 全 PASS
+  （0 land cell）；presentation eligible = True。
+
 ## 14. Artifact Reuse
 
 - Snapshot 保存 identity/timestamps/revisions/digests/resource 引用/

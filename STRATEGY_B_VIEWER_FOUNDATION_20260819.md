@@ -212,11 +212,12 @@ resolution    = 0.05 deg（~5.5 km）
 scenario B bbox ≈ lon 10.0–22.05, lat 68.5–79.55
 ```
 
-真实数据 smoke（L2 gate contract + harness）：
+真实数据 smoke（L2 gate contract + harness；极性修正声明：本地 GEBCO
+`land_sea_mask` 规范语义为 `1=sea,0=land_or_coast`）：
 
 ```text
-水域条带 (17.55, 68.50) → (22.00, 68.50)：PASS（0 violation）
-穿陆线   (12.00, 69.50) → (18.00, 70.50)：FAIL（LAND sample）
+海域路线 (18.40, 70.50) → (18.40, 73.00)：PASS（0 violation）
+陆域路线 (15.00, 68.50) → (16.00, 68.50)：FAIL（LAND sample）
 ```
 
 L2 本轮是 contract + test harness + 本地数据 smoke（实际运行），不是全场景

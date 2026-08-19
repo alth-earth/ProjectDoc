@@ -64,6 +64,10 @@
 | TD-44 | 统计口径：REPLAN_DECIDED 的候选/采纳计数 | 中 | **FIXED（2026-08-19）** | 旧 summary 只把 REPLAN_TRIGGERED 计为 accepted；已把 REPLAN_DECIDED 计入 candidate_computed / candidate_accepted（修正后 latest-head 12h：candidate 12 / accepted 6 / rejected 6 / skip 1） | 复跑验证 manifest+13/13 snapshot+risk+route digest 与首次全等 |
 | TD-45 | deferred pending 期间的 interval gate 优化 | 低 | **NEXT（不本轮做）** | deferred adoption 使 accepted plan 在 pending 期间不刷新，interval gate 在更多 tick 放行 C（latest-head 12h 约 34min，vs 旧 immediate 约 21.8min）；可将来在 pending plan 存在且 TIME-only 时跳过 | 本轮按约束不做 Planner 性能优化；下轮若需要可加“pending-plan gate”并保持语义等价 |
 | TD-19 | GEBCO real-world coastline integrity | 高 | **FOUNDATION ESTABLISHED（2026-08-19）** | `replay/geospatial.py`：EPSG:4326 canonical transform、basemap metadata、L2 coastline gate + 本地 GEBCO_2026 land_sea_mask real smoke（水域 PASS / 穿陆 FAIL） | 下一轮并入 demo preflight 作为正式 L2 门禁；data already local |
+| TD-46 | GEBCO `land_sea_mask` 极性误解 | 高 | **CORRECTED（2026-08-19）** | 上一轮 foundation 按 `1=land` 解释；项目规范语义实为 `1=sea, 0=land_or_coast`。已修正 `LandMaskSampler` 与 smoke 描述；真实 12h route L2 = PASS（0 land cell） | 后续所有 L2 / Viewer land overlay 必须沿用 `1=sea` |
+| TD-47 | 受限 sandbox 无法跑浏览器/socket | 中 | **BLOCKED（环境）** | playwright daemon 与 `http.server` 绑定均在受限 profile 下失败（子进程/socket 被禁）；本轮以自包含单文件 + 数据 proof PNG + bundle 单测替代 | 操作者在非受限环境执行 `replay_viewer_serve.py` + 浏览器 smoke 并截图入档 |
+| TD-48 | Viewer superseded route 绘制 | 低 | **NOT DRAWN（MVP）** | Adapter `superseded_future_route` 可用，MVP 未绘制（避免 misleading） | NEXT：superseded future route 灰色展示 |
+| TD-49 | Dynamic Risk / Hard Reason overlay | 中 | **NEXT** | presentation horizons 已可用；风险 content 本轮静态（risk_content_revision=1） | NEXT：simulation-time 驱动 current/+6/+12/+24h overlay |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

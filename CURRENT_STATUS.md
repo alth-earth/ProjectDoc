@@ -128,6 +128,20 @@ basemap metadata、L2 coastline gate harness + 本地 GEBCO_2026 land_sea_mask
 real-data smoke）。权威：
 [`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
 
+**Strategy B Replay-driven Viewer MVP（2026-08-19）。**
+GEBCO L2 正式并入 replay viewer preflight（raster traversal + 真实 Scenario B
+route PASS：5 revisions + tracks 0 land cell）+ Presentation preflight
+`presentation_eligible=True`。建立最小 Replay-driven Viewer：真实 GEBCO
+basemap、Simulation Clock、Play/Pause/scrub、权威 route、append-only completed
+track、continuous moving ship（route ETA + simulation time）、pending/deferred
+route（`REPLAN_DECIDED != REPLAN_ADOPTED`）、active/pending revision 显式字段；
+提供 localhost serve 脚本与无 server 单文件模式。期间发现并修正 L2 语义极性
+误解（`1=sea,0=land`；上轮 Foundation 的部分 smoke 描述一并修正）。浏览器
+自动化在本轮受限 sandbox 下不可用（socket/browser daemon 被禁），以数据渲染
+proof PNG + bundle 契约单测替代；完整浏览器 smoke 留给操作者在非受限环境
+执行。权威：
+[`STRATEGY_B_VIEWER_MVP_20260819.md`](STRATEGY_B_VIEWER_MVP_20260819.md)。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -150,8 +164,11 @@ Strategy B 性能 = 12h ≈21.8min（1.59×）；moving-vessel semantics PASS
 Strategy B 最新 HEAD 联合基线 = PASS（12h ≈34min + 13 snapshots + determinism PASS）
 Presentation Adapter = ESTABLISHED（T1–T7 + audit）
 GEBCO/L2 = FOUNDATION ESTABLISHED（canonical EPSG:4326 + land_sea_mask smoke）
-Next = GEBCO real basemap → L2 gate → Timeline → Dynamic Risk/Route →
-        Moving Ship / Replanning Animation（下一轮）
+GEBCO/L2 Preflight = PASS / ESTABLISHED（real Scenario B route）
+Replay-driven Viewer MVP = REAL_ARTIFACT_SMOKE_PASS（数据 proof + 单测）
+Simulation Timeline / Moving Ship / Deferred Adoption Presentation = MVP PASS
+Next = 非受限环境浏览器 smoke + Dynamic Risk / Hard Reason overlay +
+       superseded route 绘制 + Replanning Animation + final UI polish
 ```
 
 ## 当前版本

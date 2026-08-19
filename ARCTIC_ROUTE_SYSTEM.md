@@ -686,6 +686,20 @@ Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` �
   land_sea_mask real smoke（水域 PASS / 穿陆 FAIL）；
 - 详见 [`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
 
+## 16.3 Replay-driven Viewer MVP（2026-08-19）
+
+- `replay/preflight.py` + `replay_viewer_preflight.py`：L2 GEBCO coastline +
+  artifacts + canonical transform + layer coverage → `presentation_eligible`；
+  真实 Scenario B：5 route revisions + completed tracks 全 PASS（0 land cell）；
+- `viewer/` MVP：GEBCO real basemap、Simulation Clock、Play/Pause/scrub、
+  权威 route / append-only track / pending-deferred route / continuous moving
+  ship；`bundle.json` 由 Presentation Adapter 生成，浏览器 60 FPS 只平滑；
+- 修正 L2 极性：`land_sea_mask` 规范语义 `1=sea, 0=land_or_coast`（前轮
+  foundation smoke 描述已同步）；
+- 浏览器自动化在本轮受限 sandbox 下不可用，以数据 proof PNG + bundle 单测
+  验证；完整浏览器 smoke 待操作者在非受限环境执行；
+- 详见 [`STRATEGY_B_VIEWER_MVP_20260819.md`](STRATEGY_B_VIEWER_MVP_20260819.md)。
+
 ## 17. 安全声明
 
 本系统是科研演示。环境来源可用性、风险规则、CNN、船型、阈值、hard mask 与优化目标均未
