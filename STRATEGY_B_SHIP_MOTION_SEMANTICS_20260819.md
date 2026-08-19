@@ -29,7 +29,8 @@ physical position 没有完全分离。本轮做了三点硬性修正：
 ## 2. Git Baseline
 
 所有仓库位于 `demo-engineering`，本轮不建分支、不 merge/rebase/reset/push。
-开始 HEAD：orchestrator `fee3491`、root `8f31f6b`。结束时见 Git 状态。
+开始 HEAD：orchestrator `fee3491`、root `8f31f6b`。
+结束 HEAD / ahead：以最终 `git status` 为准；C / A / B / D / contracts 未变。
 
 ## 3. Filesystem Safety
 
