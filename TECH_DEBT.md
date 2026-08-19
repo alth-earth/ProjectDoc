@@ -58,6 +58,8 @@
 | TD-38a | 24h 扩展验证 | 中 | **PASS（optional）** | 24h interval=2h：1743.2s（约 29min）、25 snapshots、candidate 14、accepted 12、rejected 2、skip 11、plan_revision 1→12、validation PASS、12h 前缀与权威 12h 13/13 一致 | 44h 因语义稳定与资源优先不再本轮跑 |
 | TD-39 | waypoint-aligned pre-gate | 中 | **EXPERIMENT / NOT ADOPTED** | 真实数据 route waypoint ETA 非整点（12:17/14:34...），只按 waypoint 对齐会在 12h 内全 skip、plan 卡在 1，不等价旧 accepted 序列 | 已保留 `--replan-waypoint-aligned-only` 开关与测试作为实验；生产 gate = interval 版 |
 | TD-40 | 连续船位（moving-vessel）字段 | 中 | **ESTABLISHED / REPLAY-LOCAL** | NavigationExecutionState 暴露 current_edge_index/segment ETAs/effective_speed_knots/executed & cumulative distance；validation stationary-vessel + cumulative 单调 PASS | Viewer 下一阶段直接消费后端船位，不自行插值；edge-interior replan 起点属 production contract 后续 |
+| TD-41 | Edge-interior C planner origin | 高 | **CONTRACT GAP（Future）** | C 只接受 grid-node start；本轮以 next-waypoint deferred adoption 保证物理船位不瞬移（node-aligned v1 + explicit adoption semantics），但真正的 edge-interior 任意点位起点仍需 C contract proposal | Physical motion = PASS；Edge-interior planning ≠ PASS |
+| TD-42 | Moving Ship（UI 呈现） | 中 | **NEXT PHASE（presentation）** | 与 continuous physical motion 分离：后端船位正确性 = PASS；逐帧渲染/船头朝向/动画属 Viewer 阶段 | 不应再把“moving ship”写成 backend debt |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

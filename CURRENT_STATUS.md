@@ -103,6 +103,16 @@ validation 增加 stationary-vessel 与 cumulative 单调检查。权威：
 可选 24h 扩展验证亦完成：`1743.2s`、25 snapshots、plan_revision 1→12、
 validation PASS、12h 前缀与权威 12h 一致 13/13。
 
+**Strategy B Ship Motion Semantics（2026-08-19 ship-motion 轮）。**
+纯 kinematics 模块 `vessel_state_at(任意 t)` 提供连续 physical position /
+speed（m/s + knots）/ NOT_STARTED / UNDERWAY / ARRIVED；`physical_position`
+与 `planner_origin_node` 正式分离，planner grid snap 不再写回物理船位；
+replan 采用 next-waypoint deferred adoption（mid-edge 决策不瞬移，新 route
+在下一执行节点生效）。真实 12h 审计：speed≈9.65 knots、1h 位移≈20.4km、
+snap median≈5.1km / max≈17.9km、grid edge median≈40.8km。单元测试 42 项
+PASS。权威：
+[`STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md`](STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md)。
+
 ## 当前状态重定义（审计后）
 
 ```text

@@ -102,6 +102,17 @@ generated_at     = 墙钟生成时刻（禁止用于因果）
   teleport / history rewind；
 - ETA 是 authoritative motion timeline；Viewer 不用前/后端像素速度。
 
+新增（ship-motion 轮）：
+
+```text
+physical_position        = 任意 simulation_time 的连续执行船位
+speed_mps / speed_knots  = 由 segment distance / ETA span 推出
+planner_origin_node      = 仅给 C 的 grid-node 起点，不移动物理船位
+replan_decision_time     = candidate 产生时刻
+effective_adoption_time  = deferred plan 在下一个 waypoint 生效的时刻
+adoption_status          = NONE / IMMEDIATE / DEFERRED / PENDING
+```
+
 ## 因果检查清单（改代码时）
 
 1. 新增数据读取路径：先 `issue_time <= knowledge_as_of`；
