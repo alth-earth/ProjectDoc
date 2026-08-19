@@ -158,6 +158,26 @@ XDG_CACHE_HOME=/root/my_project/.runtime/causal-replay-mvp/cache \
   /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/<det-root>`
   + 相同 `--replay-id`，然后比对 manifest 与 snapshot digest。
 
+## 模式 D — Replay Presentation（Strategy B，2026-08-19）
+
+```bash
+cd /root/my_project/arctic_route_orchestrator
+.venv/bin/python scripts/replay_presentation.py \
+  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
+  --audit
+.venv/bin/python scripts/replay_presentation.py \
+  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
+  --state 2026-08-15T10:30:00Z
+```
+
+- `--audit` 输出每个 accepted replan 的机器可读 adoption 决策（decision /
+  physical pos / planner origin / snap / mode / scheduled+effective adoption /
+  route changed / revisions / track 长度），并给最小汇总；
+- `--state` 返回任意仿真时刻的 presentation state；船位由 accepted route ETA
+  决定，Viewer 只做平滑；
+- 最新 HEAD 权威 12h = `sb-viewer-baseline-12h(-det)`：
+  validation/route integrity/determinism 全 PASS。
+
 ## 故障恢复
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；

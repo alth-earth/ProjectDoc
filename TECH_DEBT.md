@@ -60,6 +60,10 @@
 | TD-40 | 连续船位（moving-vessel）字段 | 中 | **ESTABLISHED / REPLAY-LOCAL** | NavigationExecutionState 暴露 current_edge_index/segment ETAs/effective_speed_knots/executed & cumulative distance；validation stationary-vessel + cumulative 单调 PASS | Viewer 下一阶段直接消费后端船位，不自行插值；edge-interior replan 起点属 production contract 后续 |
 | TD-41 | Edge-interior C planner origin | 高 | **CONTRACT GAP（Future）** | C 只接受 grid-node start；本轮以 next-waypoint deferred adoption 保证物理船位不瞬移（node-aligned v1 + explicit adoption semantics），但真正的 edge-interior 任意点位起点仍需 C contract proposal | Physical motion = PASS；Edge-interior planning ≠ PASS |
 | TD-42 | Moving Ship（UI 呈现） | 中 | **NEXT PHASE（presentation）** | 与 continuous physical motion 分离：后端船位正确性 = PASS；逐帧渲染/船头朝向/动画属 Viewer 阶段 | 不应再把“moving ship”写成 backend debt |
+| TD-43 | Presentation Adapter + Contract | 中 | **ESTABLISHED（2026-08-19）** | `replay/presentation.py` + `scripts/replay_presentation.py`；任意仿真时刻船位 = accepted route ETA + `vessel_state_at`；adoption audit 机器可读；T1–T7 + audit 测试；Viewer 不再直接读 replay internals | 下一轮 Viewer 只消费 presentation state；60 FPS 平滑不维护业务速度 |
+| TD-44 | 统计口径：REPLAN_DECIDED 的候选/采纳计数 | 中 | **FIXED（2026-08-19）** | 旧 summary 只把 REPLAN_TRIGGERED 计为 accepted；已把 REPLAN_DECIDED 计入 candidate_computed / candidate_accepted（修正后 latest-head 12h：candidate 12 / accepted 6 / rejected 6 / skip 1） | 复跑验证 manifest+13/13 snapshot+risk+route digest 与首次全等 |
+| TD-45 | deferred pending 期间的 interval gate 优化 | 低 | **NEXT（不本轮做）** | deferred adoption 使 accepted plan 在 pending 期间不刷新，interval gate 在更多 tick 放行 C（latest-head 12h 约 34min，vs 旧 immediate 约 21.8min）；可将来在 pending plan 存在且 TIME-only 时跳过 | 本轮按约束不做 Planner 性能优化；下轮若需要可加“pending-plan gate”并保持语义等价 |
+| TD-19 | GEBCO real-world coastline integrity | 高 | **FOUNDATION ESTABLISHED（2026-08-19）** | `replay/geospatial.py`：EPSG:4326 canonical transform、basemap metadata、L2 coastline gate + 本地 GEBCO_2026 land_sea_mask real smoke（水域 PASS / 穿陆 FAIL） | 下一轮并入 demo preflight 作为正式 L2 门禁；data already local |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

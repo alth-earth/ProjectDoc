@@ -113,6 +113,21 @@ snap median≈5.1km / max≈17.9km、grid edge median≈40.8km。单元测试 42
 PASS。权威：
 [`STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md`](STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md)。
 
+**Strategy B Viewer Backend Baseline（2026-08-19）。**
+performance hardening（2h pre-planning gate）与最新 ship-motion / deferred
+adoption 语义在最新 HEAD 上联合成立。最新 HEAD 12h 权威复跑
+`sb-viewer-baseline-12h(-det)`：total 2044.9s（约 34min）、13 snapshots、
+snapshots/replay/manifest validation 全 PASS、route integrity PASS（12/12）、
+determinism PASS（manifest + 13/13 snapshot + risk + route digest 一致，wall-clock
+允许不同）；adoption audit 机器确认：4 个窗口内已生效 replan 全部
+`NEXT_WAYPOINT_DEFERRED`（`IMMEDIATE=0`）、决策时 `physical_at_waypoint=false`、
+snap 0–0km、跨 adoption 逐小时位移约 17.9km 无跳变，另有 rev6 于 22:00 决策、
+窗口外待生效。新增 Replay Presentation Adapter + Presentation Contract
+（T1–T7 + audit 测试）与 GEBCO/L2 foundation（EPSG:4326 canonical transform、
+basemap metadata、L2 coastline gate harness + 本地 GEBCO_2026 land_sea_mask
+real-data smoke）。权威：
+[`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
+
 ## 当前状态重定义（审计后）
 
 ```text
@@ -132,7 +147,11 @@ Causal Replay Feasibility = PARTIAL（A 19h / B 44h 末期窗口）
 Strategy B = CAUSAL REPLAY ENGINE + SAME-VESSEL ROUTE PLANNING MVP ESTABLISHED
 Strategy B C 规划 = v3 four-layer + same-vessel navigation PASS
 Strategy B 性能 = 12h ≈21.8min（1.59×）；moving-vessel semantics PASS
-Next = three-window Viewer + moving ship execution（下一轮）
+Strategy B 最新 HEAD 联合基线 = PASS（12h ≈34min + 13 snapshots + determinism PASS）
+Presentation Adapter = ESTABLISHED（T1–T7 + audit）
+GEBCO/L2 = FOUNDATION ESTABLISHED（canonical EPSG:4326 + land_sea_mask smoke）
+Next = GEBCO real basemap → L2 gate → Timeline → Dynamic Risk/Route →
+        Moving Ship / Replanning Animation（下一轮）
 ```
 
 ## 当前版本

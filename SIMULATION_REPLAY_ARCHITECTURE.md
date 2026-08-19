@@ -40,6 +40,8 @@
 | Semantic digest 硬化 | IMPLEMENTED（risk/route 业务 digest + mutation tests） |
 | NavigationExecutionState v1 | IMPLEMENTED（node-aligned same-vessel replan origin） |
 | Objective-level 并行（1/2/3 worker） | IMPLEMENTED + benchmark（157.2s/100.9s/80.5s，结果逐位一致） |
+| Presentation Adapter（2026-08-19） | ESTABLISHED（`replay/presentation.py`；任意仿真时刻船位由 accepted route ETA + `vessel_state_at` 重建；adoption audit 机器可读；T1–T7 测试） |
+| GEBCO / L2 基础（2026-08-19） | ESTABLISHED（`replay/geospatial.py`：EPSG:4326 canonical transform、basemap metadata、L2 coastline gate harness + 本地 GEBCO_2026 land_sea_mask real smoke） |
 
 ## 3. Canonical Time Model
 
@@ -178,6 +180,35 @@ v1 明确限制：replan origin 只能是 grid node（C planner 合同），当�
 使用 accepted route 最后到达 waypoint snap 到最近可通航 node（显式
 tolerance + `snap_adjustment_km` 记录）；edge-interior 任意起点、连续
 NavigationExecutionState production contract 与 moving-ship 动画属后续。
+
+## 13.1 Presentation Adapter（2026-08-19）
+
+Viewer 不直接读 replay 内部实现；`PresentationAdapter(manifest, snapshots)`
+把 backend business semantics 投影成稳定 presentation contract：
+
+```text
+SimulationSnapshot / ReplayManifest
+        ↓
+PresentationAdapter（state_at(t) / vessel_at(t) / adoption_audit()）
+        ↓
+Viewer（只消费 presentation state + 60 FPS 平滑，不猜业务速度）
+```
+
+关键点：
+
+- snapshot cadence（1h）≠ vessel render cadence；`vessel_at(t)` 用当前
+  accepted plan 的 route waypoint ETA + `vessel_state_at` 计算任意时刻船位；
+- `accepted_route`（physical-clock ETA）在 snapshot 中持久化，Adapter 不重算
+  Planner、不改 route、不解释 risk 业务规则、不改 adoption timing；
+- adoption audit 区分 `IMMEDIATE` / `NEXT_WAYPOINT_DEFERRED`，并同时报告
+  `scheduled_adoption_time`（计划生效）与 `effective_adoption_time` /
+  `route_changed_time`（实际生效，1h tick 评估）；
+- `REPLAN_SKIPPED` / `PLAN_REUSED` 不渲染成 route 变化；`REPLAN_ADOPTED` /
+  `ROUTE_CHANGED` 才是 adopted-route 切换。
+
+真实 latest-head 12h 审计：0 `IMMEDIATE`、4 `NEXT_WAYPOINT_DEFERRED`
+（rev2–5，另有 rev6 22:00 决策窗口外待生效）、决策时刻全部 mid-edge、
+跨 adoption 无跳变。
 
 ## 14. Artifact Reuse
 

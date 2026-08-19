@@ -50,6 +50,7 @@
 | 失败降级（live TIMEOUT/FAIL 透明、冻结结果仍可看） | PASS（API 显式 FAIL，不冒充成功） |
 | Causal Replay 性能硬化（2026-08-19） | PASS（12h 2071.4→1306.8s；candidate 13→8；业务 13/13 一致） |
 | Moving Ship（沿 ETA 连续移动） | NEXT PHASE（本轮只补后端船位语义，未做 UI） |
+| Viewer Backend Baseline（2026-08-19） | PASS（最新 HEAD 12h：2044.9s、13 snapshots、validation/route integrity PASS、determinism PASS；Presentation Adapter T1–T7；GEBCO/L2 foundation + 本地 land_sea_mask smoke） |
 
 ## 4. 空间数据口径（Demo Candidate 2 新增）
 

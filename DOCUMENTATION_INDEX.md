@@ -33,6 +33,7 @@
 - [Strategy B Semantic Hardening 2026-08-18](STRATEGY_B_SEMANTIC_HARDENING_20260818.md) — revision/digest 硬化、v3 合同解决、NavigationExecutionState、多核 benchmark
 - [Strategy B Performance Hardening 2026-08-19](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md) — replan 成本审计、pre-planning gate、12h 2071.4→1306.8s、moving-vessel 语义、determinism
 - [Strategy B Ship Motion Semantics 2026-08-19](STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md) — physical/planner 分离、route-ETA speed、deferred adoption、no-teleport
+- [Strategy B Viewer Foundation 2026-08-19](STRATEGY_B_VIEWER_FOUNDATION_20260819.md) — latest-HEAD 联合基线 12h、Presentation Adapter/Contract、adoption audit、GEBCO/L2 foundation
 
 ## 规划
 

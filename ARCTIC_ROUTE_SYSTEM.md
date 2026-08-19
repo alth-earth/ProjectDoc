@@ -670,6 +670,22 @@ Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` �
   不自行猜像素速度；
 - 详见 [`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。
 
+## 16.2 Strategy B Viewer Backend Baseline（2026-08-19）
+
+- 最新 HEAD 联合基线（performance hardening + ship motion deferred adoption）：
+  12h authoritative `sb-viewer-baseline-12h(-det)` = 2044.9s、13 snapshots、
+  validation / route integrity（12/12）/ determinism 全 PASS；
+- adoption audit：窗口内 4 个 accepted replan 全部 `NEXT_WAYPOINT_DEFERRED`
+  （`IMMEDIATE=0`）、决策时 mid-edge、跨 adoption 无跳变、snap 0km；rev6 22:00
+  决策窗口外待生效；
+- Presentation Adapter / Contract 建立（`replay/presentation.py` +
+  `scripts/replay_presentation.py`）；任意仿真时刻船位由 accepted route ETA +
+  `vessel_state_at` 决定，Viewer 不猜航速；
+- GEBCO/L2 foundation（`replay/geospatial.py`）：EPSG:4326 canonical
+  transform、basemap metadata、L2 coastline gate harness + 本地 GEBCO_2026
+  land_sea_mask real smoke（水域 PASS / 穿陆 FAIL）；
+- 详见 [`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
+
 ## 17. 安全声明
 
 本系统是科研演示。环境来源可用性、风险规则、CNN、船型、阈值、hard mask 与优化目标均未
