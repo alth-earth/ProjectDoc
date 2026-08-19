@@ -1,7 +1,7 @@
 # Engineering Run Report Standard（2026-08-19）
 
 状态：本轮起生效的最终报告模板标准（authoritative）
-范围：所有后续有人值守 Codex 轮次的最终报告，必须使用本模板，不得每轮随意
+范围：所有后续 Codex 轮次的最终报告，必须使用本模板，不得每轮随意
 换结构；细节可以补充，固定区块不能省略。
 
 ## 1. Purpose
