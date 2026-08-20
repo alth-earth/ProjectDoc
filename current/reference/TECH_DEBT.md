@@ -20,8 +20,8 @@ Last Verified: 2026-08-20
 | TD-15 | Temporal Semantics Audit / canonical time model | ~~HIGH~~ → **RESOLVED / DOCUMENTED** | 2026-08-17 审计完成：issue_time/valid_time/knowledge_as_of/simulation_time 语义、145 帧结构、+6h replan、因果/事后模式、无泄漏 | 4 个结构性 gap 已记录（causal 相等非硬门、B 无显式 horizon、D 丢失 as_of/mode、route 无 mode） |
 | TD-16 | Simulation Snapshot schema | HIGH | NEXT PHASE（未开始） | 二维时间模型：simulation_time × forecast valid_time/lead；需合同设计，本轮未改 schema |
 | TD-17 | Rolling A→B→C→D replay pipeline | HIGH | NEXT PHASE（未开始） | 当前 145 帧是单一 knowledge 快照，不能直接当播放器帧；需每 tick 固定知识边界重算 |
-| TD-18 | Simulation-clock Viewer | HIGH | NEXT PHASE（未开始） | 主控 = simulation_time；区分 risk horizon（current/+6/+12/+24）与 C 四层 |
-| TD-19 | GEBCO real-world coastline integrity | HIGH | NEXT PHASE（未开始） | 需 CRS/bbox/transform/coastline/bathymetry；与风险帧对齐后复跑 Geo Integrity gate |
+| TD-18 | Simulation-clock Viewer | HIGH | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | 主控 = simulation_time；risk horizon（current/+6/+12/+24）与 C route state 已分离，切 horizon 不改变船位 |
+| TD-19 | GEBCO real-world coastline integrity | HIGH | **FOUNDATION ESTABLISHED（2026-08-19）** | EPSG:4326 canonical transform、coastline/L2 gate、GEBCO land mask 与 risk cells 已对齐 |
 | TD-20 | knowledge cutoff vs max-source-issue distinction | ~~HIGH~~ → **AUDITED / DOCUMENTED** | 2026-08-17：契约层允许 `as_of > max issue`（A 单测证明）；orchestrator intake 强制相等（生产约定）；causal replay 需放开 | 下一轮改 intake：接受逻辑 knowledge_as_of + visible_record_set_digest |
 | TD-21 | causal equality enforcement（knowledge_as_of == simulation_time） | HIGH | NEXT PHASE（未开始） | 当前 frozen_forecast 只强制 as_of<=start；causal 模式需显式硬门 |
 | TD-22 | scenario_mode presentation propagation | ~~HIGH~~ → **RESOLVED** | 2026-08-17：demo-state + Viewer 展示 scenario_mode/simulation/knowledge_as_of | route/B 层仍不携带 mode（下一轮 contract proposal） |
@@ -75,8 +75,9 @@ Last Verified: 2026-08-20
 | TD-46 | GEBCO `land_sea_mask` 极性误解 | 高 | **CORRECTED（2026-08-19）** | 上一轮 foundation 按 `1=land` 解释；项目规范语义实为 `1=sea, 0=land_or_coast`。已修正 `LandMaskSampler` 与 smoke 描述；真实 12h route L2 = PASS（0 land cell） | 后续所有 L2 / Viewer land overlay 必须沿用 `1=sea` |
 | TD-47 | 受限 sandbox 无法跑浏览器/socket | 中 | **RESOLVED FOR THIS ROUND / BROWSER_E2E_PASS** | 默认受限 profile 仍阻断 daemon/socket；attended run 通过允许的 escalated local Firefox path 完成真实浏览器验证，console/network 均 PASS | 后续 CI 仍需提供可复现浏览器执行环境 |
 | TD-48 | Viewer superseded route 绘制 | 低 | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | Adapter 输出 `superseded_future_route`，D 以灰色虚线显示，adoption 后保留过去 future segment | 后续可做 richer animation，不改变语义 |
-| TD-49 | Dynamic Risk / Hard Reason overlay | 中 | **CURRENT MVP PASS / BROWSER_E2E_PASS（2026-08-20）** | Orchestrator 输出 presentation-ready current frames；D 按 Simulation Clock 对齐风险与 hard reason，`unknown != safe` | NEXT：current/+6/+12/+24h presentation horizon controls |
-| TD-50 | Dynamic Risk presentation horizons | 中 | **NEXT** | 当前 MVP 只选择 latest `valid_time <= simulation_time`；已保留有效时间和 signed horizon | 增加 +6/+12/+24h 视图，保持单一 Simulation Clock |
+| TD-49 | Dynamic Risk / Hard Reason overlay | 中 | **CURRENT MVP PASS / BROWSER_E2E_PASS（2026-08-20）** | Orchestrator 输出 presentation-ready current/horizon selections；D 按 Simulation Clock 对齐风险与 hard reason，`unknown != safe` | 当前语义已完成；后续只做视觉 polish |
+| TD-50 | Dynamic Risk presentation horizons | 中 | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | Current/+6/+12/+24h 已有 exact/floor/out-of-range unavailable contract；不复用 stale frame；Simulation Time 切换不变 | 若未来扩大 frame range，继续保持 fail-closed selection |
+| TD-51 | replay_viewer_export.py editor diagnostics | 中 | **RESOLVED / EDITOR_ENVIRONMENT（2026-08-20）** | 四个 unresolved-import 红线来自缺少 repo-local interpreter/type-checker 配置；`pyrightconfig.json` 指向 `.venv` + `src`，无 production `sys.path` hack；py_compile/ruff/import smoke PASS | CI 若引入 Pyright，使用同一 repo-local config |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。

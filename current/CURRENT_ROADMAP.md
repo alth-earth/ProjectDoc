@@ -9,7 +9,7 @@ Supersedes: archive/superseded/ABC_10_DAY_SPRINT.md
 
 # Current Roadmap
 
-## Current Phase: Viewer Product Mainline（2026-08-20 21:13 +08:00）
+## Current Phase: Viewer Product Mainline（2026-08-20 22:50 +08:00）
 
 The causal replay engine, performance hardening, physical vessel motion,
 deferred adoption, Presentation Adapter, GEBCO L2 preflight, and
@@ -19,12 +19,17 @@ closed for this phase.
 
 ## Milestone Sequence
 
-### 1. Dynamic Risk Overlay — Current Frame (COMPLETE)
+### 1. Dynamic Risk Overlay — Current Frame + Horizons (COMPLETE)
 
 Consumed formal B risk frames via the Presentation Adapter. The current frame
 is driven by `simulation_time`, not A forecast lead; selection is the latest
 `valid_time` at or before the simulation time. Presentation horizon is
 `risk.valid_time - simulation_time`.
+
+Current/+6h/+12h/+24h selections are exported by the Orchestrator with
+requested/actual valid times, actual horizon seconds, selection method, and
+availability. Floor selection is used only within the formal frame range;
+out-of-range requests are unavailable and never reuse a stale frame.
 
 ### 2. Hard Reason / Availability Overlay (COMPLETE)
 
@@ -42,11 +47,11 @@ The Viewer presents the transition from pending to adopted route at the correct
 `effective_adoption_time`, with distinct `REPLAN_DECIDED` and
 `REPLAN_ADOPTED` event state. Rich animation remains a later polish item.
 
-### 5. Dynamic Risk Horizons (NEXT)
+### 5. Presentation Mode and Layer Controls (COMPLETE)
 
-Add presentation controls for current, +6h, +12h, and +24h. These must remain
-derived from `risk.valid_time - simulation_time` and must not become a second
-business clock.
+Presentation Mode hides engineering diagnostics by default. Engineering Debug
+remains available, and Risk, Hard/Availability, Routes, and Completed Track can
+be toggled independently without changing business semantics.
 
 ### 6. Route / Objective Controls
 
