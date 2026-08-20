@@ -1,8 +1,22 @@
 # RC2 开发状态
 
-状态：CURRENT（当前）
-最后更新：2026-08-17
-适用范围：Demo RC1 之后的 RC2 功能完善阶段
+---
+Document Status: FROZEN_RC2
+Branch: rc2-development
+Frozen At: 2026-08-17 (commit e3f43f2)
+Canonical Current State: NO
+Scope: RC2 frozen baseline (post-RC1 functional completion)
+Frozen Baseline: work_package_a/docs/DEMO_RC1_BASELINE_20260816.md (RC1 immutable)
+---
+
+> **FROZEN ≠ COMPLETE.** This document records RC2 as it actually stood at the
+> 2026-08-17 freeze. Items not completed at freeze (e.g. second-scenario 144h full
+> RC, independent backup) are explicitly marked below and must NOT be silently
+> upgraded to PASS. Later Strategy B / Viewer work is NOT part of RC2.
+
+状态：FROZEN（RC2 冻结，2026-08-17）
+最后更新：2026-08-17（冻结时状态，后续不在此文档倒灌）
+适用范围：Demo RC1 之后的 RC2 功能完善阶段（已冻结）
 权威基线：`work_package_a/docs/DEMO_RC1_BASELINE_20260816.md`（RC1 不可变）
 
 ## 1. 基线

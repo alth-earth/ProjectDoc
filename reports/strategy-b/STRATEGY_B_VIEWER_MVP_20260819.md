@@ -1,7 +1,7 @@
 # Strategy B Replay-driven Viewer MVP（2026-08-19）
 
 状态：本轮随报告完成（本地 commit，未 push）
-形式：按 [Engineering Run Report Standard](ENGINEERING_RUN_REPORT_STANDARD.md)
+形式：按 [Engineering Run Report Standard](../../standards/ENGINEERING_GOVERNANCE_STANDARD.md)
 的固定区块整理（完整最终报告见对话末尾）。
 
 ## 1. Executive Summary

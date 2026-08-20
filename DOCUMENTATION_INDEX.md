@@ -46,7 +46,7 @@ Last Verified: 2026-08-20
 |----------|----------|
 | Superseded (old plans, etc.) | [archive/superseded/](archive/superseded/) |
 | Pre-governance archives | [archive/pre-governance/](archive/pre-governance/) |
-| Deprecated | [archive/deprecated/](archive/deprecated/) |
+| Deprecated | [archive/deprecated/](archive/deprecated/README.md) (currently N/A) |
 
 ## Local (operator-only, gitignored)
 

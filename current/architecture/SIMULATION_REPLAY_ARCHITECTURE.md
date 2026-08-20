@@ -1,10 +1,13 @@
-# Simulation Replay Architecture（候选设计，2026-08-17）
+# Simulation Replay Architecture（设计 + 实现，2026-08-17 起，经 2026-08-20 治理审计）
 
-> 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18）**
+> 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18） + VIEWER MVP IMPLEMENTED（2026-08-19）**
 > 已实现：replay models/digests/runner/validation/inspector；真实 12h/24h/44h
 > Scenario B 回放 PASS（engine level）；C 四层因风险窗 < ETA 保持
-> PLANNING-HORIZON ARCHITECTURE BLOCKER（诚实 fail-closed）。
-> 详细结果：[`CAUSAL_REPLAY_MVP_20260818.md`](CAUSAL_REPLAY_MVP_20260818.md)
+> PLANNING-HORIZON ARCHITECTURE BLOCKER（诚实 fail-closed）；
+> Viewer（`work_package_d`）消费 Presentation Adapter 导出的 `bundle.json`，
+> Simulation Clock 驱动渲染，船舶连续运动已验证（12h baseline 0 land cell）。
+> 详细结果：[`CAUSAL_REPLAY_MVP_20260818.md`](../../reports/strategy-b/CAUSAL_REPLAY_MVP_20260818.md)、
+> [`STRATEGY_B_VIEWER_MVP_20260819.md`](../../reports/strategy-b/STRATEGY_B_VIEWER_MVP_20260819.md)
 > 依据：`CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`、
 > `TEMPORAL_SEMANTICS_AUDIT_20260817.md`
 
@@ -217,10 +220,13 @@ Viewer（只消费 presentation state + 60 FPS 平滑，不猜业务速度）
   `presentation_eligible` 唯一 verdict；`replay_viewer_preflight.py` CLI；
 - L2 gate 改为 raster-cell traversal（mask grid，oversample <= 2x cell），
   不再按固定经纬度步长采样；语义对齐项目规范 `1=sea, 0=land_or_coast`；
-- Viewer MVP 只消费 `viewer/bundle.json`（由 Presentation Adapter 生成）：
-  Simulation Clock 驱动 basemap/route/track/vessel/pending；浏览器 60 FPS
-  仅在 backend segment 上插值，不维护业务速度；`viewer/` 含 build_basemap /
-  build_bundle / embed / render_proof / app.js；
+- Viewer (in `work_package_d`) consumes only `viewer/bundle.json`, produced by the
+  orchestrator Presentation Adapter (`scripts/replay_viewer_export.py`): Simulation
+  Clock drives basemap / route / track / vessel / pending; the browser interpolates
+  only on backend segments at 60 FPS and does **not** invent business speed. The
+  Viewer implementation lives in `work_package_d/viewer/` (app.js, embed.py,
+  render_proof.py, pngcodec.py), owned solely by D; the orchestrator does not host
+  the Viewer runtime.
 - 真实 Scenario B 12h：L2 = 5 route revisions + completed tracks 全 PASS
   （0 land cell）；presentation eligible = True。
 

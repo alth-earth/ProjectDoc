@@ -1,7 +1,7 @@
 # 技术债登记
 
 状态：CURRENT（当前）
-最后更新：2026-08-17
+最后更新：2026-08-20
 范围：非阻塞事项 + NEXT PHASE（地理时序 Demo Viewer 阶段）
 
 ## HIGH / NEXT PHASE（Route Geospatial Integrity PASS 后）

@@ -76,8 +76,11 @@ Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
 
 ## Governance
 
-- `/root/my_project` is a plain workspace (no root Git repo).
-- Governance docs live in `arctic_route_governance/` (this repo).
+- `/root/my_project` is a **recovery / historical safety source** that still retains
+  its original ProjectDoc Git repo (`demo-engineering` @ `3812b5d`). It is intentionally
+  NOT retired this round. Governance docs live in `arctic_route_governance/` (this repo),
+  which is the canonical governance source. Final root-Git retirement is a human-reviewed
+  cutover step (not performed by automation).
 - Branch mapping: main=RC1 frozen, rc2-development=RC2 frozen, demo-engineering=active.
 - Documentation follows `standards/ENGINEERING_GOVERNANCE_STANDARD.md`.
 

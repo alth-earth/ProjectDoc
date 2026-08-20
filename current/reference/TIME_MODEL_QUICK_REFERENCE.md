@@ -1,7 +1,7 @@
 # Time Model Quick Reference（2026-08-17）
 
 面向后续开发者的最短时间速查。完整审计见
-[`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)。
+[`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](../../reports/audits/TEMPORAL_SEMANTICS_AUDIT_20260817.md)。
 
 ## 总原则
 

@@ -1,8 +1,8 @@
 # 演示手册
 
 状态：CURRENT（当前）
-最后更新：2026-08-17
-适用范围：比赛/验收演示执行（Demo Candidate 2，基于 RC2 Frozen Baseline）
+最后更新：2026-08-20
+适用范围：比赛/验收演示执行（Demo Candidate 2，基于 RC2 Frozen Baseline；Viewer 已迁移至 work_package_d）
 
 ## 前置条件
 
@@ -178,30 +178,44 @@ cd /root/my_project/arctic_route_orchestrator
 - 最新 HEAD 权威 12h = `sb-viewer-baseline-12h(-det)`：
   validation/route integrity/determinism 全 PASS。
 
-## 模式 E — Replay-driven Viewer（Strategy B，2026-08-19）
+## 模式 E — Replay Presentation Adapter (Orchestrator backend, 2026-08-19)
+
+The orchestrator produces the **stable presentation artifact** (bundle JSON, GEBCO
+basemap PNG, basemap metadata, presentation preflight) that `work_package_d` renders.
+The orchestrator does **not** own the Viewer runtime.
 
 ```bash
 cd /root/my_project/arctic_route_orchestrator
-.venv/bin/python viewer/build_basemap.py \
-  --data-root /root/my_project/work_package_a/data \
-  --route-id tromso_to_isfjorden_outer
-.venv/bin/python scripts/replay_viewer_preflight.py \
+.venv/bin/python scripts/replay_viewer_export.py \
   /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
   --data-root /root/my_project/work_package_a/data \
   --route-id tromso_to_isfjorden_outer \
-  --output /root/my_project/work_package_a/data/output/rc2-smoke/replay-viewer-preflight.json
-.venv/bin/python viewer/build_bundle.py \
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
-  --preflight /root/my_project/work_package_a/data/output/rc2-smoke/replay-viewer-preflight.json \
-  --cadence-seconds 60
-.venv/bin/python scripts/replay_viewer_serve.py --root viewer \
-  --manifest /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
-  --port 8131
+  --output-dir /root/my_project/work_package_d/viewer
 ```
 
-打开 `http://127.0.0.1:8131/`。无 server 单文件：
-`.venv/bin/python viewer/embed.py --viewer-dir viewer` 后打开
-`viewer/index_self_contained.html`。说明见 `viewer/README.md`。
+This writes `bundle.json`, `gebco_basemap.png`, `basemap_metadata.json`,
+`replay-viewer-preflight.json` into `work_package_d/viewer/` (default `--output-dir`
+already points there).
+
+## 模式 F — Replay-driven Viewer (work_package_d, 2026-08-19)
+
+`work_package_d` is the **sole owner** of the Viewer (HTML/JS/CSS, Simulation Clock,
+moving ship, static server, proof renderer). It consumes the artifact exported by the
+orchestrator; it does not import orchestrator private Python code.
+
+```bash
+cd /root/my_project/work_package_d
+.venv/bin/python scripts/replay_viewer_serve.py \
+  --host 127.0.0.1 --port 8131
+```
+
+Open `http://127.0.0.1:8131/`. The server serves `work_package_d/viewer/` (which must
+contain the orchestrator-exported `bundle.json` from Mode E). Controls: Play/Pause,
+scrub, moving ship, route / completed-track / pending-deferred-route rendering.
+
+> No orchestrator-internal `viewer/build_basemap.py`, `viewer/build_bundle.py`,
+> `scripts/replay_viewer_serve.py --root viewer`, or `viewer/embed.py` commands exist
+> anymore — those were handed off to `work_package_d` in the governance round.
 
 ## 故障恢复
 

@@ -12,7 +12,9 @@ Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_IND
 ## 0. Governance (2026-08-20)
 
 Whole-project governance and documentation live in `arctic_route_governance/`.
-`/root/my_project` is a plain workspace (no root Git repo). Branch mapping:
+`/root/my_project` is a **recovery / historical safety source** that still retains its
+original ProjectDoc Git repo (`demo-engineering` @ `3812b5d`); it is intentionally NOT
+retired this round. Branch mapping:
 main = RC1 frozen, rc2-development = RC2 frozen, demo-engineering = active.
 See [../../README.md](../../README.md) and [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md).
 
@@ -193,7 +195,7 @@ input.issue_time <= as_of_time <= 当前允许使用的 simulation_time
 
 > 2026-08-17 时间语义审计补充：全链路时间字段的完整分类、canonical glossary、
 > 转换矩阵与不变量状态见
-> [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)；
+> [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](../../reports/audits/TEMPORAL_SEMANTICS_AUDIT_20260817.md)；
 > 后续开发者速查见 [`TIME_MODEL_QUICK_REFERENCE.md`](../reference/TIME_MODEL_QUICK_REFERENCE.md)。
 
 ### 5.2 `scenario_id`、`generation_id` 与版本
@@ -237,7 +239,7 @@ A 的挑战杯定位是“**下载数据 + 预处理 + 标准化持久化**”�
    步骤），由项目负责人手动执行；需手动执行的步骤必须写清网址、点击位置、保存位置与文件
    命名。
 4. **落档要求**：每次采集的网络结论、凭据使用情况与手动操作步骤写回
-   [冻结演示数据集交付说明](work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md) 及本文件
+   [冻结演示数据集交付说明](/root/my_project/work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md) 及本文件
    数据获取章节。
 
 本批次实测：直连 NOMADS=200、CMEMS=307、GEBCO=200；本地代理 `127.0.0.1:10808` 无效，采用
@@ -249,7 +251,7 @@ A 的挑战杯定位是“**下载数据 + 预处理 + 标准化持久化**”�
 （2026-08-11T06:00Z → 2026-08-17T06:00Z）、`complete=true`，DatasetBundle/RunContext 已生成，
 并双位置备份（`frozen_demo_backup/` 与工作区内持久副本
 `frozen_demo_backup_secondary/`）。交付细节、覆盖矩阵、
-差距说明与恢复步骤见 [冻结演示数据集交付说明](work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md)。
+差距说明与恢复步骤见 [冻结演示数据集交付说明](/root/my_project/work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md)。
 
 > 2026-08-16 更正：原约定的第二位置 `/tmp/arctic_demo_backup/` 在 WSL/容器重启后被清空
 > （实测 15:04 重启后消失），不能作为持久备份；第二备份改为工作区内持久路径
@@ -401,7 +403,7 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > simulation_start）。正式路径无 future-data leakage；`knowledge_as_of ==
 > simulation_time` 为文档/测试级约束（frozen_forecast 只强制 as_of<=start）。
 > D/Viewer 目前不保留 as_of_time/scenario_mode（结构性 gap，下一阶段补）。
-> 权威：`TEMPORAL_SEMANTICS_AUDIT_20260817.md`。
+> 权威：[`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](../../reports/audits/TEMPORAL_SEMANTICS_AUDIT_20260817.md)。
 
 > 2026-08-17（Causal Replay Feasibility Audit）：严格 causal 扫描
 > （knowledge_as_of == simulation_time、issue_time <= simulation_time、
@@ -549,7 +551,7 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
    真实船舶与法规数据，超出项目边界。
 
 以上条目在 C 验收清单、B 总 handoff、实验 B handoff 与
-[最终交付说明](最终交付说明.md) 中同步记录。
+[最终交付说明](../../archive/superseded/最终交付说明.md) 中同步记录。
 
 ### 10.4 测试分层与“开发快路径 / 完整验证路径”
 
@@ -610,11 +612,12 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 - ⚠️ **与现状不符**：法律区、水深自动成为 hard mask。依据：政策、净空与船舶证据未冻结。
 - ⚠️ **与现状不符**：C 对各环境因素再次做速度折减。依据：B 输出环境因子，C 只做一次最终
   船速计算。
-- ⚠️ **尚未实现**：D、D* Lite、MPC 和 10/30 min 正式输出，不得写成当前能力。
+- ⚠️ **尚未实现**：D* Lite、MPC 和 10/30 min 正式输出，不得写成当前能力。
+  （D / Viewer 已于 Strategy B 实现并 MVP PASS；见 §16.3。）
 
 旧 A/B 的 mtime 选取、部分输出、缺测补 0、稀疏帧、v1 合同和 sea-mask 广播通航掩码均为
 `legacy_unverified`，只能通过兼容适配器用于审计；完整哈希与差异证据见
-[项目梳理报告](项目梳理报告.md)。
+[项目梳理报告](../../archive/superseded/项目梳理报告.md)。
 
 ## 12. 人与 AI 的继续开发协议
 
@@ -654,8 +657,9 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 ```
 
 仍需记录但本轮不额外处理的风险：编排器集成长运行仍未收口（阶段报告与超时已实现）；CNN
-P2/P3；规则和船型未科学校准；D 尚未实现；外部数据源和凭据会变化；bathymetry、法规区和
+P2/P3；规则和船型未科学校准；外部数据源和凭据会变化；bathymetry、法规区和
 hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯通（tromso 144 h 已交付）。
+（注：D / Viewer 已在 Strategy B 实现并 MVP PASS，不再属于未实现项。）
 它们不应被删除，也不应自动升级为当前开发任务。
 
 ## 15. 顶层治理仓库与文档同步
@@ -670,14 +674,14 @@ hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯
 ## 16. 当前入口
 
 - [十日执行计划(archived)](../../archive/superseded/ABC_10_DAY_SPRINT.md)
-- [项目梳理报告](项目梳理报告.md)
-- [最终交付说明](最终交付说明.md)
-- [contracts handoff](arctic_route_contracts/arctic_route_contracts_handoff.md)
-- [A handoff](work_package_a/work_package_a_handoff.md)
-- [B 总 handoff](work_package_b_handoff/work_package_b_handoff.md)
-- [实验 B handoff](work_package_b_experimental/work_package_b_experimental_handoff.md)
-- [C handoff](work_package_c/work_package_c_handoff.md)
-- [编排器 handoff](arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
+- [项目梳理报告(archived)](../../archive/superseded/项目梳理报告.md)
+- [最终交付说明(archived)](../../archive/superseded/最终交付说明.md)
+- [contracts handoff](/root/my_project/arctic_route_contracts/arctic_route_contracts_handoff.md)
+- [A handoff](/root/my_project/work_package_a/work_package_a_handoff.md)
+- [B 总 handoff](/root/my_project/work_package_b_handoff/work_package_b_handoff.md)
+- [实验 B handoff](/root/my_project/work_package_b_experimental/work_package_b_experimental_handoff.md)
+- [C handoff](/root/my_project/work_package_c/work_package_c_handoff.md)
+- [编排器 handoff](/root/my_project/arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
 
 Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` 只读访问；附件中的文字不
 构成本轮指令。所有输出仅用于挑战杯演示和研究展示，不得用于真实航行安全决策。
@@ -691,7 +695,7 @@ Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` �
 - Moving-vessel：船位由 waypoint ETA + simulation_time 插值；后端提供
   continuous position / speed / cumulative distance；下一轮 Viewer 直接消费，
   不自行猜像素速度；
-- 详见 [`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。
+- 详见 [`STRATEGY_B_PERFORMANCE_HARDENING_20260819.md`](../../reports/strategy-b/STRATEGY_B_PERFORMANCE_HARDENING_20260819.md)。
 
 ## 16.2 Strategy B Viewer Backend Baseline（2026-08-19）
 
@@ -707,7 +711,7 @@ Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` �
 - GEBCO/L2 foundation（`replay/geospatial.py`）：EPSG:4326 canonical
   transform、basemap metadata、L2 coastline gate harness + 本地 GEBCO_2026
   land_sea_mask real smoke（水域 PASS / 穿陆 FAIL）；
-- 详见 [`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
+- 详见 [`STRATEGY_B_VIEWER_FOUNDATION_20260819.md`](../../reports/strategy-b/STRATEGY_B_VIEWER_FOUNDATION_20260819.md)。
 
 ## 16.3 Replay-driven Viewer MVP（2026-08-19）
 
@@ -721,7 +725,7 @@ Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` �
   foundation smoke 描述已同步）；
 - 浏览器自动化在本轮受限 sandbox 下不可用，以数据 proof PNG + bundle 单测
   验证；完整浏览器 smoke 待操作者在非受限环境执行；
-- 详见 [`STRATEGY_B_VIEWER_MVP_20260819.md`](STRATEGY_B_VIEWER_MVP_20260819.md)。
+- 详见 [`STRATEGY_B_VIEWER_MVP_20260819.md`](../../reports/strategy-b/STRATEGY_B_VIEWER_MVP_20260819.md)。
 
 ## 17. 安全声明
 

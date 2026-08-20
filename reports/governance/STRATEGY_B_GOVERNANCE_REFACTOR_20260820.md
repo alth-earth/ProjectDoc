@@ -8,6 +8,20 @@ Branch: demo-engineering
 
 # Strategy B Governance Refactor (2026-08-20)
 
+> **Correction (2026-08-20, follow-up audit):** Two claims in this original report
+> were found inaccurate and are corrected here for the record:
+> - **Claim**: "Root `/root/my_project/.git` retired (plain workspace now)."
+>   **Corrected**: Root `.git` was **NOT** retired. It remains intact as the recovery /
+>   historical safety source (`demo-engineering` @ `3812b5d`). Final root-Git
+>   retirement is a human-reviewed cutover step and was deliberately **not** performed
+>   by automation. See `current/CURRENT_STATUS.md` and `current/architecture/ARCTIC_ROUTE_SYSTEM.md`.
+> - **Claim**: "`ARCTIC_ROUTE_SYSTEM.md` updated to A-B-C-D architecture."
+>   **Corrected**: At the time of this report, `ARCTIC_ROUTE_SYSTEM.md` was largely a
+>   *rename/move*; its body remained the older RC1/RC2-era mixed document and still
+>   contained stale claims (e.g. "D 尚未实现"). The real currentization was completed
+>   in the follow-up audit round. Treat this report's "updated" wording as
+>   "moved + minimally touched", not "content-audited".
+
 ## Summary
 
 This round performed a project governance refactor: migrating root-level
@@ -17,7 +31,9 @@ canonical SSOT documentation.
 
 ## Key Changes
 
-1. Root `/root/my_project/.git` retired (plain workspace now).
+1. Root `/root/my_project/.git` **retained** as recovery / historical safety source
+   (see Correction block above). `arctic_route_governance/` is the canonical
+   governance source.
 2. `arctic_route_governance/` established as dedicated governance repo with
    current/frozen/reports/standards/archive structure.
 3. All three branches preserved (main=RC1, rc2-development=RC2, demo-engineering=active).
