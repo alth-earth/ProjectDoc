@@ -3,13 +3,13 @@ Document Status: ACTIVE_CANONICAL
 Scope: project roadmap / next phases
 Canonical For: what to do next, milestone sequence
 Branch: demo-engineering
-Last Verified: 2026-08-20
+Last Verified: 2026-08-21
 Supersedes: archive/superseded/ABC_10_DAY_SPRINT.md
 ---
 
 # Current Roadmap
 
-## Current Phase: Viewer Product Mainline（2026-08-20 22:50 +08:00）
+## Current Phase: Viewer Product Mainline（2026-08-21 01:20 +08:00）
 
 The causal replay engine, performance hardening, physical vessel motion,
 deferred adoption, Presentation Adapter, GEBCO L2 preflight, and
@@ -57,11 +57,14 @@ be toggled independently without changing business semantics.
 
 Allow viewer to select route revision, objective, layer for inspection.
 
-### 7. Final UI Polish
+### 7. Final UI Polish (COMPLETE)
 
-Styling, layout, responsive design, debug panel toggle.
+Presentation Mode styling, exact-cell risk rendering with pixel-aligned fills,
+separate hard legend, top-down heading-aware ship icon, and display-only
+collinear route densification are complete and Firefox-smoke verified. No
+authoritative risk, route, ETA, adoption, or replay semantics changed.
 
-### 8. Demo Rehearsal
+### 8. Demo Rehearsal (NEXT)
 
 End-to-end offline demo run with real artifacts.  Verify timing,
 narration, and fallback.

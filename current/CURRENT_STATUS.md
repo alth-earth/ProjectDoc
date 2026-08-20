@@ -3,7 +3,7 @@ Document Status: ACTIVE_CANONICAL
 Scope: whole-project current state
 Canonical For: current milestone, capability matrix, maturity
 Branch: demo-engineering
-Last Verified: 2026-08-20
+Last Verified: 2026-08-21
 ---
 
 # Current Status
@@ -39,7 +39,7 @@ Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
 | Route / Replanning Visualization | MVP COMPLETE | BROWSER_E2E_PASS |
 | Presentation / Engineering Mode | COMPLETE | BROWSER_E2E_PASS |
 | Presentation Layer Controls | COMPLETE | BROWSER_E2E_PASS |
-| Final Viewer UI Polish | NEXT | IMPLEMENTED |
+| Final Viewer UI Polish | COMPLETE | BROWSER_E2E_PASS |
 
 ## Key Metrics (latest authoritative)
 
@@ -79,6 +79,22 @@ The Viewer contract is now:
   independently toggleable;
 - 10:30 +6h displays 16:00 / actual +5h30m; 10:30 +12h/+24h show UNAVAILABLE
   because their requested valid times exceed the 22:00 formal frame range.
+
+## Viewer Presentation Polish（2026-08-21 01:20 +08:00）
+
+The grid audit found that the coarse 31×11 risk/hard layer is inherited from
+B's `demo_unvalidated_smoke_grid_v3` target-grid realization (about
+0.3667°×1.2°), while A/GEBCO remains about 0.05°. C consumes the same RiskFrame
+grid for planning waypoints; D was not the source of the coarse data. The audit
+is recorded in `GRID_PRESENTATION_AUDIT_20260821.md`.
+
+The Viewer polish is now complete at product level: Presentation Mode uses
+pixel-aligned exact cells and softer colors, Engineering Debug retains the raw
+cell grid, routes use only collinear display densification/round joins, and the
+ship uses a segment-bearing top-down icon while keeping backend ETA motion.
+Orchestrator bundle metadata makes these display-only boundaries explicit.
+Real Firefox smoke passed with zero console errors/warnings and HTTP 200
+required resources. Next milestone is demo rehearsal, then Demo Freeze.
 
 ## Version Summary
 
@@ -125,8 +141,8 @@ The Viewer contract is now:
    attended run used the available escalated local Firefox path and completed
    the browser E2E baseline. This is an execution-environment note, not a
    product verification gap.
-5. Rich route-transition animation, final visual polish, demo rehearsal, and
-   final freeze remain open. Horizon availability is intentionally bounded by
+5. Rich route-transition animation, demo rehearsal, and final freeze remain
+   open. Horizon availability is intentionally bounded by
    the existing formal artifact and is not extrapolated.
 
 ## What Is NOT Done
@@ -135,6 +151,6 @@ The Viewer contract is now:
   complete; unavailable horizons fail closed.
 - Superseded route visualization and adoption-state presentation are complete
   at MVP level; richer animation remains NEXT.
-- Final UI polish (NEXT)
+- Final UI polish (COMPLETE; BROWSER_E2E_PASS)
 - Demo rehearsal (NOT STARTED)
 - Final freeze (NOT STARTED)

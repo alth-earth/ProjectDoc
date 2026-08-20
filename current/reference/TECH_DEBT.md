@@ -3,13 +3,13 @@ Document Status: ACTIVE_CANONICAL
 Scope: non-blocking items + NEXT PHASE technical debt
 Canonical For: registered technical debt and next-phase work
 Branch: demo-engineering
-Last Verified: 2026-08-20
+Last Verified: 2026-08-21
 ---
 
 # 技术债登记
 
 状态：CURRENT（当前）
-最后更新：2026-08-20
+最后更新：2026-08-21
 范围：非阻塞事项 + NEXT PHASE（地理时序 Demo Viewer 阶段）
 
 ## HIGH / NEXT PHASE（Route Geospatial Integrity PASS 后）
@@ -78,6 +78,14 @@ Last Verified: 2026-08-20
 | TD-49 | Dynamic Risk / Hard Reason overlay | 中 | **CURRENT MVP PASS / BROWSER_E2E_PASS（2026-08-20）** | Orchestrator 输出 presentation-ready current/horizon selections；D 按 Simulation Clock 对齐风险与 hard reason，`unknown != safe` | 当前语义已完成；后续只做视觉 polish |
 | TD-50 | Dynamic Risk presentation horizons | 中 | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | Current/+6/+12/+24h 已有 exact/floor/out-of-range unavailable contract；不复用 stale frame；Simulation Time 切换不变 | 若未来扩大 frame range，继续保持 fail-closed selection |
 | TD-51 | replay_viewer_export.py editor diagnostics | 中 | **RESOLVED / EDITOR_ENVIRONMENT（2026-08-20）** | 四个 unresolved-import 红线来自缺少 repo-local interpreter/type-checker 配置；`pyrightconfig.json` 指向 `.venv` + `src`，无 production `sys.path` hack；py_compile/ruff/import smoke PASS | CI 若引入 Pyright，使用同一 repo-local config |
+
+2026-08-21（Viewer Presentation Polish）更新：
+
+| ID | 事项 | 优先级 | 状态 | 说明 |
+|---|---|---|---|---|
+| TD-52 | Viewer coarse risk/hard presentation grid | 中 | **AUDITED / PRESENTATION-MITIGATED** | 当前 31×11、约 0.3667°×1.2° 来自 B v3 target-grid realization；A/GEBCO 约 0.05°，D 不是数据根因。D 已采用 exact-cell pixel-aligned Presentation Mode，未插值或改变 hard semantics；若未来需要细化，必须在 B/presentation artifact 层版本化。 |
+| TD-53 | Viewer vessel heading visual | 低 | **ESTABLISHED / BROWSER_E2E_PASS** | D 使用 active authoritative route segment bearing 旋转 top-down icon；位置仍是 backend ETA + Simulation Clock。当前 12h artifact 的可见 segment heading 为 0°，后续长窗可补充非零 heading 视觉彩排。 |
+| TD-54 | Rich replanning transition animation | 低 | NEXT / NON-BLOCKING | 当前 pending/adopted/superseded 视觉语义已 PASS；可增加非语义 pulse/fade，但不得改 adoption time、route data 或 completed track。 |
 
 > 当前 P0 已被 TD-11 消解；TD-12–14 是下一阶段的正式路线，不作为本轮
 > correctness 审计范围。
