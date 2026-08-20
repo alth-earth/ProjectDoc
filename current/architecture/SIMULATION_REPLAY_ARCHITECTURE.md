@@ -1,3 +1,11 @@
+---
+Document Status: ACTIVE_CANONICAL
+Scope: simulation replay engine + presentation adapter + viewer artifact boundary
+Canonical For: how replay snapshots, digests, presentation export and Viewer handoff work
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
+
 # Simulation Replay Architecture（设计 + 实现，2026-08-17 起，经 2026-08-20 治理审计）
 
 > 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18） + VIEWER MVP IMPLEMENTED（2026-08-19）**

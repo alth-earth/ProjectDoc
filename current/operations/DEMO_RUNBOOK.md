@@ -1,3 +1,11 @@
+---
+Document Status: ACTIVE_CANONICAL
+Scope: competition/acceptance demo execution
+Canonical For: how to run the demo (Modes A-F)
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
+
 # 演示手册
 
 状态：CURRENT（当前）

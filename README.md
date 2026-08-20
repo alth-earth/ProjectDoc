@@ -12,7 +12,10 @@ This repository holds the **whole-project governance and documentation** for the
 Arctic Route Planning system.  It is NOT a code repository.  Code lives in the
 individual work-package repositories under `/root/my_project/`.
 
-`/root/my_project` itself is a **plain workspace** — not a Git repository.
+`/root/my_project` retains its root Git repository as a **recovery / historical
+safety source** (branch `demo-engineering`, kept intact; retirement is a
+human-reviewed cutover — never performed by automation).  It is NOT the
+canonical docs home; this governance repo is.
 
 ## Repository Layout
 

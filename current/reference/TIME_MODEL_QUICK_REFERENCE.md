@@ -1,3 +1,11 @@
+---
+Document Status: ACTIVE_CANONICAL
+Scope: time model quick reference (issue/valid/knowledge/simulation/generated)
+Canonical For: time-field semantics and causality rules
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
+
 # Time Model Quick Reference（2026-08-17）
 
 面向后续开发者的最短时间速查。完整审计见

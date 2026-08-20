@@ -1,3 +1,11 @@
+---
+Document Status: ACTIVE_CANONICAL
+Scope: non-blocking items + NEXT PHASE technical debt
+Canonical For: registered technical debt and next-phase work
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
+
 # 技术债登记
 
 状态：CURRENT（当前）

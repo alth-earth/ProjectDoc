@@ -1,10 +1,12 @@
 ---
-Document Status: HISTORICAL_REPORT
-Canonical Current State: NO
-Scope: Phase 14-15 final governance audit/correct/complete/validate/converge report
+Document Status: ACTIVE_CANONICAL
+Canonical Current State: YES
+Scope: FINAL CONSISTENCY CLOSURE — the single current final audit report for governance migration
+Canonical For: current authoritative closure verdict (ROOT_DOCUMENTATION_MIGRATION_READY / ROOT_GIT_RETIREMENT_READY)
 Branch: demo-engineering
 Generated: 2026-08-20
-Supersedes: (none — first comprehensive audit report)
+Last Verified: 2026-08-20
+Supersedes: STRATEGY_B_GOVERNANCE_REFACTOR_20260820.md, PHASE10_AUDIT_20260820.md, TEST_RUN_REPORT_20260820.md (all retained as HISTORICAL_REPORT)
 Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.md
 ---
 
@@ -32,7 +34,7 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 | D ruff | — | clean | PASS |
 | orchestrator pytest | 73 passed (prior round) | **RE-RUN this session: 75 passed** (73 fast + 2 integration, 41m35s) | REAL_E2E_PASS |
 | RC2 FROZEN ≠ COMPLETE | implied complete | banner + explicit note added | CORRECTED |
-| Integration 26-min replay | — | deliberately NOT RUN (targeted suites pass; long-run risk) | NOT RUN |
+| orchestrator integration | 2 scenarios | **re-run this session: 2 passed, 41m35s** (2495.25s) | REAL_E2E_PASS |
 
 ---
 
@@ -48,9 +50,9 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 | L2 polarity `1=sea,0=land` canonical | PASS | UNIT_PASS | SIMULATION_REPLAY_ARCHITECTURE §13.2 | corrected from prior `1=land` error |
 | D unit suite green | PASS | UNIT_PASS | `uv run pytest` 50 passed | conftest fix applied |
 | D ruff clean | PASS | UNIT_PASS | `uv run ruff check` All checks passed | |
-| orchestrator suite green | INHERITED (prior) | REAL_E2E_PASS | **re-run this session: 75 passed** (73 fast + 2 integration, 41m35s) + ruff clean | full re-run completed, not interrupted |
+| orchestrator suite green | INHERITED (prior) | REAL_E2E_PASS | **RE-RUN THIS SESSION: 75 passed** (73 fast + 2 integration, 41m35s) + ruff clean | full re-run completed, not interrupted |
 | Root `.git` retained (not retired) | PASS | AUTHORITATIVE_PASS | `ls -d .git` exists @ `3812b5d`; CURRENT_STATUS corrected | human-reviewed cutover only |
-| 26-min integration replay | NOT RUN | NOT_IMPLEMENTED (for this session) | targeted suites pass; long-run risk | honest NOT RUN per #47/#48 |
+| 12h authoritative semantic determinism | INHERITED | AUTHORITATIVE_PASS | determinism unit/contract tests PASS (re-run); **12h twin-run NOT re-executed** | 75 pytest PASS ≠ re-run 12h determinism |
 | New-handoff simulation (#59) | PASS | SMOKE_PASS | link audit passed; README+DOCUMENTATION_INDEX derive architecture | |
 
 ---
@@ -68,7 +70,7 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 **做了**：P0-1 治理取证审计；P0-2 当前规范文档内容级修正（CURRENT_STATUS/ARCTIC_ROUTE_SYSTEM/SIM_REPLAY/DEMO_RUNBOOK/RECOVERY_RUNBOOK/reference）；P0-3 冻结 RC1/RC2 补全；P0-4 子项目文档审计（link/stale/empty-dir/coverage）；P0-5 Viewer 迁移深度验证（ownership/HTTP smoke/import boundary）；治理本地提交 `d9e8f46`；本报告。
 
-**没做**：不删根 `.git`；不删根旧文档；不 push；不 reset D/orchestrator 迁移历史；不重跑 26-min 集成回放；不重写 frozen digests；不做新场景/性能优化。
+**没做**：不删根 `.git`；不删根旧文档；不 push；不 reset D/orchestrator 迁移历史；不重跑 12h authoritative determinism twin-run；不重写 frozen digests；不做新场景/性能优化。**已做**：integration/real_artifact 2 场景本轮完整重跑（41m35s）。
 
 ---
 
@@ -77,7 +79,7 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 - starting HEAD (governance): `4a22ecd` (origin/demo-engineering)
 - starting artifact: empty `frozen/rc1-main/`; stale root-Git claims in 2 docs; `D 尚未实现` claims in ARCTIC_ROUTE_SYSTEM
 - previous authoritative metrics: orchestrator **75 passed (re-run this session, full)** + ruff clean; D 50 passed (post conftest fix)
-- known limitations: orchestrator `viewer/` double-ownership residual; 26-min integration NOT RUN
+- known limitations (this closure): 12h authoritative determinism INHERITED (not re-run); viewer residual resolved (see §6)
 
 ---
 
@@ -96,10 +98,9 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 ## 5. Filesystem & Resource Safety
 
-- writes outside allowed root: **NONE** (only within `arctic_route_governance/` and `work_package_d/` for conftest)
+- **KNOWN PROCESS-POLICY VIOLATION (previous closure run)**: `/tmp/orch_integ.log` was written by the earlier integration test re-run. Impact: test logging only, no product semantic impact. Correction: this closure run writes logs only under `/root/my_project/.runtime/test-logs/` (see P4 export + serve.log). **writes outside allowed root = YES (historical, logged)**.
 - root `.git` / root old docs: **untouched, not deleted**
-- heavy task: NONE this session (no 26-min replay; no model training) → `free -h`/OOM/RSS: N/A
-- RAM/disk: no heavy task, no OOM, no peak-RSS concern
+- heavy task: orchestrator integration 2 scenarios re-run this session (41m35s); no OOM, no memory concern observed
 
 ---
 
@@ -137,8 +138,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 ## 9. Authoritative Run / Real Validation
 
-- **Viewer real artifact smoke (继承上一轮已验证，本轮未重跑长任务)**：orchestrator `replay_viewer_export.py` on `sb-viewer-baseline-12h-det` → bundle (preflight=PASS, l2=PASS, timeline=721)；D server served HTTP 200 on `/`,`/bundle.json`,`/gebco_basemap.png`；ship trajectory 连续 (10:00→18.4,70.333; 10:30→18.4,70.414; 11:00→18.4,70.494; status UNDERWAY, no jumps).
-- 26-min integration replay: **NOT RUN** — targeted suites pass, resource-safe but long-run; honest NOT RUN per #47/#48.
+- **Viewer real artifact smoke (RE-RUN THIS SESSION, P4)**：orchestrator `replay_viewer_export.py` on `sb-viewer-baseline-12h-det` → bundle (preflight=PASS, l2=PASS, timeline=721, bundle 263KB)；D server (`127.0.0.1:8131`) served HTTP 200 on `/`,`/bundle.json`,`/gebco_basemap.png`,`/basemap_metadata.json`；ship trajectory 连续 (10:00→lat 70.3333; 10:30→70.4135; 11:00→70.4938; 15:00→71.1358; status UNDERWAY, no jumps)；deferred adoption: `13:00 REPLAN_DECIDED rev=2` (arv=1, prv=2, PENDING) → `15:00 REPLAN_ADOPTED rev=2` (arv=2) — **REPLAN_DECIDED ≠ REPLAN_ADOPTED** confirmed on real artifact.
+- orchestrator integration: **re-run this session — 2 passed, 41m35s** (see TEST_RUN_REPORT).
 
 ---
 
@@ -153,8 +154,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 - unit: D 50 passed (uv pytest); orchestrator 73 fast passed (re-run this session).
 - integration/real-artifact: orchestrator 2 passed (re-run this session, 41m35s, formal archive→B→C + 6h replan v2/v3).
-- smoke: governance link/stale/coverage audit PASS; Viewer HTTP smoke PASS (inherited).
-- real-data: Viewer bundle artifact real (inherited).
+- smoke: governance link/stale/coverage audit PASS (re-run); Viewer HTTP smoke PASS (**re-run this session**, HTTP 200 ×4).
+- real-data: Viewer bundle artifact real (**re-exported this session**, preflight PASS / l2 PASS / timeline 721).
 - ruff: D clean (post conftest fix); orchestrator clean (re-run).
 - L2: polarity `1=sea` confirmed in SIM_REPLAY.
 - fail-closed: RC1/RC2 FROZEN banners prevent content modification.
@@ -165,7 +166,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 - D test digest: 50 passed deterministic (no wall-clock dependency in unit suite).
 - Viewer trajectory continuity: reproducible from same bundle.
-- orchestrator determinism: re-verified this session via full re-run (75 passed including determinism unit tests).
+- orchestrator determinism unit/contract tests: **RE-RUN this session** (75 passed includes replay_determinism/replay_digests suites).
+- **12h authoritative semantic digest determinism: INHERITED** — 75 pytest PASS proves unit-level determinism contracts, NOT a re-execution of the 12h twin-run. Not conflated.
 - 明确：未用旧版本 determinism 冒充最新；conftest 仅加路径，不改测试逻辑。
 
 ---
@@ -175,8 +177,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 | artifact | source identity | digest | ignored/tracked | provenance |
 |---|---|---|---|---|
 | `frozen/rc1-main/RC1_FROZEN_STATUS.md` | RC1 @ 29aa74d "8-16demo交付" | — | tracked | governance commit d9e8f46 |
-| Viewer bundle (inherited) | `sb-viewer-baseline-12h-det` | run-…0b0005 | tracked | orchestrator export → D |
-| governance commit | staged 13 files | d9e8f46 | tracked | local, NOT pushed |
+| Viewer bundle (re-exported this session) | `sb-viewer-baseline-12h-det` manifest (A repo causal-replay-mvp) | preflight PASS / l2 PASS / timeline 721 | ignored in D (`viewer/bundle.json`), verified `git check-ignore` | orchestrator `scripts/replay_viewer_export.py` → D viewer/ |
+| governance commits (this closure) | — | d9e8f46 + 746cfed + ade24ab + (closure commits) | tracked | local, NOT pushed |
 | `work_package_d/conftest.py` | test infra fix | — | tracked (uncommitted) | D repo |
 
 ---
@@ -185,8 +187,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 
 | TD-ID | impact | severity | next action |
 |---|---|---|---|
-| TD-A | orchestrator `viewer/` dead frontend source double-ownership | low | KEEP_WITH_FIX; document; do not touch history |
-| TD-B | 26-min integration replay NOT RUN | med | next round targeted or run with oversight |
+| TD-A | orchestrator `viewer/` dead frontend source | low | **RESOLVED** — deleted (orchestrator commit aeda5f2); single Viewer owner = D |
+| TD-B | 12h authoritative determinism twin-run | med | INHERITED (not re-run); determinism unit/contract tests PASS |
 | TD-C | orchestrator pytest re-run this session (75 passed) | resolved | no action |
 | TD-D | `ROOT_GIT_RETIREMENT_READY=NO` by design | n/a | human-reviewed cutover only; automation must not delete root `.git` |
 | TD-E | D `conftest.py` uncommitted | low | user to commit in D repo |
@@ -196,8 +198,8 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 ## 15. Decision / Next Phase
 
 - **项目状态变化**：治理文档从"已迁移但未审计"收敛为"内容级审计通过、覆盖率 100%（28→25 mapped）、断链/stale 0"。RC1 冻结空白已补。Root `.git` 明确保留。
-- **下一里程碑**：人工复核根文档 cutover（可选 retire root `.git` after human sign-off）；下一轮可跑 26-min 集成回放；可提交 D `conftest.py`。
-- **推荐下一轮**：Viewer final polish / 真实 E2E 回归；orchestrator `viewer/` 死代码清理（仅在不破坏历史前提下）。
+- **下一里程碑**：人工复核根文档 cutover（可选 retire root `.git` after human sign-off）。D `conftest.py` 已提交（D HEAD 1c419b6，50 passed 自包含）。
+- **推荐下一轮（产品主线）**：Dynamic Risk Overlay → Hard Reason Overlay → Superseded/Replanning Animation → Browser Rehearsal → Presentation Polish → Demo Freeze。不再做 governance 修补轮。
 - **明确不做**：不自动删根 `.git`；不 push 治理；不 reset 迁移历史；不重写 frozen；不做性能优化/新场景。
 
 ---
@@ -210,6 +212,61 @@ Related Canonical Docs: DOCUMENTATION_INDEX.md, ENGINEERING_GOVERNANCE_STANDARD.
 | "D 尚未实现" | D owned by work_package_d, Viewer MVP implemented | D implemented; remove stale | ARCTIC_ROUTE_SYSTEM L615/L659 |
 | "ARCTIC_ROUTE_SYSTEM updated to A-B-C-D" (implied full currentize) | was largely rename; real currentization done in follow-up audit | separate correction step | STRATEGY_B_GOVERNANCE_REFACTOR correction block |
 | RC1 dir empty → "RC1 complete" implied | RC1 had NOT_COMPLETED_AT_FREEZE items | RC1 FROZEN not COMPLETE; fill doc | RC1_FROZEN_STATUS.md |
+
+---
+
+## Previous Report Corrections (2026-08-20 closure)
+
+| 旧报告 | 旧 claim | 修正后事实 | 状态 |
+|---|---|---|---|
+| ROOT_GOVERNANCE_AUDIT_FINAL (this file, v1) | "26-min integration replay NOT RUN" | orchestrator integration 2 scenarios **re-run this session, 41m35s** (2495.25s) | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | Claim "INHERITED (prior)" + Evidence "re-run this session" | orchestrator suite = **RE-RUN THIS SESSION: 75 passed** | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | "writes outside allowed root: NONE" | `/tmp/orch_integ.log` historical violation recorded; closure run logs → `.runtime/test-logs/` | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | "heavy task: NONE this session" | integration 41m35s re-run this session (heavy task, no OOM) | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | "orchestrator determinism: re-verified via full re-run" | split: determinism unit/contract **re-run PASS**; **12h authoritative INHERITED** | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | "Viewer bundle (inherited)" | **re-exported this session** (preflight PASS / l2 PASS / timeline 721) | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | TD-A "KEEP_WITH_FIX indefinitely" | **RESOLVED** — orchestrator viewer residual deleted (commit aeda5f2) | CORRECTED |
+| ROOT_GOVERNANCE_AUDIT_FINAL (v1) | "orchestrator viewer/ double-ownership residual" (limitation) | resolved — single Viewer owner = D | CORRECTED |
+| governance README.md | "root is a plain workspace — not a Git repository" | root `.git` retained as recovery/historical safety source | CORRECTED |
+
+---
+
+## Code Ownership Matrix (final, 2026-08-20)
+
+| Capability | Final owner |
+|---|---|
+| Replay | Orchestrator |
+| Snapshot | Orchestrator |
+| Manifest | Orchestrator |
+| Presentation Adapter | Orchestrator |
+| L2 Preflight | Orchestrator |
+| Presentation Export | Orchestrator |
+| Viewer app | D |
+| Static server | D |
+| GEBCO rendering | D |
+| Ship rendering | D |
+| Dynamic Risk presentation | D |
+| Planner | C |
+
+> 单一实现 owner 原则达成：orchestrator `viewer/` 前端残留已删除（commit aeda5f2）；
+> D 不 import orchestrator 私有 Python（仅 artifact 消费）；orchestrator 核心包不依赖 D。
+
+---
+
+## Subproject Documentation Matrix (2026-08-20)
+
+| Repo | README | CHANGELOG | docs/ | HANDOFF | stale found | fixed | remaining |
+|---|---|---|---|---|---|---|---|
+| contracts | ✅ polarity added (1=sea) | ✅ 0.3.0 | n/a | ✅ | land_sea_mask polarity missing | 2026-08-20 | none |
+| orchestrator | ✅ coordinator, not Viewer owner | ✅ migration logged | ✅ INCIDENT | ✅ updated 2026-08-20 (Viewer ownership) | handoff stale (RC1) | 2026-08-20 | none |
+| A | ✅ causal/issue_time/ice-free correct | ✅ | 12 docs | ✅ | none | n/a | none |
+| B | ✅ hard-mask/unknown≠safe correct | ✅ | 9 docs | n/a | none | n/a | none |
+| C | ✅ time-dependent A* / v3 correct | ✅ | 19 docs | ✅ | none | n/a | none |
+| D | ✅ Viewer owner, consumes artifacts | ✅ adoption logged | n/a | ✅ updated 2026-08-20 (Replay-driven Viewer) | HANDOFF stale (Demo Candidate 2) | 2026-08-20 | none |
+
+> A/B/C 语义确认：A=causal visibility + provenance + L2 polarity；B=dynamic risk + hard mask +
+> unknown != safe；C=time-dependent A* `(node,time_bucket,heading_code)` 60-min + v3 four layers +
+> fail-closed；D=Viewer owner 非 planner/risk owner；orchestrator=A-B-C-D coordinator 不拥有 Viewer runtime。
 
 ---
 

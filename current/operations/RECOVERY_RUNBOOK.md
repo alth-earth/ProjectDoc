@@ -1,3 +1,11 @@
+---
+Document Status: ACTIVE_CANONICAL
+Scope: recovery of RC1 demo environment + git/governance rollback
+Canonical For: how to recover from backup and how to roll back governance
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
+
 # 恢复手册
 
 状态：CURRENT（当前）
