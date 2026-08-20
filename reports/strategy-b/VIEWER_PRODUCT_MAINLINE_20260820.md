@@ -138,8 +138,11 @@ The completed-track prefix did not regress. `PLAN_REUSED` and
    presentation-ready projection; D still performs no B computation.
 3. A first export validation exposed a matrix-shape check defect. It was fixed,
    then the export and bundle tests were rerun successfully.
-4. No route/track land crossing, transform mismatch, NaN position, browser
-   rendering exception, or console error was observed.
+4. The first server trace exposed a missing `favicon.ico` request (404). D
+   now serves a local `favicon.svg`; the final browser run had 0 console
+   errors/warnings and all six static resources returned 200.
+5. No route/track land crossing, transform mismatch, NaN position, browser
+   rendering exception, or final-run console error was observed.
 
 ## 10. Performance and elapsed-time analysis
 
@@ -154,6 +157,7 @@ resource timing probe measured:
 | `app.js` | 13,186 B | 14 ms |
 | `style.css` | 3,911 B | 13 ms |
 | `gebco_basemap.png` | 14,238 B | 3 ms |
+| `favicon.svg` | small local asset | 200 final request |
 
 The on-disk bundle was 442,650 B; the bundle includes 721 one-minute timeline
 entries and 13 hourly risk frames. Scrub and Play remained responsive in the
