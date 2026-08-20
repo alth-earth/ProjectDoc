@@ -9,51 +9,59 @@ Supersedes: archive/superseded/ABC_10_DAY_SPRINT.md
 
 # Current Roadmap
 
-## Current Phase: Viewer Backend Foundation Ready
+## Current Phase: Viewer Product Mainline（2026-08-20 21:13 +08:00）
 
 The causal replay engine, performance hardening, physical vessel motion,
 deferred adoption, Presentation Adapter, GEBCO L2 preflight, and
-Replay-driven Viewer MVP are all established.  The project is ready to
-advance toward final demo readiness.
+Replay-driven Viewer MVP are all established. The real-browser baseline and
+current-frame risk product path are now established. Governance completion is
+closed for this phase.
 
 ## Milestone Sequence
 
-### 1. Dynamic Risk Overlay (NEXT)
+### 1. Dynamic Risk Overlay — Current Frame (COMPLETE)
 
-Consume B risk frames via the Presentation Adapter.  Risk overlay is
-driven by `simulation_time`, not A forecast lead.  Support at least
-current risk frame; optionally add +6h / +12h / +24h.  Presentation
-horizon = `risk.valid_time - simulation_time`.
+Consumed formal B risk frames via the Presentation Adapter. The current frame
+is driven by `simulation_time`, not A forecast lead; selection is the latest
+`valid_time` at or before the simulation time. Presentation horizon is
+`risk.valid_time - simulation_time`.
 
-### 2. Hard Reason Overlay
+### 2. Hard Reason / Availability Overlay (COMPLETE)
 
 Distinguish LAND, DATA_UNAVAILABLE, OTHER in the viewer.  `unknown != safe`.
 Do not render unknown as safe.
 
-### 3. Superseded Route Visualization
+### 3. Superseded Route Visualization (MVP COMPLETE)
 
 Show superseded future route (faded) when a new plan is adopted, if the
 Adapter can reliably provide it.  Do not fabricate.
 
-### 4. Replanning Event Animation
+### 4. Replanning Event Presentation (MVP COMPLETE)
 
-Animate the transition from pending to adopted route at the correct
-`effective_adoption_time`.  Visual cue for REPLAN_DECIDED vs REPLAN_ADOPTED.
+The Viewer presents the transition from pending to adopted route at the correct
+`effective_adoption_time`, with distinct `REPLAN_DECIDED` and
+`REPLAN_ADOPTED` event state. Rich animation remains a later polish item.
 
-### 5. Route / Objective Controls
+### 5. Dynamic Risk Horizons (NEXT)
+
+Add presentation controls for current, +6h, +12h, and +24h. These must remain
+derived from `risk.valid_time - simulation_time` and must not become a second
+business clock.
+
+### 6. Route / Objective Controls
 
 Allow viewer to select route revision, objective, layer for inspection.
 
-### 6. Final UI Polish
+### 7. Final UI Polish
 
 Styling, layout, responsive design, debug panel toggle.
 
-### 7. Demo Rehearsal
+### 8. Demo Rehearsal
 
 End-to-end offline demo run with real artifacts.  Verify timing,
 narration, and fallback.
 
-### 8. Final Freeze
+### 9. Final Freeze
 
 Freeze demo-engineering as demo baseline.  Tag and document.
 

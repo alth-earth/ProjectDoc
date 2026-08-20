@@ -27,13 +27,15 @@ Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
 | Performance hardening | COMPLETE | AUTHORITATIVE_PASS |
 | Physical vessel motion | COMPLETE | AUTHORITATIVE_PASS |
 | Deferred replan adoption | COMPLETE | AUTHORITATIVE_PASS |
-| Presentation Adapter | ESTABLISHED | SMOKE_PASS |
-| GEBCO L2 Preflight | ESTABLISHED | SMOKE_PASS |
-| Replay-driven Viewer MVP | COMPLETE | REAL_ARTIFACT_SMOKE_PASS |
-| Simulation Timeline | COMPLETE | MVP_PASS |
-| Moving Ship | COMPLETE | MVP_PASS |
-| Deferred Adoption Presentation | COMPLETE | MVP_PASS |
-| Dynamic Risk Overlay | NEXT | NOT_IMPLEMENTED |
+| Presentation Adapter | ESTABLISHED | REAL_ARTIFACT_HTTP_SMOKE_PASS |
+| GEBCO L2 Preflight | ESTABLISHED | REAL_ARTIFACT_HTTP_SMOKE_PASS |
+| Replay-driven Viewer MVP | COMPLETE | BROWSER_E2E_PASS |
+| Simulation Timeline | COMPLETE | BROWSER_E2E_PASS |
+| Moving Ship | COMPLETE | BROWSER_E2E_PASS |
+| Deferred Adoption Presentation | COMPLETE | BROWSER_E2E_PASS |
+| Dynamic Risk Overlay (current frame) | COMPLETE | BROWSER_E2E_PASS |
+| Hard Reason / Availability Overlay | COMPLETE | BROWSER_E2E_PASS |
+| Route / Replanning Visualization | MVP COMPLETE | BROWSER_E2E_PASS |
 | Final Viewer UI Polish | NOT STARTED | NOT_IMPLEMENTED |
 
 ## Key Metrics (latest authoritative)
@@ -47,6 +49,26 @@ Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
 | A bundle | a-bundle-32cafad4ee280f286d8eb049 | work_package_a |
 | L2 preflight | PASS | replay-viewer-preflight.json |
 | Timeline frames | 721 | bundle.json |
+
+## Viewer Product Mainline（2026-08-20 21:13 +08:00）
+
+The governance phase is closed for this milestone. The current product
+milestone is **Viewer Product Mainline**. The existing formal artifact
+`sb-viewer-baseline-12h-det` is exported through the Orchestrator adapter and
+rendered by D. A real Firefox browser run verified GEBCO, active route,
+completed track, continuous vessel motion, current-risk frames, separate hard
+reasons, pending/adopted route states, controls, and zero console errors.
+
+The Viewer contract is now:
+
+- Orchestrator owns presentation export and validates formal B risk frames;
+- D is the sole Viewer runtime owner and uses one Simulation Clock;
+- `REPLAN_DECIDED` exposes pending future state, while `REPLAN_ADOPTED`
+  changes the active route at the effective time;
+- completed track remains append-only; `DATA_UNAVAILABLE` and other hard
+  reasons are not rendered as safe risk;
+- current-frame risk is complete; +6h/+12h/+24h horizon controls remain the
+  next product increment.
 
 ## Version Summary
 
@@ -89,15 +111,19 @@ Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
 1. Full 144h historical causal replay is not supported by current provenance.
 2. Pending-Plan Gate (performance debt): deferred adoption causes TIME-only candidates to be recomputed during pending period, increasing runtime from ~21.8 min to ~34 min. Tracked as TD.
 3. Edge-interior planner origin: physical vessel position may differ from planner origin node at mid-edge replan. Tracked as TD.
-4. Browser runtime may be environment-blocked; proof PNG + bundle tests substitute for live browser smoke.
-5. Dynamic Risk Overlay not yet implemented.
+4. The default restricted sandbox blocks browser daemon/socket startup, but the
+   attended run used the available escalated local Firefox path and completed
+   the browser E2E baseline. This is an execution-environment note, not a
+   product verification gap.
+5. Risk horizon controls (+6h/+12h/+24h), final visual polish, demo rehearsal,
+   and final freeze remain open.
 
 ## What Is NOT Done
 
-- Dynamic Risk Overlay (NEXT)
-- Hard Reason overlay (NEXT)
-- Superseded route visualization (NEXT)
-- Replanning event animation (NEXT)
+- Dynamic Risk + Hard Reason current-frame overlays are complete; horizon
+  controls remain NEXT.
+- Superseded route visualization and adoption-state presentation are complete
+  at MVP level; richer animation remains NEXT.
 - Final UI polish (NOT STARTED)
 - Demo rehearsal (NOT STARTED)
 - Final freeze (NOT STARTED)
