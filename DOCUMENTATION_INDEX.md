@@ -31,6 +31,13 @@ Last Verified: 2026-08-20
 | RC1 (main branch) | [frozen/rc1-main/](frozen/rc1-main/) |
 | RC2 (rc2-development branch) | [frozen/rc2-rc2-development/](frozen/rc2-rc2-development/) |
 
+## Current Final Reports (2026-08-20 closure)
+
+| Report | Role |
+|--------|------|
+| [FINAL_CONSISTENCY_CLOSURE_20260820.md](reports/governance/FINAL_CONSISTENCY_CLOSURE_20260820.md) | THIS ROUND closure + task-status reconciliation |
+| [ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md](reports/governance/ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md) | CURRENT FINAL AUDIT (supersedes earlier governance reports) |
+
 ## Historical Reports (evidence, not current truth)
 
 | Category | Location |
