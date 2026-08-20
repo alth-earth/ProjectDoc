@@ -1,71 +1,78 @@
-# 文档索引
+---
+Document Status: ACTIVE_CANONICAL
+Scope: documentation navigation map
+Canonical For: which document to trust for each question
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
 
-状态：CURRENT（当前）
-最后更新：2026-08-17
+# Documentation Index
 
-## 从这里开始
+**Which file should I trust?** This index answers that question.
 
-- [项目梳理报告.md](项目梳理报告.md) — 推荐首先阅读
-- [ARCTIC_ROUTE_SYSTEM.md](ARCTIC_ROUTE_SYSTEM.md) — 权威架构
-- [CURRENT_STATUS.md](CURRENT_STATUS.md) — 今日状态速览
+## Current (trust these for today's project state)
 
-## 权威层级（冲突裁决）
+| Question | Document |
+|----------|----------|
+| Where are we now? | [current/CURRENT_STATUS.md](current/CURRENT_STATUS.md) |
+| What's next? | [current/CURRENT_ROADMAP.md](current/CURRENT_ROADMAP.md) |
+| System architecture? | [current/architecture/ARCTIC_ROUTE_SYSTEM.md](current/architecture/ARCTIC_ROUTE_SYSTEM.md) |
+| Replay architecture? | [current/architecture/SIMULATION_REPLAY_ARCHITECTURE.md](current/architecture/SIMULATION_REPLAY_ARCHITECTURE.md) |
+| How to run a demo? | [current/operations/DEMO_RUNBOOK.md](current/operations/DEMO_RUNBOOK.md) |
+| How to recover? | [current/operations/RECOVERY_RUNBOOK.md](current/operations/RECOVERY_RUNBOOK.md) |
+| Technical debt? | [current/reference/TECH_DEBT.md](current/reference/TECH_DEBT.md) |
+| Time model? | [current/reference/TIME_MODEL_QUICK_REFERENCE.md](current/reference/TIME_MODEL_QUICK_REFERENCE.md) |
+| Governance / report rules? | [standards/ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md) |
 
-1. 当前代码/Schema/配置 + 生产者—消费者测试；
-2. `ARCTIC_ROUTE_SYSTEM.md`（架构权威）；
-3. `DEMO_RC1_BASELINE_20260816.md`（RC1 标识符权威）；
-4. `CURRENT_STATUS.md` / `最终交付说明.md`（当前交付状态）；
-5. `ABC_10_DAY_SPRINT.md` / 各 WP README / HANDOFF / docs；
-6. 执行日志与归档文档（历史证据，不改写）。
+## Frozen (historical baselines, do not modify)
 
-## 交付
+| Phase | Location |
+|-------|----------|
+| RC1 (main branch) | [frozen/rc1-main/](frozen/rc1-main/) |
+| RC2 (rc2-development branch) | [frozen/rc2-rc2-development/](frozen/rc2-rc2-development/) |
 
-- [最终交付说明.md](最终交付说明.md)
-- [Demo RC1 基线](work_package_a/docs/DEMO_RC1_BASELINE_20260816.md) — RC1 精确标识符权威
-- [RC2 基线](work_package_a/docs/RC2_BASELINE_20260817.md) — RC2 多场景冻结基线权威
-- [Route Geospatial Integrity Audit 2026-08-17](ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md) — 航线地理完整性机器审计与 Viewer 投影修复
-- [Temporal Semantics Audit 2026-08-17](TEMPORAL_SEMANTICS_AUDIT_20260817.md) — 全链路时间语义审计与 Simulation-Time 架构
-- [Time Model Quick Reference](TIME_MODEL_QUICK_REFERENCE.md) — 时间字段速查（后续开发者）
-- [Causal Replay Feasibility Audit 2026-08-17](CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md) — 严格因果回放可行性机器审计
-- [Simulation Replay Architecture](SIMULATION_REPLAY_ARCHITECTURE.md) — 滚动回放架构与 Snapshot/Manifest 候选设计
-- [Causal Replay MVP 2026-08-18](CAUSAL_REPLAY_MVP_20260818.md) — Scenario B 短窗因果回放引擎真实结果
-- [Simulation Replay Architecture](SIMULATION_REPLAY_ARCHITECTURE.md) — 三窗口语义 + v2/v3 规划集成现状
-- [Strategy B Semantic Hardening 2026-08-18](STRATEGY_B_SEMANTIC_HARDENING_20260818.md) — revision/digest 硬化、v3 合同解决、NavigationExecutionState、多核 benchmark
-- [Strategy B Performance Hardening 2026-08-19](STRATEGY_B_PERFORMANCE_HARDENING_20260819.md) — replan 成本审计、pre-planning gate、12h 2071.4→1306.8s、moving-vessel 语义、determinism
-- [Strategy B Ship Motion Semantics 2026-08-19](STRATEGY_B_SHIP_MOTION_SEMANTICS_20260819.md) — physical/planner 分离、route-ETA speed、deferred adoption、no-teleport
-- [Strategy B Viewer Foundation 2026-08-19](STRATEGY_B_VIEWER_FOUNDATION_20260819.md) — latest-HEAD 联合基线 12h、Presentation Adapter/Contract、adoption audit、GEBCO/L2 foundation
-- [Engineering Run Report Standard](ENGINEERING_RUN_REPORT_STANDARD.md) — 本轮起权威最终报告模板：固定 15 区块 + Key Delta / Claim Matrix / 成熟度等级 / 术语标准化
-- [Strategy B Viewer MVP 2026-08-19](STRATEGY_B_VIEWER_MVP_20260819.md) — GEBCO L2 demo preflight PASS、Replay-driven Viewer MVP、极性修正、resource/git 摘要
-- [Viewer README](arctic_route_orchestrator/viewer/README.md) — viewer 构建/运行/控件/debug 说明
+## Historical Reports (evidence, not current truth)
 
-## 规划
+| Category | Location |
+|----------|----------|
+| Audits | [reports/audits/](reports/audits/) |
+| Strategy B reports | [reports/strategy-b/](reports/strategy-b/) |
+| Decisions | [reports/decisions/](reports/decisions/) |
+| Governance refactor | [reports/governance/](reports/governance/) |
 
-- [ABC_10_DAY_SPRINT.md](ABC_10_DAY_SPRINT.md)
-- [POST_RC1_PLAN.md](POST_RC1_PLAN.md)
+## Archive (superseded, deprecated, pre-governance)
 
-## 运维
+| Category | Location |
+|----------|----------|
+| Superseded (old plans, etc.) | [archive/superseded/](archive/superseded/) |
+| Pre-governance archives | [archive/pre-governance/](archive/pre-governance/) |
+| Deprecated | [archive/deprecated/](archive/deprecated/) |
 
-- [Demo Engineering 状态](DEMO_ENGINEERING_STATUS.md)
-- [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md)
-- [RECOVERY_RUNBOOK.md](RECOVERY_RUNBOOK.md)
-- [TECH_DEBT.md](TECH_DEBT.md)
+## Local (operator-only, gitignored)
 
-## 开发
+| Category | Location |
+|----------|----------|
+| Local operator env | [local/LOCAL_OPERATOR_ENV.md](local/LOCAL_OPERATOR_ENV.md) |
 
-- WP A：[README](work_package_a/README.md) / [HANDOFF](work_package_a/work_package_a_handoff.md)
-- WP B：[README](work_package_b/README.md)
-- WP C：[README](work_package_c/README.md) / [HANDOFF](work_package_c/work_package_c_handoff.md)
-- WP D：[README](work_package_d/README.md) / [HANDOFF](work_package_d/HANDOFF.md)
-- Orchestrator：[README](arctic_route_orchestrator/README.md) / [HANDOFF](arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
-- Contracts：[README](arctic_route_contracts/README.md) / [HANDOFF](arctic_route_contracts/arctic_route_contracts_handoff.md)
+## Subproject Documentation
 
-## 历史 / 归档
+Each subproject has its own README, CHANGELOG, and docs:
 
-- 执行日志：`work_package_a/data/output/golden/EXECUTION_LOG_*.md`
-- 归档映射：[归档文件映射表与全量比对表.md](归档文件映射表与全量比对表.md)
-- `_归档_*` / `.archive-*` 文件为历史证据，保留不改写
+| Repo | Path |
+|------|------|
+| Contracts | /root/my_project/arctic_route_contracts/ |
+| Orchestrator | /root/my_project/arctic_route_orchestrator/ |
+| A (Data) | /root/my_project/work_package_a/ |
+| B (Risk) | /root/my_project/work_package_b/ |
+| C (Planning) | /root/my_project/work_package_c/ |
+| D (Display) | /root/my_project/work_package_d/ |
 
-## 仅本机
+## Conflict Resolution Order
 
-操作者可保留 `local/LOCAL_OPERATOR_ENV.md`（被根 `.gitignore` 忽略，不会提交）。
-它不是项目契约。
+1. Current code + tests (ground truth).
+2. current/ canonical docs (this repo).
+3. Subproject READMEs.
+4. Historical reports (reports/).
+5. Archive (archive/).
+
+If a frozen doc conflicts with current, current wins. If a historical report conflicts with current, current wins, but the historical report should carry a correction note.

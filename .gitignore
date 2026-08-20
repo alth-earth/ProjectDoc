@@ -1,6 +1,23 @@
-# Top-level governance repository: track only root documentation.
-!/work_package_d
-/*
-!/*.md
-!/.gitignore
-!/work_package_d
+# Arctic Route governance repository: documentation only.
+# Work package code lives in sibling repositories and is intentionally
+# excluded from this repository.
+
+# Local-only operator notes (never committed).
+/local/
+
+# Runtime, caches, and tool data.
+.runtime/
+.agents/
+.codex/
+.playwright-cli/
+.ruff_cache/
+.pytest_cache/
+.venv/
+.mamba-env/
+__pycache__/
+*.py[cod]
+
+# Editors / OS.
+.DS_Store
+*.swp
+*~

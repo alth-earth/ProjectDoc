@@ -1,8 +1,168 @@
-# Engineering Run Report Standard（2026-08-19）
+---
+Document Status: ACTIVE_CANONICAL
+Scope: engineering governance + documentation rules + report standard
+Canonical For: how to write, organize, and report documentation
+Branch: demo-engineering
+Last Verified: 2026-08-20
+---
 
-状态：本轮起生效的最终报告模板标准（authoritative）
-范围：所有后续 Codex 轮次的最终报告，必须使用本模板，不得每轮随意
-换结构；细节可以补充，固定区块不能省略。
+# Engineering Governance Standard
+
+This document defines:
+1. Documentation governance rules (status taxonomy, metadata, semantic placement, archive rules)
+2. Engineering run report standard (15 fixed blocks, key delta table, claim matrix, maturity levels)
+
+---
+
+## Part I: Documentation Governance
+
+### Document Status Taxonomy
+
+| Status | Meaning |
+|--------|---------|
+| ACTIVE_CANONICAL | The single source of truth for a fact domain |
+| ACTIVE_SUPPORTING | Current and valid, but secondary to a canonical doc |
+| FROZEN_RC1 | Frozen at RC1 baseline; do not modify content |
+| FROZEN_RC2 | Frozen at RC2 baseline; do not modify content |
+| HISTORICAL_REPORT | Engineering evidence from a past round; not current truth |
+| SUPERSEDED | Replaced by another document; kept for reference |
+| DEPRECATED | No longer valid; kept for audit trail |
+| ARCHIVED | Moved out of current; preserved for history |
+| LOCAL_ONLY | Operator-specific; gitignored |
+
+### Content Status Taxonomy
+
+Content within a document may use:
+COMPLETE, FROZEN, ACTIVE, IN_PROGRESS, NEXT, PENDING, BLOCKED, DEPRECATED, HISTORICAL, NOT_SUPPORTED
+
+These are not mutually exclusive. A frozen doc can contain COMPLETE and NOT_COMPLETED_AT_FREEZE items.
+
+### Metadata Banner
+
+Every active document must have a YAML metadata block at the top:
+
+```yaml
+---
+Document Status: ACTIVE_CANONICAL
+Scope: what the document covers
+Canonical For: what question this answers
+Branch: demo-engineering
+Last Verified: YYYY-MM-DD
+Supersedes: (optional)
+Related Canonical Docs: (optional)
+---
+```
+
+Frozen docs use:
+```yaml
+Document Status: FROZEN_RC1 or FROZEN_RC2
+Branch: main or rc2-development
+Frozen At: YYYY-MM-DD
+Canonical Current State: NO
+```
+
+Historical reports use:
+```yaml
+Document Status: HISTORICAL_REPORT
+Canonical Current State: NO
+Superseded Claim: (if applicable)
+Corrected By: (link to correction)
+```
+
+### Semantic Placement
+
+Information must go in the right section:
+- Tests -> test documentation
+- Cache -> environment/cache/artifacts docs
+- Dependencies -> architecture/dependencies
+- Next steps -> roadmap
+- Blockers -> status/blockers
+- Decisions -> decisions/architecture
+- Data freeze -> artifact lifecycle
+- Performance -> performance/non-functional
+
+Do NOT append information at the end of a document. Rewrite the relevant section.
+
+### SSOT (Single Source of Truth)
+
+Each fact domain has exactly one canonical document:
+- Current state -> CURRENT_STATUS.md
+- Roadmap -> CURRENT_ROADMAP.md
+- System architecture -> ARCTIC_ROUTE_SYSTEM.md
+- Replay architecture -> SIMULATION_REPLAY_ARCHITECTURE.md
+- Time model -> TIME_MODEL_QUICK_REFERENCE.md
+- Demo operation -> DEMO_RUNBOOK.md
+- Recovery -> RECOVERY_RUNBOOK.md
+- Technical debt -> TECH_DEBT.md
+- Governance standard -> this file
+- RC1 -> frozen/rc1-main/
+- RC2 -> frozen/rc2-rc2-development/
+- Historical reports -> reports/
+
+Other documents link to the canonical source; they do not copy full content.
+
+### Archive 3-Step Rule
+
+Before archiving a document:
+1. Back-fill: move still-valid information from old doc to current canonical docs.
+2. Compare: check old vs new for unique valid info that is missing.
+3. Converge: ensure current valid-info coverage >= archive coverage, with no stale conflicts.
+Only then archive. Archiving is NOT deleting valid information.
+
+### Historical Report Rule
+
+Historical reports must NOT be rewritten to look current. They preserve the state
+of knowledge at the time of writing. Add a correction note at the top if needed:
+
+```yaml
+Document Status: HISTORICAL_REPORT
+Canonical Current State: NO
+Superseded Claim: (old claim that was wrong)
+Corrected By: (link to canonical correction)
+```
+
+### Correction Rule
+
+When discovering an error in a historical report:
+- Do NOT silently fix the historical report body.
+- Add a correction note at the top.
+- Fix the current canonical doc to reflect the correct understanding.
+
+### Timestamped New Headings
+
+All newly added headings must carry a real timestamp:
+```markdown
+### X.Y Title (YYYY-MM-DD HH:MM +08:00)
+```
+Use `date '+%Y-%m-%d %H:%M %z'` for the real system time.
+Do NOT batch-update old headings with new timestamps.
+
+### AI Documentation Workflow
+
+1. Read this standard and DOCUMENTATION_INDEX.md before writing docs.
+2. Put information in the right section (semantic placement).
+3. Do not append patches at the end of documents.
+4. Do not create duplicate canonical docs.
+5. Update links when moving files.
+6. Run a freshness audit before reporting completion.
+
+### Link Update Rule
+
+After moving files, search all repos for old paths and update links.
+Target: broken canonical links = 0.
+
+### Freshness Audit
+
+Before reporting completion, verify:
+- No stale claims in current docs.
+- No broken links.
+- No duplicate canonical sources.
+- All new headings have timestamps.
+- Metadata banners are present on active docs.
+
+---
+
+## Part II: Engineering Run Report Standard
 
 ## 1. Purpose
 

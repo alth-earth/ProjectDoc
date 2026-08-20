@@ -1,12 +1,20 @@
-> **文档治理声明**
->
-> - 本文件角色：北极航线预测驱动动态规划系统当前唯一的顶层定位、架构、运行语义与治理权威。
-> - 改造时间：2026-08-15（Asia/Shanghai）。
-> - 原文件去向：[ARCTIC_ROUTE_SYSTEM_归档_20260815.md](ARCTIC_ROUTE_SYSTEM_归档_20260815.md)。
-> - 改造原因：落实项目负责人已定的挑战杯演示定位、D1–D7、双航区最新坐标、散货船口径和离线演示模式。
-> - 事实边界：现状事实以当前代码、Schema、配置和测试为准；归档及外部附件只作来源证据。
+---
+Document Status: ACTIVE_CANONICAL
+Scope: system architecture SSOT
+Canonical For: module boundaries, data flow, runtime semantics
+Branch: demo-engineering
+Last Verified: 2026-08-20
+Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_INDEX.md
+---
 
-# 北极航线预测驱动动态规划系统
+# Arctic Route Planning System
+
+## 0. Governance (2026-08-20)
+
+Whole-project governance and documentation live in `arctic_route_governance/`.
+`/root/my_project` is a plain workspace (no root Git repo). Branch mapping:
+main = RC1 frozen, rc2-development = RC2 frozen, demo-engineering = active.
+See [../../README.md](../../README.md) and [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md).
 
 ## 1. 项目定位与成功标准
 
@@ -29,39 +37,54 @@ C v3 四层 + 6h 重规划、D 真实制品消费均 PASS；r6 首次完整 E2E�
 精确身份见 `work_package_a/docs/DEMO_RC1_BASELINE_20260816.md`。历史基线
 `tromso_isfjorden_august_2026_demo_v1` 仍保留为独立场景证据。
 
-核心功能链固定为：
+Canonical data flow:
 
 ```text
-arctic_route_contracts：预先准备共享走廊、场景、船型和运行身份
-                              │
-                              ▼
-A：下载数据 → 预处理/标准化 → 持久化冻结制品
-                              │
-                              ▼
-B：逐小时风险处理/预测 → 风险图与风险序列
-                              │
-                              ▼
-C：按预计到达时刻采样风险 → 多目标航线 → 至少一次重规划
-                              │
-                              ▼
-D：可视化风险图、风险预测图、候选航线和指标
+arctic_route_contracts: shared corridor, scenario, vessel, RunContext
+                              |
+                              v
+A: download -> preprocess/standardize -> persist frozen artifacts
+                              |
+                              v
+B: hourly risk processing -> RiskFrame / hard_mask / confidence
+                              |
+                              v
+Coverage / fail-closed gates
+                              |
+                              v
+C: time-dependent A* -> route -> at least one replan
+                              |
+                              v
+NavigationExecution -> SimulationSnapshot / ReplayManifest
+                              |
+                              v
+Presentation Adapter -> Presentation Package (JSON/PNG)
+                              |
+                              v
+D: Viewer / Display / Demo (GEBCO basemap, Simulation Clock, moving ship)
 ```
 
-项目负责人对 A、B、C 拥有完整决策权。文档和 AI 不再要求不存在的子项目负责人、跨专业评审组
-或签字流程批准挑战杯演示。
+Orchestrator coordinates A -> B -> C -> D and owns:
+replay execution, navigation execution, replan lifecycle,
+presentation adapter (business semantics), L1/L2 preflight,
+presentation artifact export.
+
+D owns: HTML/JS/CSS, Simulation Clock UI, ship/route/track rendering,
+static server, proof renderer. D consumes only JSON/PNG artifacts.
+
+项目负责人对 A、B、C、D 拥有完整决策权。Orchestrator 是 A-B-C-D 根级编排器。
 
 ## 2. 权威顺序与接手入口
 
 发生冲突时按下列顺序裁决：
 
-1. 当前公共代码、Schema、配置和生产者—消费者测试；
-2. 本文件；
-3. 当前 [十日计划](ABC_10_DAY_SPRINT.md)和各包 handoff；
-4. [项目梳理报告](项目梳理报告.md)中的形成时点审计证据；
-5. `_归档_YYYYMMDD`、`.archive-*` 归档和外部历史附件。
+1. Current code, schema, config, and producer-consumer tests.
+2. `current/` canonical docs in `arctic_route_governance/` (this file, CURRENT_STATUS, etc.).
+3. Subproject READMEs and HANDOFFs.
+4. Historical reports in `reports/`.
+5. Archive in `archive/`.
 
-新成员或 AI 依次阅读：本文件 → 十日计划 → 目标包 handoff → 两侧接口文档 → 代码和测试。
-若机器合同与本文件不一致，应登记并修订文档；不得自行从旧附件挑选另一套口径。
+New agents should read: [../../README.md](../../README.md) -> [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md) -> [../CURRENT_STATUS.md](../CURRENT_STATUS.md) -> [../CURRENT_ROADMAP.md](../CURRENT_ROADMAP.md) -> this file -> target package README -> code and tests.
 
 ## 3. 模块边界与当前状态
 
@@ -71,8 +94,8 @@ D：可视化风险图、风险预测图、候选航线和指标
 | A | 下载、留证、拆帧、标准化、QC、持久化和回放 | 0.4.2；mur RC1 数据已交付（TOPAZ originalGrid 重建） | RC1 冻结；仅 correctness/safety 修复 |
 | B | 时间处理、逐小时风险、置信度、hard mask、环境速度因子 | 0.2.0；RC1 风险窗已提交（unknown-navigable=0） | RC1 冻结；hard_reason 为 POST-RC1 |
 | C | 最终船速、ETA、成本、路径搜索、发布和重规划 | 0.4.0；v3 四层+6h 重规划已跑通（单目标 ≈96s） | RC1 冻结；可选性能优化 POST-RC1 |
-| D | 只读展示风险、路线和指标 | 0.1.0；真实 v3 制品离线消费 + Route Geospatial Integrity gate PASS（36 tests，2026-08-17） | NEXT PHASE：GEBCO / 145-frame / Moving Ship |
-| orchestrator | 只经公共 API 组织 A→B→C、报告和制品 | 阶段报告+可中断 worker 超时已实现；r6/r7 完整 E2E PASS | worker 模式全链冒烟（pre-demo） |
+| D | Display / Visualization / Viewer: HTML/JS/CSS, Simulation Clock, moving ship, route/track/pending rendering, static server, proof renderer | 0.1.0; Replay-driven Viewer MVP REAL_ARTIFACT_SMOKE_PASS; GEBCO L2 PASS; moving ship PASS | Dynamic Risk overlay, final UI polish |
+| orchestrator | A-B-C-D root coordinator: replay, navigation execution, replan lifecycle, presentation adapter, L1/L2 preflight, artifact export | replay engine + presentation adapter + preflight established; viewer runtime handed off to D | Dynamic Risk integration, demo rehearsal |
 | experimental B | 隔离的反事实实验工程 | 工程卫生待修 | 真实主线完成后再最小修复 |
 
 边界不变：A 不算风险，B 不生成路线，C 不下载环境数据，D 不调用 B/C 内部函数。
@@ -171,7 +194,7 @@ input.issue_time <= as_of_time <= 当前允许使用的 simulation_time
 > 2026-08-17 时间语义审计补充：全链路时间字段的完整分类、canonical glossary、
 > 转换矩阵与不变量状态见
 > [`TEMPORAL_SEMANTICS_AUDIT_20260817.md`](TEMPORAL_SEMANTICS_AUDIT_20260817.md)；
-> 后续开发者速查见 [`TIME_MODEL_QUICK_REFERENCE.md`](TIME_MODEL_QUICK_REFERENCE.md)。
+> 后续开发者速查见 [`TIME_MODEL_QUICK_REFERENCE.md`](../reference/TIME_MODEL_QUICK_REFERENCE.md)。
 
 ### 5.2 `scenario_id`、`generation_id` 与版本
 
@@ -316,7 +339,7 @@ detided 后备；GFS/Copernicus 部分产品为 3 h 原生步长，由 B 逐小�
 > 不新下载**；B 新增 RC2 专属策略 `land_sea_mask_plus_unknown_ice_free_v1`
 > （无冰水域将 ice_type/edge 中性化为 0，其余 unknown 仍 fail-closed）。
 > 修复后 72h 第二场景：coverage gate=true、start→goal 连通、v3 四层 + 6h
-> 重规划 + D 消费全部 PASS（详见 `RC2_DEVELOPMENT_STATUS.md` §3）。
+> 重规划 + D 消费全部 PASS（详见 [../../frozen/rc2-rc2-development/RC2_DEVELOPMENT_STATUS.md](../../frozen/rc2-rc2-development/RC2_DEVELOPMENT_STATUS.md) §3）。
 >
 > 2026-08-17（RC2 第二轮）：Tromsø 144h qualification PASS（145 帧 gate=true、
 > v3 四层 + 6h 重规划 + D），状态为 **RC2 Second Scenario Candidate**；
@@ -646,7 +669,7 @@ hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯
 
 ## 16. 当前入口
 
-- [十日执行计划](ABC_10_DAY_SPRINT.md)
+- [十日执行计划(archived)](../../archive/superseded/ABC_10_DAY_SPRINT.md)
 - [项目梳理报告](项目梳理报告.md)
 - [最终交付说明](最终交付说明.md)
 - [contracts handoff](arctic_route_contracts/arctic_route_contracts_handoff.md)
