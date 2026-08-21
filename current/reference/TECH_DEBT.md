@@ -14,7 +14,7 @@ Last Verified: 2026-08-22
 # 技术债登记
 
 状态：CURRENT（当前）
-最后更新：2026-08-21
+最后更新：2026-08-22
 范围：非阻塞事项 + Research Validation System Enhancement Phase
 
 ## Research Validation 优先级映射（2026-08-21 23:18）
@@ -22,21 +22,22 @@ Last Verified: 2026-08-22
 | Priority | Existing debt / new gap | Current state |
 |---|---|---|
 | P0 | interface ownership/version registry; C→D candidate presentation proposal | REGISTRY COMPLETE; candidate proposal DRAFT |
-| P1 | winter scenario + provenance-complete 12-type artifact | CONFIG VALIDATED; all 12 February local rows absent; DATA BLOCKED |
+| P1 | winter scenario + provenance-complete 12-type artifact | 9/12 ROWS COMPLETE; GFS SOURCE/CADENCE BLOCKED |
 | P2 | fixed-grid benchmark, then adaptive-grid proposal | FORMAL B BUILD COMPLETE; BASELINE/MEDIUM C COUPLING COMPLETE; REPEATABILITY PLANNED |
-| P3 | C edge traversal cache/shared-search/incremental feasibility | COMPONENT PROFILE + EDGE CACHE STATS COMPLETE; EXACT RISK-SAMPLE STUDY PLANNED |
+| P3 | C edge traversal cache/shared-search/incremental feasibility | EXACT SAMPLE + DEFAULT-OFF 50K LRU VALIDATED EXPERIMENTALLY; FORMAL GATE NEXT |
 | P4 | D professional navigation and research validation views | NAVIGATION AIDS BROWSER PASS; RESEARCH VIEWS PLANNED |
 
 ## Research Validation acceleration findings（2026-08-22 00:24）
 
 | ID | Item | State | Next control |
 |---|---|---|---|
-| TD-55 | Winter 12-type dataset/artifact | BLOCKED_BY_DATASET | metadata availability probe; do not start B before A exact resolver passes |
+| TD-55 | Winter 12-type dataset/artifact | PARTIAL / 9_OF_12_COMPLETE | resolve GFS source and 6 h/3 h cadence; do not start B before exact resolver passes |
 | TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
-| TD-57 | C repeated risk-sampling cost | PROFILED / EXPERIMENTAL | count formal repeated keys and design bounded memory policy before memoization |
+| TD-57 | C repeated risk-sampling cost | EXPERIMENTAL LRU PASS | 14.77% median gain at 50k; formal ingress/12-route equality before promotion |
 | TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |
 | TD-59 | B grid refinement grows C search super-linearly | MEASURED / EXPERIMENTAL | 112→341 nodes produced 10.51→75.00 s; require bounded fine pilot and repeated-run variance before acceptance |
-| TD-60 | February static-mask knowledge-time policy | OPEN DECISION | only local GEBCO mask is issued after scenario window; retrospective exception must be explicit before A publication |
+| TD-60 | February static-mask knowledge-time policy | CONTROLLED / RETROSPECTIVE_DIAGNOSTIC_PASS | explicit August cutoff accepted cached GEBCO; preserve cutoff in future bundle evidence |
+| TD-61 | NCEI winter source and cadence mismatch | BLOCKER | 202602 archive paths absent; f000 adapter is 6 h while coverage gate is 3 h; A owner proposal required |
 
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。

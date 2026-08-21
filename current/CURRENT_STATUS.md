@@ -13,7 +13,26 @@ Last Verified: 2026-08-22
 
 # Research Validation System Current Status
 
+## 第三阶段真实实验结果（2026-08-22 02:34 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| Winter Copernicus acquisition | PARTIAL / 8_TYPES_DOWNLOADED | 1,064 target-window records, eight immutable source snapshots, exact endpoints |
+| Winter 12-type A coverage | PARTIAL / 9_OF_12_COMPLETE | eight Copernicus rows + cached GEBCO mask complete; bundle not persisted |
+| Winter GFS | BLOCKED_BY_SOURCE_AND_CADENCE | NCEI 202602 object/THREDDS paths absent; direct inventory 404; 6 h adapter vs 3 h coverage gate |
+| A archive integrity | VALIDATED | doctor 5,232 checked, 0 errors, 0 warnings |
+| C exact sample profile | EXPERIMENTAL / REAL_B_FRAME_PASS | 705,469 requests; 242,992 exact repeats; 34.444% reuse ceiling |
+| C bounded LRU | IMPLEMENTED / EXPERIMENTAL_DEFAULT_OFF | 50k cap; median 76.281 s → 65.012 s; complete route digest unchanged |
+| B-C optimized medium path | EXPERIMENTAL / VALIDATED | fixed B input and endpoint; 3 independent runs per mode; no contract/publication change |
+
+No winter DatasetBundle, RiskFrame, route or Viewer artifact exists. The C LRU
+is available only through the experiment benchmark and is not used by formal
+ingress. Full 48h replay, heavy integration and determinism twin-run were not
+run.
+
 ## 第二阶段真实实验结果（2026-08-22 01:11 +08:00）
+
+> Historical Round2 checkpoint; the Round3 table above is the current state.
 
 | Workstream | Current state | Evidence |
 |---|---|---|
@@ -30,6 +49,9 @@ through committed-window formal ingress; it is experimental coupling evidence,
 not a full integration claim.
 
 ## 第二阶段加速结果（2026-08-22 00:24）
+
+> Historical preparation checkpoint; the Round3 table above supersedes its
+> winter and cache readiness rows.
 
 | Workstream | Current state | Evidence |
 |---|---|---|
@@ -96,8 +118,8 @@ A PreparedWindow / DatasetBundle.v2
 | D presentation Viewer | IMPLEMENTED | BROWSER_E2E_PASS | Firefox；单 Simulation Clock；artifact driven |
 | 48h replay Viewer | IMPLEMENTED | BROWSER_E2E_PASS | 49 snapshots、2881 minute states、49 risk frames |
 | C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
-| Winter scenario configuration | IMPLEMENTED | UNIT_PASS | config skeleton only; all 12 local February rows are absent |
-| Winter A→B→C→D artifact | NOT_IMPLEMENTED | BLOCKED_BY_DATASET | no winter source/bundle evidence |
+| Winter scenario configuration | IMPLEMENTED | UNIT_PASS | config plus nine complete A source rows; DatasetBundle not persisted |
+| Winter A→B→C→D artifact | NOT_IMPLEMENTED | BLOCKED_BY_GFS | three meteorological rows missing; downstream winter chain not started |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -122,11 +144,13 @@ A PreparedWindow / DatasetBundle.v2
    proposal 逐项审批，registry 本身不等于 proposal 批准。
 2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
    19 个时间修订版误称为 19 个候选。
-3. 有冬季采集能力，没有冬季 scenario + 12-type frozen bundle + B/C/D 验证链。
+3. 冬季场景已配置，九个 A source rows 已通过覆盖；三个 GFS rows 和 12-type frozen
+   bundle 仍缺失，因此 B/C/D 冬季验证链未开始。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
-5. C baseline/medium 联合性能已测，节点 3.04×对应 planning time 7.14×；fine 未运行。
-   共享搜索、bounded risk memoization 与 incremental replanning 未实现。
+5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
+   benchmark 中取得 14.77% median 收益。formal ingress/12-route promotion、共享搜索与
+   incremental replanning 均未实现。
 6. D 已建立基础专业导航辅助层；route candidate compare 与研究 provenance/
    uncertainty 交互仍取决于真实 presentation contract。
 
@@ -138,7 +162,7 @@ A PreparedWindow / DatasetBundle.v2
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| winter artifact 不存在 | BLOCKED_BY_DATASET | config 已验证；下一步先 source availability probe |
+| winter artifact 不存在 | PARTIAL / BLOCKED_BY_GFS | 九行 complete；只解决三行 GFS 与 cadence gate，不重下 Copernicus |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
 | C candidate 未投影到 replay bundle | DRAFT / PLANNED | proposal exists; current NOT_PUBLISHED semantics unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
@@ -147,8 +171,8 @@ A PreparedWindow / DatasetBundle.v2
 ## 本轮验证边界（2026-08-21 23:18）
 
 本轮没有运行 48h replay、heavy integration 或新的 determinism twin-run。
-Contracts 19 PASS（inherited）；B 61 个 non-integration tests PASS（8 integration deselected）；
-C 146 个 non-integration tests PASS；B/C Ruff clean。D 63 PASS、JS syntax 与 Firefox
+A doctor 5,232 PASS；C 152 个 non-integration tests PASS、Ruff clean。Contracts/B/D
+代码未改，其前轮测试证据继承。D 63 PASS、JS syntax 与 Firefox
 48h artifact 回归均为前轮继承证据：required resources 200，console errors/warnings 0，
 10:00/10:30 船位与 13:30/15:00 adoption 状态未回退。
 12h authoritative determinism 仍为继承证据。

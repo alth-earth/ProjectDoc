@@ -40,11 +40,12 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-21 23:18）
 
-状态：`CONFIG_UNIT_VALIDATED / LOCAL_FEASIBILITY_AUDITED / BLOCKED_BY_DATASET`。
+状态：`PARTIAL_ACQUISITION / 9_OF_12_COMPLETE / BLOCKED_BY_GFS`。
 
 1. 在 contracts 中提出新的 winter scenario identity，不修改冻结 scenario。
-2. A 获取真实冬季 12-type 数据并建立 provenance-complete frozen bundle；不得用夏季
-   数据或旧 9-type artifact 代替。
+2. A 已获取八个真实 Copernicus 类型并复用一个 GEBCO static row；下一步只解决
+   wind/temperature/visibility 的 NCEI 202602 缺档和 6 h/3 h cadence policy，随后建立
+   provenance-complete frozen bundle。不得用夏季数据或旧 9-type artifact 代替。
 3. B 在旧模型版本上先做 input/grid/unknown 分布基线，再决定是否创建新 calibration
    version；禁止静默改权重或 level policy。
 4. C/D 只在 A/B acceptance 通过后接入，比较夏季/冬季风险、可达性、路线和 replanning。
@@ -71,12 +72,12 @@ tests 和性能收益证据。
 
 ## P3 C Performance Optimization（2026-08-21 23:18）
 
-状态：`COMPONENT_PROFILE + BC_COUPLING_BASELINE_COMPLETED`。
+状态：`EXACT_SAMPLE_PROFILE + BOUNDED_LRU_EXPERIMENT_VALIDATED`。
 
-真实 `TimeDependentAStar`/`RiskSampler`/cost/vessel 组件的合成 profiler 已表明
-risk sampling/edge traversal 是首要热点；edge geometry cache 的 sample-count
-identity 已修正并有回归。下一步先在 bounded formal fixture 统计重复 key 与 bounded
-cache 内存收益，不直接引入共享搜索。
+真实 medium B frame search 记录 705,469 次 sample 请求，其中 242,992 次精确重复。
+50k default-off LRU 的 3-run median 从 76.281 s 降至 65.012 s（14.77%），额外 sampled
+RSS 约 38.6 MiB，完整规划语义摘要不变。下一步进入 committed ingress、三目标和四层
+equality gate，不直接引入共享搜索。
 
 保留现有 3-worker objective-level ProcessPool 基线。依次评估：重复搜索与 cache
 profiling、同 layer 多目标共享 immutable inputs、shared-search feasibility，以及

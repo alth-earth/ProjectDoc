@@ -13,22 +13,25 @@ Last Verified: 2026-08-22
 
 # Winter Scenario Status
 
-## Current verdict（2026-08-22 00:02）
+## Current verdict（2026-08-22 02:34 +08:00）
 
 | Item | State | Evidence |
 |---|---|---|
 | A generic winter-capable acquisition interfaces | IMPLEMENTED | GFS/NCEI, Copernicus, GEBCO and deterministic ice derivations already support explicit UTC windows |
 | Winter scenario configuration | IMPLEMENTED | `tromso_isfjorden_february_2026_research_v1` uses existing `scenario.v2` without schema changes |
 | Scenario validation | VALIDATED | contracts loader/CLI/unit test |
-| Winter 12-type source dataset | BLOCKED_BY_DATASET | local target-corridor audit found zero February 2026 records in all 12 rows; no network acquisition run |
+| Winter source dataset | PARTIAL / 9_OF_12_COMPLETE | eight Copernicus rows acquired plus cached GEBCO mask; A coverage diagnostic passed these nine |
+| Winter GFS rows | BLOCKED_BY_SOURCE_AND_CADENCE | NCEI 202602 paths absent; adapter 6 h cadence conflicts with current 3 h dynamic coverage gate |
 | Winter `PreparedWindow` / `DatasetBundle.v2` | NOT_IMPLEMENTED | depends on complete source acquisition and QC |
 | Winter B/C/D artifacts | NOT_IMPLEMENTED | downstream work prohibited until A publication passes |
 
 The configuration is not a winter artifact and is not evidence that the 12
 required sources are complete for the selected period.
 
-Detailed read-only evidence is recorded in
-[WINTER_DATA_FEASIBILITY_REPORT.md](../../reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md).
+Feasibility history is in
+[WINTER_DATA_FEASIBILITY_REPORT.md](../../reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md);
+current acquisition evidence is in
+[WINTER_DATA_ACQUISITION_REPORT.md](../../reports/research-validation/WINTER_DATA_ACQUISITION_REPORT.md).
 
 ## Configuration skeleton（2026-08-22 00:02）
 
@@ -42,7 +45,7 @@ Detailed read-only evidence is recorded in
 | Horizon | 144 h |
 | Required profile | existing 12 formal data types |
 | Optional | bathymetry, long-term restricted area |
-| Artifact state | none |
+| Artifact state | nine source rows complete; DatasetBundle not persisted |
 
 The February window is a reproducible research target, not a claim about source
 availability or winter representativeness. Changing the target period requires
@@ -52,12 +55,12 @@ a new scenario revision and a recorded source-availability review.
 
 | Data group | Existing path | Winter readiness |
 |---|---|---|
-| wind, temperature, visibility | GFS/NCEI acquisition and normalization | interface implemented; February 2026 local records = 0 |
-| wave | Copernicus global wave | interface implemented; February 2026 local records = 0 |
-| ocean current, water level | Copernicus Arctic physical products | interface implemented; February 2026 local records = 0 |
-| ice concentration/drift/thickness | Copernicus Arctic physical products | interface implemented; February 2026 local records = 0 |
-| ice type/edge | neXtSIM concentration components and deterministic derivation | interface implemented; February 2026 local records = 0 |
-| land/sea mask | GEBCO-derived static mask | only local mask is issued/valid 2026-04-23; February causal/static binding requires an explicit decision |
+| wind, temperature, visibility | GFS/NCEI acquisition and normalization | BLOCKED: no 202602 archive path and unresolved 6 h/3 h cadence gate |
+| wave | Copernicus global wave | 49 records, COMPLETE |
+| ocean current, water level | Copernicus Arctic physical products | 145 each, COMPLETE; current is detided fallback |
+| ice concentration/drift/thickness | Copernicus Arctic physical products | 145 each, COMPLETE |
+| ice type/edge | neXtSIM concentration components and deterministic derivation | 145 each, COMPLETE |
+| land/sea mask | GEBCO-derived static mask | cached row COMPLETE under explicit later retrospective cutoff |
 
 A supports `retrospective_best_estimate` and `frozen_forecast`, explicit UTC
 windows, source snapshots, issue/valid/ingest provenance and atomic publication.
@@ -77,21 +80,18 @@ Before B may consume the scenario, A must produce:
 
 ## Blockers and acquisition plan（2026-08-22 00:02）
 
-Current blocker: `BLOCKED_BY_DATASET`. Every required target-corridor data type
-has zero local February 2026 records. This round intentionally did not perform
-network downloads, credential use or large acquisition. A retrospective study
-may choose a later static GEBCO release, but that knowledge-time exception must
-be explicit before a formal bundle is published.
+Current blocker: `BLOCKED_BY_GFS`. The Copernicus and static rows must be reused;
+only the three meteorological rows remain missing. A diagnostic retrospective
+cutoff explicitly accepted the later GEBCO release. No formal bundle may be
+published while the GFS rows fail start support and horizon coverage.
 
 Next controlled action:
 
-1. run source metadata/availability probes only;
-2. record proxy state and use per-command direct connection only if required;
-3. estimate download bytes and Windows-host free space separately—WSL `df` is
-   not host-disk evidence;
-4. acquire one source group at a time with resumable manifests;
-5. run A doctor/exact resolver before starting B;
-6. preserve partial downloads as incomplete evidence, never as a formal bundle.
+1. resolve NCEI February availability and the 6 h analysis versus 3 h coverage gate;
+2. acquire only wind, temperature and visibility from an approved A source;
+3. keep Windows-host free space `UNKNOWN` until host verification;
+4. rerun doctor/exact coverage without incomplete mode before starting B;
+5. preserve the nine completed rows and never substitute summer data.
 
 ## Downstream acceptance（2026-08-22 00:02）
 

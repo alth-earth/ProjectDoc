@@ -1,5 +1,5 @@
 ---
-Overall Status: ACTIVE
+Overall Status: SUPERSEDED
 Content Status:
   - COMPLETED
   - BLOCKED
@@ -8,9 +8,14 @@ Scope: read-only local-data feasibility for the February 2026 winter scenario
 Canonical/Supporting: Supporting evidence; current/reference/WINTER_SCENARIO_STATUS.md is canonical
 Branch: research-validation-system
 Last Verified: 2026-08-22
+Superseded By: WINTER_DATA_ACQUISITION_REPORT.md
 ---
 
 # Winter Data Feasibility Report
+
+This report preserves the pre-acquisition Round2 snapshot. Current source-row
+status is maintained in `WINTER_DATA_ACQUISITION_REPORT.md` and the canonical
+`current/reference/WINTER_SCENARIO_STATUS.md`.
 
 ## Scenario identity（2026-08-22 01:11 +08:00）
 
