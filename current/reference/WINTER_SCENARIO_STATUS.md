@@ -20,12 +20,15 @@ Last Verified: 2026-08-22
 | A generic winter-capable acquisition interfaces | IMPLEMENTED | GFS/NCEI, Copernicus, GEBCO and deterministic ice derivations already support explicit UTC windows |
 | Winter scenario configuration | IMPLEMENTED | `tromso_isfjorden_february_2026_research_v1` uses existing `scenario.v2` without schema changes |
 | Scenario validation | VALIDATED | contracts loader/CLI/unit test |
-| Winter 12-type source dataset | BLOCKED_BY_DATASET | no matching local artifact found; no network acquisition run in this round |
+| Winter 12-type source dataset | BLOCKED_BY_DATASET | local target-corridor audit found zero February 2026 records in all 12 rows; no network acquisition run |
 | Winter `PreparedWindow` / `DatasetBundle.v2` | NOT_IMPLEMENTED | depends on complete source acquisition and QC |
 | Winter B/C/D artifacts | NOT_IMPLEMENTED | downstream work prohibited until A publication passes |
 
 The configuration is not a winter artifact and is not evidence that the 12
 required sources are complete for the selected period.
+
+Detailed read-only evidence is recorded in
+[WINTER_DATA_FEASIBILITY_REPORT.md](../../reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md).
 
 ## Configuration skeleton（2026-08-22 00:02）
 
@@ -49,12 +52,12 @@ a new scenario revision and a recorded source-availability review.
 
 | Data group | Existing path | Winter readiness |
 |---|---|---|
-| wind, temperature, visibility | GFS/NCEI acquisition and normalization | interface implemented; target-window records unverified |
-| wave | Copernicus global wave | interface implemented; target-window records unverified |
-| ocean current, water level | Copernicus Arctic physical products | interface implemented; target-window records unverified |
-| ice concentration/drift/thickness | Copernicus Arctic physical products | interface implemented; target-window records unverified |
-| ice type/edge | neXtSIM concentration components and deterministic derivation | interface implemented; target-window records unverified |
-| land/sea mask | GEBCO-derived static mask | existing local/static capability; exact bundle binding still required |
+| wind, temperature, visibility | GFS/NCEI acquisition and normalization | interface implemented; February 2026 local records = 0 |
+| wave | Copernicus global wave | interface implemented; February 2026 local records = 0 |
+| ocean current, water level | Copernicus Arctic physical products | interface implemented; February 2026 local records = 0 |
+| ice concentration/drift/thickness | Copernicus Arctic physical products | interface implemented; February 2026 local records = 0 |
+| ice type/edge | neXtSIM concentration components and deterministic derivation | interface implemented; February 2026 local records = 0 |
+| land/sea mask | GEBCO-derived static mask | only local mask is issued/valid 2026-04-23; February causal/static binding requires an explicit decision |
 
 A supports `retrospective_best_estimate` and `frozen_forecast`, explicit UTC
 windows, source snapshots, issue/valid/ingest provenance and atomic publication.
@@ -74,9 +77,11 @@ Before B may consume the scenario, A must produce:
 
 ## Blockers and acquisition plan（2026-08-22 00:02）
 
-Current blocker: `BLOCKED_BY_DATASET`. No complete local February 2026 12-type
-bundle was found. This round intentionally did not perform network downloads,
-credential use or large acquisition.
+Current blocker: `BLOCKED_BY_DATASET`. Every required target-corridor data type
+has zero local February 2026 records. This round intentionally did not perform
+network downloads, credential use or large acquisition. A retrospective study
+may choose a later static GEBCO release, but that knowledge-time exception must
+be explicit before a formal bundle is published.
 
 Next controlled action:
 
@@ -95,4 +100,3 @@ identity without changing the frozen risk formula. C must pass route integrity,
 coverage and determinism gates. D may consume only Orchestrator presentation
 artifacts and must label scientific status `demo_unvalidated` until calibration
 evidence exists.
-

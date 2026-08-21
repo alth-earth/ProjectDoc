@@ -26,9 +26,9 @@ historical reports.
 | 模块 | 已有能力 | 已验证证据 | 缺口 | 建议 |
 |---|---|---|---|---|
 | Contracts | identity loaders plus ownership/change gate; 8 scenario configs | 19 tests; winter config loader/CLI | future proposal owner approvals | apply registry/template per change |
-| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer frozen bundles | no real winter dataset/artifact | source availability probe, then provenance-complete bundle |
-| B | hourly deterministic risk plus isolated fixed-grid experiment framework | 60 non-integration tests; deterministic kernel benchmark | `demo_unvalidated`; no formal B-only profile; no adaptive grid | bounded formal grid comparison before proposal |
-| C | time-dependent A*, 12-route publication, component profiler, hardened edge-geometry cache identity | 145 non-integration tests; synthetic profile digest | no bounded traversal memoization/shared/incremental search | measure repeated formal sample keys first |
+| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer frozen bundles; local winter matrix audited | no real winter dataset/artifact; all 12 February rows absent | metadata-only remote availability probe, then provenance-complete bundle |
+| B | hourly deterministic risk plus synthetic and formal fixed-grid experiment harnesses | 78 formal frames on 16×7/31×11/60×21 | `demo_unvalidated`; incremental RSS/variance not isolated; no adaptive grid | repeat bounded formal comparison before proposal |
+| C | time-dependent A*, 12-route publication, profiler, BC benchmark, edge-cache counters | baseline 10.51 s; medium 75.00 s on real B frames | no bounded risk memoization/shared/incremental search; fine not run | measure repeated exact sample keys first |
 | Orchestrator | causal replay, navigation execution, process-level objective parallelism, preflight, presentation export | 12h authoritative/inherited; 48h real artifact | presentation candidate package empty | versioned projection from real C artifact only |
 | D | 48h Viewer plus graticule/labels/scale/grid north and aspect-preserving map | fresh Firefox BROWSER_E2E_PASS | no real candidate compare; limited provenance/uncertainty views | consume proposed artifact; expose published quality |
 
@@ -40,7 +40,7 @@ with explicit UTC windows and causal visibility. Existing formal evidence is Jul
 
 - winter data interface: `IMPLEMENTED`;
 - winter scenario config identity: `IMPLEMENTED / UNIT_VALIDATED`;
-- winter frozen DatasetBundle: `NOT_IMPLEMENTED`;
+- winter frozen DatasetBundle: `NOT_IMPLEMENTED / BLOCKED_BY_DATASET` (zero local February records for all 12 types);
 - winter A→B→C→D validation: `NOT_RUN`.
 
 ## B Grid and scientific gap（2026-08-21 23:18）

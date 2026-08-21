@@ -47,7 +47,14 @@ The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest implementation evidence:
-[RESEARCH_VALIDATION_ACCELERATION_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ACCELERATION_REPORT.md).
+[RESEARCH_VALIDATION_ROUND2_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ROUND2_REPORT.md).
+
+Focused Round 2 evidence:
+
+- [WINTER_DATA_FEASIBILITY_REPORT.md](reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md)
+- [ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md](current/proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md)
+- B: `B_FORMAL_GRID_COMPARISON_REPORT.md`
+- C: `BC_COUPLING_PERFORMANCE_REPORT.md` and `C_OPTIMIZATION_PROPOSAL.md`
 
 ## Competition Demo Closure Reports（2026-08-21 23:18）
 

@@ -84,5 +84,5 @@ explicit unsupported/unavailable state when it cannot interpret a publication.
 | Winter scenario identity | EXPERIMENTAL CONFIG, DATA BLOCKED | contracts + A + integration owner |
 | B grid experiment profiles | EXPERIMENTAL, no formal RiskFrame change | B + C compatibility reviewer |
 | Adaptive/non-uniform grid contract | PLANNED | B + C + Orchestrator |
-| Candidate route presentation with real geometry/metrics | PLANNED | C + Orchestrator + D |
+| [Candidate route presentation with real geometry/metrics](../proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md) | DRAFT / PLANNED; current payload remains NOT_PUBLISHED | C + Orchestrator + D |
 | Environment factor presentation packages | PLANNED | A/B semantic owners + Orchestrator + D |

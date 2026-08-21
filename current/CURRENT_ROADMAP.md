@@ -28,7 +28,7 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
    的 ownership/version/producer/consumer registry。
 2. 把既有接口标为 `FROZEN_COMPATIBLE`，把 proposed extension 标为
    `DRAFT`；禁止直接改旧 schema 的既有字段语义。
-3. 为 `presentation.route-candidates` 建立 backward-compatible proposal，明确
+3. 审批已建立的 `presentation.route-candidates` backward-compatible proposal，明确
    planning layer、objective、geometry、metrics、selection 和 provenance。
 4. 建立 B Adaptive Grid proposal 的 compatibility gate：grid identity、parent
    mapping、C regular-grid 可消费性和 fail-closed 重采样证据。
@@ -40,7 +40,7 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-21 23:18）
 
-状态：`CONFIG_UNIT_VALIDATED / BLOCKED_BY_DATASET`。
+状态：`CONFIG_UNIT_VALIDATED / LOCAL_FEASIBILITY_AUDITED / BLOCKED_BY_DATASET`。
 
 1. 在 contracts 中提出新的 winter scenario identity，不修改冻结 scenario。
 2. A 获取真实冬季 12-type 数据并建立 provenance-complete frozen bundle；不得用夏季
@@ -54,11 +54,12 @@ presentation 均有独立证据。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
-状态：`FIXED_GRID_EXPERIMENTAL_BASELINE_COMPLETED`。
+状态：`FORMAL_FIXED_GRID_EXPERIMENT_COMPLETED / BC_BASELINE_MEDIUM_COMPLETED`。
 
-已完成 baseline 16×7、medium 31×11、fine 60×21 的隔离配置、确定性
-xarray spatial-kernel benchmark 和输出/RSS 记录；默认生产配置未变。下一步是
-一个 bounded formal A→B fixture，随后才允许讨论 adaptive proposal。
+已完成 baseline 16×7、medium 31×11、fine 60×21 的真实 B formal build；
+baseline/medium 已进入真实 C recommended search。默认生产配置未变。B 节点从
+112 增至 341 时 C planning time 从 10.51 s 增至 75.00 s；fine 只记录 1,260
+节点容量，不在无显式预算时启动规划。
 
 先运行固定网格对照：16×7 default、31×11 RC2 和至少一个研究候选。记录 B latency、
 RSS、hard/unknown 比例、risk aliasing、C route/ETA 差异和 planner failure。只有对照证据
@@ -70,7 +71,7 @@ tests 和性能收益证据。
 
 ## P3 C Performance Optimization（2026-08-21 23:18）
 
-状态：`COMPONENT_PROFILE_EXPERIMENTAL_BASELINE_COMPLETED`。
+状态：`COMPONENT_PROFILE + BC_COUPLING_BASELINE_COMPLETED`。
 
 真实 `TimeDependentAStar`/`RiskSampler`/cost/vessel 组件的合成 profiler 已表明
 risk sampling/edge traversal 是首要热点；edge geometry cache 的 sample-count
