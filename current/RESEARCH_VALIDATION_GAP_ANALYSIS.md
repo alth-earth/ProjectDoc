@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: verified capability and gap baseline for research validation
 Canonical For: what exists, what is missing, and what may be developed next
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-22
 Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md
 ---
 
@@ -25,12 +25,12 @@ historical reports.
 
 | 模块 | 已有能力 | 已验证证据 | 缺口 | 建议 |
 |---|---|---|---|---|
-| Contracts | corridor/scenario/vessel/RunContext loaders and validation | package tests; 7 current scenario configs | no cross-repo contract ownership registry; no winter identity | P0 registry, then versioned winter proposal |
-| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer frozen bundles | no real winter scenario/artifact | P1 build new provenance-complete winter bundle |
-| B | hourly deterministic risk, fixed grid, hard reason, confidence, speed factor | unit/integration and formal risk frames | `demo_unvalidated`; no B-only benchmark; no adaptive grid | fixed-grid benchmark before adaptive proposal |
-| C | time-dependent A*, fastest/low_risk/recommended, four layers, atomic 12-route publication, replanning | RC1 r6/r7 artifact and tests | 12 independent searches; no shared/incremental search; candidate presentation gap | profile and traversal cache first; preserve digests |
+| Contracts | identity loaders plus ownership/change gate; 8 scenario configs | 19 tests; winter config loader/CLI | future proposal owner approvals | apply registry/template per change |
+| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer frozen bundles | no real winter dataset/artifact | source availability probe, then provenance-complete bundle |
+| B | hourly deterministic risk plus isolated fixed-grid experiment framework | 60 non-integration tests; deterministic kernel benchmark | `demo_unvalidated`; no formal B-only profile; no adaptive grid | bounded formal grid comparison before proposal |
+| C | time-dependent A*, 12-route publication, component profiler, hardened edge-geometry cache identity | 145 non-integration tests; synthetic profile digest | no bounded traversal memoization/shared/incremental search | measure repeated formal sample keys first |
 | Orchestrator | causal replay, navigation execution, process-level objective parallelism, preflight, presentation export | 12h authoritative/inherited; 48h real artifact | presentation candidate package empty | versioned projection from real C artifact only |
-| D | 48h Viewer, GEBCO/risk/hard/ship/route/replanning, horizons, modes, controls | Firefox BROWSER_E2E_PASS inherited | no real candidate compare; limited research/professional layers | consume proposed artifact; expose provenance/quality |
+| D | 48h Viewer plus graticule/labels/scale/grid north and aspect-preserving map | fresh Firefox BROWSER_E2E_PASS | no real candidate compare; limited provenance/uncertainty views | consume proposed artifact; expose published quality |
 
 ## A 与 Winter Scenario（2026-08-21 23:18）
 
@@ -39,7 +39,7 @@ with explicit UTC windows and causal visibility. Existing formal evidence is Jul
 9-type long window is legacy evidence and cannot satisfy the current 12-type chain. Therefore:
 
 - winter data interface: `IMPLEMENTED`;
-- winter scenario contract: `NOT_IMPLEMENTED`;
+- winter scenario config identity: `IMPLEMENTED / UNIT_VALIDATED`;
 - winter frozen DatasetBundle: `NOT_IMPLEMENTED`;
 - winter A→B→C→D validation: `NOT_RUN`.
 
@@ -55,7 +55,12 @@ DATA_UNAVAILABLE hard cells. That is the artifact's actual model/scenario distri
 threshold bug. Finer cells may improve spatial representation but do not create scientific risk
 variation or calibration.
 
-Required P2 experiment matrix:
+The first synthetic spatial-kernel experiment now covers 112/341/1260 cells
+without changing the production default. It demonstrates deterministic output
+and linear output-byte growth, but fixed xarray overhead dominates its ~24.6 ms
+runtime. It is not evidence of full RiskFrame build performance.
+
+Remaining P2 formal experiment matrix:
 
 | Measure | Why |
 |---|---|
@@ -72,7 +77,10 @@ However each objective invokes an independent A*. Existing optimizations cache g
 precompute risk arrays; Orchestrator can run objective searches in a controlled ProcessPool. There is
 no shared objective queue, Pareto frontier, retained search tree, D* Lite or LPA*.
 
-P3 should first share only objective-independent immutable traversal under a complete key. Search
+The synthetic component profile attributes ~92% inclusive time to risk sampling
+inside edge traversal and confirms six samples per evaluated edge. The existing
+geometry cache key now includes `minimum_samples`, closing one correctness gap.
+P3 should next share only objective-independent immutable traversal under a complete key. Search
 labels cannot be reused across objective weights, layers, heading/time state, risk revision or
 generation without new correctness proof. Acceptance requires all 12 route business digests equal to
 the serial baseline and measured wall-time/RSS improvement.
@@ -122,3 +130,8 @@ producer/consumer tests, migration and rollback before implementation.
 - Orchestrator owner: candidate/environment projection and compatibility tests only.
 - Integration owner: approves schema proposal, pins artifact identities, runs one heavy workload at a
   time and compares semantic digests.
+
+Directory-level write ownership and integration order are now canonical in
+[`DEVELOPMENT_OWNERSHIP.md`](DEVELOPMENT_OWNERSHIP.md); contract ownership is
+canonical in
+[`CONTRACT_OWNERSHIP_REGISTRY.md`](reference/CONTRACT_OWNERSHIP_REGISTRY.md).

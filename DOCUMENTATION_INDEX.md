@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: documentation navigation map
 Canonical For: which document to trust for each question
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-22
 ---
 
 # Documentation Index
@@ -27,6 +27,10 @@ Last Verified: 2026-08-21
 | Technical debt? | [current/reference/TECH_DEBT.md](current/reference/TECH_DEBT.md) |
 | Research gap analysis? | [current/RESEARCH_VALIDATION_GAP_ANALYSIS.md](current/RESEARCH_VALIDATION_GAP_ANALYSIS.md) |
 | Research decisions? | [current/decisions/RESEARCH_VALIDATION_DECISIONS.md](current/decisions/RESEARCH_VALIDATION_DECISIONS.md) |
+| Contract ownership? | [current/reference/CONTRACT_OWNERSHIP_REGISTRY.md](current/reference/CONTRACT_OWNERSHIP_REGISTRY.md) |
+| Parallel development ownership? | [current/DEVELOPMENT_OWNERSHIP.md](current/DEVELOPMENT_OWNERSHIP.md) |
+| Contract proposal template? | [standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md](standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md) |
+| Winter scenario readiness? | [current/reference/WINTER_SCENARIO_STATUS.md](current/reference/WINTER_SCENARIO_STATUS.md) |
 | Time model? | [current/reference/TIME_MODEL_QUICK_REFERENCE.md](current/reference/TIME_MODEL_QUICK_REFERENCE.md) |
 | Governance / report rules? | [standards/ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md) |
 
@@ -41,6 +45,9 @@ Last Verified: 2026-08-21
 
 The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
+
+Latest implementation evidence:
+[RESEARCH_VALIDATION_ACCELERATION_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ACCELERATION_REPORT.md).
 
 ## Competition Demo Closure Reports（2026-08-21 23:18）
 

@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: research validation roadmap
 Canonical For: next work, phase gates, and dependency order
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-22
 Supersedes: competition-demo Viewer Product Mainline roadmap
 ---
 
@@ -21,7 +21,8 @@ identity，不覆盖 RC1/RC2/demo frozen artifact。
 
 ## P0 接口冻结与多人开发门禁（2026-08-21 23:18）
 
-状态：`IN_PROGRESS`。
+状态：`REGISTRY_BASELINE_COMPLETED`。Ownership registry、change-proposal
+template 和 development ownership 已建立；具体 breaking proposal 仍需逐项审批。
 
 1. 建立 A→B、B→C、C route plan、C→D candidate presentation、Viewer bundle
    的 ownership/version/producer/consumer registry。
@@ -39,7 +40,7 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-21 23:18）
 
-状态：`PLANNED`。
+状态：`CONFIG_UNIT_VALIDATED / BLOCKED_BY_DATASET`。
 
 1. 在 contracts 中提出新的 winter scenario identity，不修改冻结 scenario。
 2. A 获取真实冬季 12-type 数据并建立 provenance-complete frozen bundle；不得用夏季
@@ -53,7 +54,11 @@ presentation 均有独立证据。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
-状态：`PLANNED`。
+状态：`FIXED_GRID_EXPERIMENTAL_BASELINE_COMPLETED`。
+
+已完成 baseline 16×7、medium 31×11、fine 60×21 的隔离配置、确定性
+xarray spatial-kernel benchmark 和输出/RSS 记录；默认生产配置未变。下一步是
+一个 bounded formal A→B fixture，随后才允许讨论 adaptive proposal。
 
 先运行固定网格对照：16×7 default、31×11 RC2 和至少一个研究候选。记录 B latency、
 RSS、hard/unknown 比例、risk aliasing、C route/ETA 差异和 planner failure。只有对照证据
@@ -65,7 +70,12 @@ tests 和性能收益证据。
 
 ## P3 C Performance Optimization（2026-08-21 23:18）
 
-状态：`PLANNED`。
+状态：`COMPONENT_PROFILE_EXPERIMENTAL_BASELINE_COMPLETED`。
+
+真实 `TimeDependentAStar`/`RiskSampler`/cost/vessel 组件的合成 profiler 已表明
+risk sampling/edge traversal 是首要热点；edge geometry cache 的 sample-count
+identity 已修正并有回归。下一步先在 bounded formal fixture 统计重复 key 与 bounded
+cache 内存收益，不直接引入共享搜索。
 
 保留现有 3-worker objective-level ProcessPool 基线。依次评估：重复搜索与 cache
 profiling、同 layer 多目标共享 immutable inputs、shared-search feasibility，以及
@@ -74,7 +84,7 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 
 ## P4 D Professional Navigation Visualization（2026-08-21 23:18）
 
-状态：`PLANNED`。
+状态：`FOUNDATION_BROWSER_E2E_PASS`。
 
 1. 接入真实 route candidate presentation contract，支持 layer/objective compare；空候选
    继续明确 NOT_PUBLISHED。
@@ -82,6 +92,10 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
    comparison 视图；不以视觉插值掩盖缺测。
 3. 评估专业导航图层和环境 contributor，但只消费 Orchestrator 已发布数据。
 4. 保留 Presentation / Engineering Debug 双模式和单 Simulation Clock。
+
+经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示和独立 layer
+toggle 已通过 Firefox。后续仍以真实 candidate/provenance/environment presentation
+contract 为前置条件。
 
 ## 全局验收与资源规则（2026-08-21 23:18）
 

@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: non-blocking items + NEXT PHASE technical debt
 Canonical For: registered technical debt and next-phase work
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-22
 ---
 
 # 技术债登记
@@ -21,11 +21,20 @@ Last Verified: 2026-08-21
 
 | Priority | Existing debt / new gap | Current state |
 |---|---|---|
-| P0 | interface ownership/version registry; C→D candidate presentation proposal | IN_PROGRESS |
-| P1 | winter scenario + provenance-complete 12-type artifact | PLANNED |
-| P2 | fixed-grid benchmark, then adaptive-grid proposal | PLANNED |
-| P3 | C edge traversal cache/shared-search/incremental feasibility | PLANNED |
-| P4 | D professional navigation and research validation views | PLANNED |
+| P0 | interface ownership/version registry; C→D candidate presentation proposal | REGISTRY COMPLETE; candidate proposal PLANNED |
+| P1 | winter scenario + provenance-complete 12-type artifact | CONFIG VALIDATED; DATA BLOCKED |
+| P2 | fixed-grid benchmark, then adaptive-grid proposal | SYNTHETIC KERNEL BASELINE COMPLETE; FORMAL BENCH PLANNED |
+| P3 | C edge traversal cache/shared-search/incremental feasibility | COMPONENT PROFILE COMPLETE; FORMAL CACHE STUDY PLANNED |
+| P4 | D professional navigation and research validation views | NAVIGATION AIDS BROWSER PASS; RESEARCH VIEWS PLANNED |
+
+## Research Validation acceleration findings（2026-08-22 00:24）
+
+| ID | Item | State | Next control |
+|---|---|---|---|
+| TD-55 | Winter 12-type dataset/artifact | BLOCKED_BY_DATASET | metadata availability probe; do not start B before A exact resolver passes |
+| TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
+| TD-57 | C repeated risk-sampling cost | PROFILED / EXPERIMENTAL | count formal repeated keys and design bounded memory policy before memoization |
+| TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |
 
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。
