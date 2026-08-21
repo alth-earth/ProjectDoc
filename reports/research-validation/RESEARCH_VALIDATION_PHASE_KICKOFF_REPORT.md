@@ -138,4 +138,17 @@ checks completed in roughly 27 seconds of command wall time. Before tests, avail
 
 All seven repositories started clean on `research-validation-system`. This round performs local
 documentation commits only. No push, merge, rebase, reset or remote mutation is permitted or
-performed. Exact end commits are recorded in the final operator report after commit creation.
+performed. `/root/my_project` is not a Git repository.
+
+| Repo | Start HEAD | End HEAD before report-finalization | Local commits |
+|---|---|---|---|
+| governance | `234573d` | `519dee7` | `519dee7` phase baseline; final report-table commit follows |
+| contracts | `7e83182` | `fcc6006` | `04428ad`, `fcc6006` |
+| Orchestrator | `62316ea` | `89e61e3` | `ad2f57f`, `89e61e3` |
+| A | `c6d0718` | `2301f18` | `b3db3b0`, `2301f18` |
+| B | `6269420` | `b6550df` | `8895fe6`, `b6550df` |
+| C | `42e951c` | `9591707` | `971c9c9`, `9591707` |
+| D | `4702e6e` | `78328bc` | `b078613`, `78328bc` |
+
+All branches have no configured upstream tracking in the audited workspace, so ahead/behind is
+`N/A (no upstream)`. Package working trees were clean after commits. `PUSH = NOT PERFORMED`.
