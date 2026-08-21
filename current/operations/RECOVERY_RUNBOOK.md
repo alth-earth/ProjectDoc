@@ -1,8 +1,11 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+Document Role: CANONICAL
 Scope: recovery of RC1 demo environment + git/governance rollback
 Canonical For: how to recover from backup and how to roll back governance
-Branch: demo-engineering
+Branch: research-validation-system
 Last Verified: 2026-08-20
 ---
 

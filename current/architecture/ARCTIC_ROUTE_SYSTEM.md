@@ -1,36 +1,42 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+  - PLANNED
+Document Role: CANONICAL
 Scope: system architecture SSOT
 Canonical For: module boundaries, data flow, runtime semantics
-Branch: demo-engineering
-Last Verified: 2026-08-20
+Branch: research-validation-system
+Last Verified: 2026-08-21
 Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_INDEX.md
 ---
 
 # Arctic Route Planning System
 
-## 0. Governance (2026-08-20)
+## 0. Governance（2026-08-21 23:18）
 
 Whole-project governance and documentation live in `arctic_route_governance/`.
-`/root/my_project` is a **recovery / historical safety source** that still retains its
-original ProjectDoc Git repo (`demo-engineering` @ `3812b5d`); it is intentionally NOT
-retired this round. Branch mapping:
-main = RC1 frozen, rc2-development = RC2 frozen, demo-engineering = active.
+`/root/my_project` is a plain multi-repository workspace and currently has no root Git.
+Branch mapping is: main = RC1 frozen, rc2-development = RC2 frozen,
+demo-engineering = competition demo frozen, research-validation-system = active.
 See [../../README.md](../../README.md) and [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md).
 
-## 1. 项目定位与成功标准
+## 1. 项目定位与成功标准（2026-08-21 23:18）
 
-这是一个由 4 名学生完成的**挑战杯演示项目**，目标是稳定展示：环境数据变化后，风险图随之
-变化，规划路线和指标也能合理更新。成功标准是：
+项目当前定位为 **Arctic Route Planning Research Validation System**。比赛演示是已冻结
+的验证基线，不再是当前架构的唯一目标。研究阶段要在保持 causal replay、artifact
+provenance 和 fail-closed contract 的前提下，建立可重复的跨场景比较、算法实验与
+专业可视化。成功标准是：
 
-- 演示流程完整、可重复、尽量可断网运行；
-- 风险图和风险预测图在视觉与相对变化上基本合理；
-- 航线不穿陆地、没有明显绕行或时间倒退，并大体符合现实海上航段；
-- 能说明 A、B、C、D 的输入、输出和一次重规划为什么发生；
-- 全部演示参数、模型和限制有明确标注，不把演示结果声称为真实导航结论。
+- 研究输入、模型配置、grid、route objective、artifact 和结果均可追溯；
+- 夏季与未来冬季场景能够在同一 contract 下比较，缺失数据继续 fail closed；
+- B/C 优化有 baseline、对照、性能和 determinism 证据，不以理论设计替代实现；
+- D 能展示真实已发布结果、数据质量与不确定性，不在浏览器创造业务语义；
+- 冻结演示仍可恢复，研究变更不覆盖 RC1/RC2/demo artifact。
 
-**科学精确度、真船标定、适航认证和业务化实时运行不是挑战杯工程验收项，也不得阻塞演示。**
-本系统仍禁止用于真实导航或安全决策；这一限制与“工程演示通过即成功”并不矛盾。
+当前 B 模型仍为 `demo_unvalidated`，系统仍禁止用于真实导航或安全决策。研究验证
+阶段的目标是产生可审计证据，不把未标定输出包装成科学或适航结论。
 
 当前进展（2026-08-16）：**Demo RC1 Frozen Baseline 已建立**。主走廊
 `murmansk_dikson_august_2026_demo_v1`（corridor 2.2.0，144 h）12 类齐全、
@@ -45,16 +51,16 @@ Canonical data flow:
 arctic_route_contracts: shared corridor, scenario, vessel, RunContext
                               |
                               v
-A: download -> preprocess/standardize -> persist frozen artifacts
+A: Environmental Data Acquisition -> PreparedWindow / DatasetBundle.v2
                               |
                               v
-B: hourly risk processing -> RiskFrame / hard_mask / confidence
+B: Risk Assessment and Forecast -> bc.risk-frame.v2
                               |
                               v
 Coverage / fail-closed gates
                               |
                               v
-C: time-dependent A* -> route -> at least one replan
+C: Risk-aware Navigation Decision -> RoutePlan.v2 / FourLayerRoutePlanSet.v3
                               |
                               v
 NavigationExecution -> SimulationSnapshot / ReplayManifest
@@ -63,10 +69,11 @@ NavigationExecution -> SimulationSnapshot / ReplayManifest
 Presentation Adapter -> Presentation Package (JSON/PNG)
                               |
                               v
-D: Viewer / Display / Demo (GEBCO basemap, Simulation Clock, moving ship)
+D: Visualization and Validation Platform (artifact-only Viewer)
 ```
 
-Orchestrator coordinates A -> B -> C -> D and owns:
+Orchestrator is the Pipeline / Artifact / Presentation Adapter and coordinates
+A -> B -> C -> D. It owns:
 replay execution, navigation execution, replan lifecycle,
 presentation adapter (business semantics), L1/L2 preflight,
 presentation artifact export.
@@ -90,19 +97,19 @@ New agents should read: [../../README.md](../../README.md) -> [../../DOCUMENTATI
 
 ## 3. 模块边界与当前状态
 
-| 模块 | 唯一职责 | 当前工程状态 | 挑战杯下一目标 |
+| 模块 | 唯一职责 | 当前工程状态 | Research Validation 下一目标 |
 |---|---|---|---|
-| `arctic_route_contracts` | 共享走廊、场景、船型、时域和 RunContext | 0.3.0；corridor 2.2.0 已冻结 | 保持共享事实稳定（RC1 冻结） |
-| A | 下载、留证、拆帧、标准化、QC、持久化和回放 | 0.4.2；mur RC1 数据已交付（TOPAZ originalGrid 重建） | RC1 冻结；仅 correctness/safety 修复 |
-| B | 时间处理、逐小时风险、置信度、hard mask、环境速度因子 | 0.2.0；RC1 风险窗已提交（unknown-navigable=0） | RC1 冻结；hard_reason 为 POST-RC1 |
-| C | 最终船速、ETA、成本、路径搜索、发布和重规划 | 0.4.0；v3 四层+6h 重规划已跑通（单目标 ≈96s） | RC1 冻结；可选性能优化 POST-RC1 |
-| D | Display / Visualization / Viewer: HTML/JS/CSS, Simulation Clock, moving ship, route/track/pending rendering, static server, proof renderer | 0.1.0; Replay-driven Viewer MVP REAL_ARTIFACT_SMOKE_PASS; GEBCO L2 PASS; moving ship PASS | Dynamic Risk overlay, final UI polish |
-| orchestrator | A-B-C-D root coordinator: replay, navigation execution, replan lifecycle, presentation adapter, L1/L2 preflight, artifact export | replay engine + presentation adapter + preflight established; viewer runtime handed off to D | Dynamic Risk integration, demo rehearsal |
+| `arctic_route_contracts` | 共享走廊、场景、船型、时域和 RunContext | 冻结合同已验证；场景清单当前为 7 个 | 建 ownership/version registry；winter 只提新 identity |
+| A | Environmental Data Acquisition | 12-type public bundle 与 provenance 已验证；当前正式证据为夏季 | 建 winter 12-type artifact，不改变既有 bundle |
+| B | Risk Assessment and Forecast | hourly fixed-grid risk、hard reason 已验证；`demo_unvalidated` | fixed-grid benchmark 后再研究 adaptive grid |
+| C | Risk-aware Navigation Decision | 三目标、四层、12 路线和 replay planning 已验证 | profile/shared-search/incremental proposal |
+| D | Visualization and Validation Platform | 48h artifact Viewer、risk horizon、ship/replanning Firefox E2E PASS | 真实 candidate compare 与研究证据视图 |
+| orchestrator | Pipeline / Artifact / Presentation Adapter | replay、navigation state、preflight、export 已建立 | versioned candidate presentation projection |
 | experimental B | 隔离的反事实实验工程 | 工程卫生待修 | 真实主线完成后再最小修复 |
 
 边界不变：A 不算风险，B 不生成路线，C 不下载环境数据，D 不调用 B/C 内部函数。
 
-### 3.1 运行时身份链
+### 3.1 运行时身份链（2026-08-21 23:18）
 
 一次正式运行先由共享契约物化场景，再让所有工作包传播同一身份。至少不得串线的字段包括：
 `run_id`、`scenario_id`、`corridor_id`、`vessel_profile_id`、`generation`、时间窗，以及各级
@@ -128,7 +135,7 @@ A records ──> DatasetBundle v2 ──独立复核──> RunContext v2
 任何跨包字段都要有唯一所有者和单一语义；A/B/C/D 不得通过复制 TOML 或手工拼 JSON 绕过
 共享配置与公共加载器。
 
-### 3.2 formal 与科学/校准是两条轴
+### 3.2 formal 与科学/校准是两条轴（2026-08-21 23:18）
 
 `provenance`（来源/身份）与 `calibration_status`（模型/参数校准状态）必须分开表达：
 
@@ -140,14 +147,15 @@ A records ──> DatasetBundle v2 ──独立复核──> RunContext v2
 `formal + demo_unvalidated` 是合法但受限的科研工程状态，可用于挑战杯工程验收；它绝不等于
 可用于导航。`formal` 只表示运行身份、来源与工程门禁通过，不表示模型已科学校准。
 
-### 3.3 本阶段做与不做
+### 3.3 本阶段做与不做（2026-08-21 23:18）
 
 本阶段必须做：
 
 - 离线复现“数据何时可见 → 风险如何变化 → 路线为何更新”；
 - B 默认形成至少 24 h、并覆盖实际规划 ETA 的逐小时风险序列；
 - C 按到达时刻使用对应风险，不用一张当前风险图覆盖全航程；
-- D 展示最快/最短时间、低风险、综合推荐和动态重规划结果及指标；
+- D 展示 authoritative route 和动态重规划；只有当 Orchestrator 正式发布真实
+  candidate geometry/metrics 后，才展示 fastest/low_risk/recommended 对比；
 - 保留未来接入实时源、缩短风险输出间隔和替换算法/参数的公共接口。
 
 本阶段不做或不承诺：
@@ -158,12 +166,31 @@ A records ──> DatasetBundle v2 ──独立复核──> RunContext v2
 - 让 D 调用 B/C 内部函数或等待持有规划锁；
 - 在历史回放中提前使用模拟时刻之后才发布的数据。
 
-## 4. 两种运行模式
+### 3.4 AB / BC / CD 缓存与并发边界（2026-08-21 23:18）
 
-| 模式 | 数据准备与时间规则 | 展示/验证目标 | 挑战杯地位 |
+当前没有一个统一的“AB、BC、CD 三缓冲区并行流水线”。已实现的是分层缓存与受控并发：
+
+| Boundary | Existing mechanism | Owner | Concurrency semantics | Research status |
+|---|---|---|---|---|
+| A→B | `PartitionedABCache` / `consumer_view()` / persisted bundle | A | generation 分区、只读共享 NumPy view、容量限制；不是跨包 reader-writer queue | IMPLEMENTED |
+| B→C | committed RiskFrame window / ingress validation | B producer, C consumer | 发布后不可变；C 按 frame/time 读取；没有独立 BC queue worker | IMPLEMENTED contract, no pipeline buffer |
+| C→D | RoutePlan/Replay artifact → Orchestrator bundle | C producer, Orchestrator adapter, D consumer | 原子 artifact handoff；D 离线读取；没有在线 CD shared-memory buffer | IMPLEMENTED artifact handoff |
+| C objective search | replay-local `ProcessPoolExecutor` | Orchestrator/C execution | layer/tick/B 串行，objective 可受控多进程并行；结果做 semantic equivalence | IMPLEMENTED |
+
+因此，未来多人开发不得假设 A/B/C/D 当前会同时以长期驻留 worker 运行。若研究真正的
+reader-writer buffer pipeline，必须先提出 lifecycle、backpressure、generation、atomic
+publication、failure recovery、memory ceiling 和 determinism contract；该改造不属于本轮。
+
+以下第 4–13 节保留了仍有价值的 Competition Demo 设计理由和阶段决策。若其阶段措辞与
+第 0–3.4 节、CURRENT_STATUS 或 CURRENT_ROADMAP 冲突，以后者为当前事实；历史验收
+不能自动升级为 Research Validation 已实现能力。
+
+## 4. 两种运行模式（2026-08-21 23:18）
+
+| 模式 | 数据准备与时间规则 | 展示/验证目标 | Research status |
 |---|---|---|---|
 | 历史回放/验证 | 严格使用当时可见数据，要求 `issue_time <= simulation_time` | 检查未来信息泄漏、比较风险与路线变化 | 保留的工程验证模式 |
-| 稳定演示 | A 预先下载、预处理并冻结到本地；运行时仍按模拟时钟、版本和代次读取 | 无网可重复展示风险变化、候选路线和至少一次重规划 | 默认比赛演示模式 |
+| 稳定演示 | A 预先下载、预处理并冻结到本地；运行时仍按模拟时钟、版本和代次读取 | 无网可重复展示风险变化、authoritative route 和重规划 | FROZEN competition demo baseline |
 
 稳定演示不要求现场下载“最新”数据。A 应提前准备与场景窗口一致的连续数据，例如为指定月份
 冻结连续数日；具体长度以走廊时域为准：主走廊默认 168 h，迁移走廊默认 96 h。比赛现场
@@ -391,9 +418,9 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > `demo preflight` 硬门 + Viewer 独立 `ROUTE GEO INTEGRITY` badge）。
 > 当前状态：**Demo Candidate 2 = GEOSPATIALLY VALIDATED ENGINEERING
 > CHECKPOINT**；完整证据见 `ROUTE_GEOSPATIAL_INTEGRITY_AUDIT_20260817.md`。
-> 展示边界：当前仅 2 张 spatial 帧（frame 0/6），145 帧动态风险播放、
-> GEBCO basemap、Moving Ship、+6h Replan 动画属于 NEXT PHASE，不得写成
-> 已实现能力。
+> 当时的展示边界仅有 2 张 spatial 帧（frame 0/6）；该历史限制随后已由
+> replay-driven Viewer、GEBCO、Moving Ship、risk horizons 和 replanning
+> presentation 消除。当前证据等级见 CURRENT_STATUS，不得继续引用本段作为现状。
 
 > 2026-08-17（Temporal Semantics Audit）：145 risk frames = **单一
 > knowledge/as-of 快照 × 145 个逐小时 valid_time**，不是 145 个 simulation
@@ -632,7 +659,7 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 完成任务时至少同步：代码/Schema/配置、生产者—消费者测试、包 handoff、顶层冲刺状态；若
 架构边界变化，还必须更新本文件。
 
-## 13. 已定治理决策 D1–D7
+## 13. Competition Demo 历史决策 D1–D7（2026-08-21 23:18）
 
 | 编号 | 已定结论 | 文档/执行影响 |
 |---|---|---|
@@ -644,23 +671,23 @@ B 输出环境速度影响，C 组合船型参数得到最终船速；同一环�
 | D6 | 实验 B 在真实主线之后做 I001、lock、Mamba、`make check` | 不修改正式 B，不接入 C，当前不抢主线资源 |
 | D7 | 其余风险与决策本轮只记录 | 不擅自开发 CNN P2、D 合同选择或新算法 |
 
-## 14. 当前关键路径与保留风险
+## 14. Research Validation 关键路径与保留风险（2026-08-21 23:18）
 
-挑战杯关键路径调整为：
+当前关键路径为：
 
 ```text
-冻结 A 演示数据
-  → B 连续风险图/序列
-  → C 三目标路线 + 至少一次重规划
-  → D 风险/路线/指标可视化
-  → 断网重复演示与答辩材料
+P0 interface ownership/version freeze
+  → P1 real winter scenario artifact
+  → P2 B fixed/adaptive grid research
+  → P3 C measured performance research
+  → P4 D professional validation visualization
 ```
 
 仍需记录但本轮不额外处理的风险：编排器集成长运行仍未收口（阶段报告与超时已实现）；CNN
 P2/P3；规则和船型未科学校准；外部数据源和凭据会变化；bathymetry、法规区和
 hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯通（tromso 144 h 已交付）。
 （注：D / Viewer 已在 Strategy B 实现并 MVP PASS，不再属于未实现项。）
-它们不应被删除，也不应自动升级为当前开发任务。
+它们不应被删除，也不应自动升级为当前开发任务；当前优先级以 CURRENT_ROADMAP 为准。
 
 ## 15. 顶层治理仓库与文档同步
 

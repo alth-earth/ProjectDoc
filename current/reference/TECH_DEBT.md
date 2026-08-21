@@ -1,8 +1,13 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+  - PLANNED
+Document Role: CANONICAL
 Scope: non-blocking items + NEXT PHASE technical debt
 Canonical For: registered technical debt and next-phase work
-Branch: demo-engineering
+Branch: research-validation-system
 Last Verified: 2026-08-21
 ---
 
@@ -10,7 +15,20 @@ Last Verified: 2026-08-21
 
 状态：CURRENT（当前）
 最后更新：2026-08-21
-范围：非阻塞事项 + NEXT PHASE（地理时序 Demo Viewer 阶段）
+范围：非阻塞事项 + Research Validation System Enhancement Phase
+
+## Research Validation 优先级映射（2026-08-21 23:18）
+
+| Priority | Existing debt / new gap | Current state |
+|---|---|---|
+| P0 | interface ownership/version registry; C→D candidate presentation proposal | IN_PROGRESS |
+| P1 | winter scenario + provenance-complete 12-type artifact | PLANNED |
+| P2 | fixed-grid benchmark, then adaptive-grid proposal | PLANNED |
+| P3 | C edge traversal cache/shared-search/incremental feasibility | PLANNED |
+| P4 | D professional navigation and research validation views | PLANNED |
+
+既有 TD 编号保留为历史追踪；当前执行顺序以
+[`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。
 
 ## HIGH / NEXT PHASE（Route Geospatial Integrity PASS 后）
 

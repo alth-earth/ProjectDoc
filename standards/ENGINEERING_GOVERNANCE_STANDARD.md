@@ -1,9 +1,13 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
 Scope: engineering governance + documentation rules + report standard
 Canonical For: how to write, organize, and report documentation
-Branch: demo-engineering
-Last Verified: 2026-08-20
+Branch: research-validation-system
+Last Verified: 2026-08-21
 ---
 
 # Engineering Governance Standard
@@ -16,37 +20,53 @@ This document defines:
 
 ## Part I: Documentation Governance
 
-### Document Status Taxonomy
+### Document Lifecycle Taxonomy（2026-08-21 23:18）
 
-| Status | Meaning |
-|--------|---------|
-| ACTIVE_CANONICAL | The single source of truth for a fact domain |
-| ACTIVE_SUPPORTING | Current and valid, but secondary to a canonical doc |
-| FROZEN_RC1 | Frozen at RC1 baseline; do not modify content |
-| FROZEN_RC2 | Frozen at RC2 baseline; do not modify content |
-| HISTORICAL_REPORT | Engineering evidence from a past round; not current truth |
-| SUPERSEDED | Replaced by another document; kept for reference |
-| DEPRECATED | No longer valid; kept for audit trail |
-| ARCHIVED | Moved out of current; preserved for history |
-| LOCAL_ONLY | Operator-specific; gitignored |
+`Overall Status` describes the lifecycle of the file, not whether every item in
+the file is complete.
 
-### Content Status Taxonomy
+| Overall Status | Meaning |
+|----------------|---------|
+| ACTIVE | Maintained for the current phase |
+| FROZEN | Preserved baseline; change only through an explicit baseline process |
+| ARCHIVED | Historical evidence retained outside the current truth path |
+| DEPRECATED | Retained for audit, but its guidance must not be followed |
+| SUPERSEDED | Replaced by a named current document |
+| DRAFT | Work in progress and not yet authoritative |
 
-Content within a document may use:
-COMPLETE, FROZEN, ACTIVE, IN_PROGRESS, NEXT, PENDING, BLOCKED, DEPRECATED, HISTORICAL, NOT_SUPPORTED
+`Document Role` is a separate field:
 
-These are not mutually exclusive. A frozen doc can contain COMPLETE and NOT_COMPLETED_AT_FREEZE items.
+| Document Role | Meaning |
+|---------------|---------|
+| CANONICAL | Single source of truth for the declared fact domain |
+| SUPPORTING | Current evidence or detail subordinate to a canonical document |
+| HISTORICAL | Past-round evidence; never current project truth by itself |
+| LOCAL | Operator-specific and normally gitignored |
 
-### Metadata Banner
+### Content Status Taxonomy（2026-08-21 23:18）
 
-Every active document must have a YAML metadata block at the top:
+`Content Status` may contain one or more of: `COMPLETED`, `FROZEN`,
+`IN_PROGRESS`, `PLANNED`, `BLOCKED`, `DEPRECATED`, `ARCHIVED`.
+
+These values are not mutually exclusive. A frozen file can document both
+completed work and unfinished items frozen at cutover. Capability tables may
+still use evidence levels such as `IMPLEMENTED`, `UNIT_PASS`,
+`BROWSER_E2E_PASS`, and `NOT_IMPLEMENTED`; those are not document metadata.
+
+### Metadata Banner（2026-08-21 23:18）
+
+Every important current document must have a YAML metadata block at the top:
 
 ```yaml
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
 Scope: what the document covers
 Canonical For: what question this answers
-Branch: demo-engineering
+Branch: research-validation-system
 Last Verified: YYYY-MM-DD
 Supersedes: (optional)
 Related Canonical Docs: (optional)
@@ -55,7 +75,11 @@ Related Canonical Docs: (optional)
 
 Frozen docs use:
 ```yaml
-Document Status: FROZEN_RC1 or FROZEN_RC2
+Overall Status: FROZEN
+Content Status:
+  - COMPLETED
+  - FROZEN
+Document Role: HISTORICAL
 Branch: main or rc2-development
 Frozen At: YYYY-MM-DD
 Canonical Current State: NO
@@ -63,11 +87,21 @@ Canonical Current State: NO
 
 Historical reports use:
 ```yaml
-Document Status: HISTORICAL_REPORT
+Overall Status: ARCHIVED
+Content Status:
+  - COMPLETED
+  - ARCHIVED
+Document Role: HISTORICAL
 Canonical Current State: NO
 Superseded Claim: (if applicable)
 Corrected By: (link to correction)
 ```
+
+Do not batch-retimestamp old headings. Every newly added second-level or deeper
+heading must include a minute-precision timestamp in the form
+`## 标题（YYYY-MM-DD HH:MM）`. Integrate changes into the correct semantic
+section; headings such as “补充”, “新增说明”, “AI建议”, or “其他注意事项” are
+prohibited.
 
 ### Semantic Placement
 
@@ -115,7 +149,11 @@ Historical reports must NOT be rewritten to look current. They preserve the stat
 of knowledge at the time of writing. Add a correction note at the top if needed:
 
 ```yaml
-Document Status: HISTORICAL_REPORT
+Overall Status: ARCHIVED
+Content Status:
+  - COMPLETED
+  - ARCHIVED
+Document Role: HISTORICAL
 Canonical Current State: NO
 Superseded Claim: (old claim that was wrong)
 Corrected By: (link to canonical correction)

@@ -1,10 +1,16 @@
-# Arctic Route Governance
-
-Document Status: ACTIVE_CANONICAL
+---
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
 Scope: whole-project governance + documentation
 Canonical For: project entry point
-Branch: demo-engineering
-Last Verified: 2026-08-20
+Branch: research-validation-system
+Last Verified: 2026-08-21
+---
+
+# Arctic Route Governance
 
 ## What This Is
 
@@ -12,10 +18,9 @@ This repository holds the **whole-project governance and documentation** for the
 Arctic Route Planning system.  It is NOT a code repository.  Code lives in the
 individual work-package repositories under `/root/my_project/`.
 
-`/root/my_project` retains its root Git repository as a **recovery / historical
-safety source** (branch `demo-engineering`, kept intact; retirement is a
-human-reviewed cutover — never performed by automation).  It is NOT the
-canonical docs home; this governance repo is.
+`/root/my_project` is a plain multi-repository workspace and is not itself a Git
+repository. This governance repository is the canonical documentation home;
+historical root documents, where present, are evidence only.
 
 ## Repository Layout
 
@@ -36,18 +41,20 @@ canonical docs home; this governance repo is.
 |---------------------|-----------------------------|----------|
 | `main`              | RC1 frozen baseline         | FROZEN   |
 | `rc2-development`   | RC2 frozen baseline          | FROZEN   |
-| `demo-engineering`  | current active development  | ACTIVE   |
+| `demo-engineering`  | competition demo baseline   | FROZEN   |
+| `research-validation-system` | research validation enhancement | ACTIVE |
 
 ## A/B/C/D Responsibilities
 
 | Package | Role                            |
 |---------|---------------------------------|
-| A       | Data preparation / causal visibility |
-| B       | Dynamic risk assessment          |
-| C       | Time-dependent route planning    |
-| D       | Display / visualization / viewer |
+| A       | Environmental Data Acquisition |
+| B       | Risk Assessment and Forecast |
+| C       | Risk-aware Navigation Decision |
+| D       | Visualization and Validation Platform |
 
-**Orchestrator** = A-B-C-D root coordinator.  It owns:
+**Orchestrator** = Pipeline / Artifact / Presentation Adapter and A-B-C-D root
+coordinator. It owns:
 - replay execution
 - navigation execution state
 - replan lifecycle

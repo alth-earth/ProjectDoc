@@ -1,8 +1,11 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+Document Role: CANONICAL
 Scope: time model quick reference (issue/valid/knowledge/simulation/generated)
 Canonical For: time-field semantics and causality rules
-Branch: demo-engineering
+Branch: research-validation-system
 Last Verified: 2026-08-20
 ---
 

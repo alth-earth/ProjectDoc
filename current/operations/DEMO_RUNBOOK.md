@@ -1,5 +1,9 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: FROZEN
+Content Status:
+  - COMPLETED
+  - FROZEN
+Document Role: SUPPORTING
 Scope: competition/acceptance demo execution
 Canonical For: how to run the demo (Modes A-F)
 Branch: demo-engineering

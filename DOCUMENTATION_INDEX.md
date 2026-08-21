@@ -1,9 +1,13 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
 Scope: documentation navigation map
 Canonical For: which document to trust for each question
-Branch: demo-engineering
-Last Verified: 2026-08-20
+Branch: research-validation-system
+Last Verified: 2026-08-21
 ---
 
 # Documentation Index
@@ -21,6 +25,8 @@ Last Verified: 2026-08-20
 | How to run a demo? | [current/operations/DEMO_RUNBOOK.md](current/operations/DEMO_RUNBOOK.md) |
 | How to recover? | [current/operations/RECOVERY_RUNBOOK.md](current/operations/RECOVERY_RUNBOOK.md) |
 | Technical debt? | [current/reference/TECH_DEBT.md](current/reference/TECH_DEBT.md) |
+| Research gap analysis? | [current/RESEARCH_VALIDATION_GAP_ANALYSIS.md](current/RESEARCH_VALIDATION_GAP_ANALYSIS.md) |
+| Research decisions? | [current/decisions/RESEARCH_VALIDATION_DECISIONS.md](current/decisions/RESEARCH_VALIDATION_DECISIONS.md) |
 | Time model? | [current/reference/TIME_MODEL_QUICK_REFERENCE.md](current/reference/TIME_MODEL_QUICK_REFERENCE.md) |
 | Governance / report rules? | [standards/ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md) |
 
@@ -31,12 +37,17 @@ Last Verified: 2026-08-20
 | RC1 (main branch) | [frozen/rc1-main/](frozen/rc1-main/) |
 | RC2 (rc2-development branch) | [frozen/rc2-rc2-development/](frozen/rc2-rc2-development/) |
 
-## Current Final Reports (2026-08-20 closure)
+## Research Validation Supporting Reports（2026-08-21 23:18）
+
+The audit and kickoff reports under `reports/research-validation/` support the
+current canonical documents; they are not parallel sources of project truth.
+
+## Competition Demo Closure Reports（2026-08-21 23:18）
 
 | Report | Role |
 |--------|------|
-| [FINAL_CONSISTENCY_CLOSURE_20260820.md](reports/governance/FINAL_CONSISTENCY_CLOSURE_20260820.md) | THIS ROUND closure + task-status reconciliation |
-| [ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md](reports/governance/ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md) | CURRENT FINAL AUDIT (supersedes earlier governance reports) |
+| [FINAL_CONSISTENCY_CLOSURE_20260820.md](reports/governance/FINAL_CONSISTENCY_CLOSURE_20260820.md) | Archived closure evidence |
+| [ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md](reports/governance/ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md) | Archived governance audit evidence |
 
 ## Historical Reports (evidence, not current truth)
 

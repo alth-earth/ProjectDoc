@@ -1,156 +1,114 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+  - PLANNED
+Document Role: CANONICAL
 Scope: whole-project current state
-Canonical For: current milestone, capability matrix, maturity
-Branch: demo-engineering
+Canonical For: current phase, capability evidence, blockers, and ownership
+Branch: research-validation-system
 Last Verified: 2026-08-21
 ---
 
-# Current Status
+# Research Validation System Current Status
 
-## Strategy Summary
+## 当前阶段（2026-08-21 23:18）
 
-| Strategy | Definition | Status |
-|----------|-----------|--------|
-| A | FROZEN RETROSPECTIVE FALLBACK | FROZEN |
-| B | SAME-VESSEL CAUSAL REPLAY + PERFORMANCE HARDENED + PHYSICAL VESSEL MOTION HARDENED + VIEWER BACKEND BASELINE FROZEN | ACTIVE |
+项目已从 Competition Demo Freeze 转入 **Research Validation System
+Enhancement Phase**。冻结演示基线保留在 `demo-engineering`，当前开发只在
+`research-validation-system` 进行。这个阶段先冻结接口事实和验证口径，再开展
+B/C/D 并行研究；不把规划中的冬季场景、自适应网格或候选路线展示写成已有能力。
 
-Strategy A (frozen retrospective fallback) is kept as a safety net.
-Strategy B (same-vessel causal replay) is the active mainline.
-Full 144h historical causal replay = NOT SUPPORTED BY CURRENT PROVENANCE.
+| Branch | Meaning | Status |
+|---|---|---|
+| `main` | RC1 baseline | FROZEN |
+| `rc2-development` | RC2 baseline | FROZEN |
+| `demo-engineering` | competition demo baseline | FROZEN |
+| `research-validation-system` | research validation enhancement | ACTIVE |
 
-## Capability Matrix
+`/root/my_project` 是多个仓库的工作区，当前没有 root Git。各子仓库分别维护自己的
+`research-validation-system` 分支。
 
-| Capability | Status | Maturity |
-|-----------|--------|----------|
-| Causal replay engine | COMPLETE | AUTHORITATIVE_PASS |
-| Performance hardening | COMPLETE | AUTHORITATIVE_PASS |
-| Physical vessel motion | COMPLETE | AUTHORITATIVE_PASS |
-| Deferred replan adoption | COMPLETE | AUTHORITATIVE_PASS |
-| Presentation Adapter | ESTABLISHED | REAL_ARTIFACT_HTTP_SMOKE_PASS |
-| GEBCO L2 Preflight | ESTABLISHED | REAL_ARTIFACT_HTTP_SMOKE_PASS |
-| Replay-driven Viewer MVP | COMPLETE | BROWSER_E2E_PASS |
-| Simulation Timeline | COMPLETE | BROWSER_E2E_PASS |
-| Moving Ship | COMPLETE | BROWSER_E2E_PASS |
-| Deferred Adoption Presentation | COMPLETE | BROWSER_E2E_PASS |
-| Dynamic Risk Overlay (current frame) | COMPLETE | BROWSER_E2E_PASS |
-| Risk Horizon Presentation (Current/+6h/+12h/+24h) | COMPLETE | BROWSER_E2E_PASS |
-| Hard Reason / Availability Overlay | COMPLETE | BROWSER_E2E_PASS |
-| Route / Replanning Visualization | MVP COMPLETE | BROWSER_E2E_PASS |
-| Presentation / Engineering Mode | COMPLETE | BROWSER_E2E_PASS |
-| Presentation Layer Controls | COMPLETE | BROWSER_E2E_PASS |
-| Final Viewer UI Polish | COMPLETE | BROWSER_E2E_PASS |
+## 当前真实架构（2026-08-21 23:18）
 
-## Key Metrics (latest authoritative)
+| Module | Research-stage role | Runtime boundary |
+|---|---|---|
+| A | Environmental Data Acquisition | 发布 `PreparedWindow` / `a.dataset-bundle.v2` 与 provenance |
+| B | Risk Assessment and Forecast | 消费 A 公共 bundle，发布 `bc.risk-frame.v2` |
+| C | Risk-aware Navigation Decision | 消费 B risk frame，发布 route plan / layered route set |
+| D | Visualization and Validation Platform | 只消费已发布 presentation artifact；唯一 Viewer runtime owner |
+| Orchestrator | Pipeline / Artifact / Presentation Adapter | 编排 A→B→C，执行 replay，验证并投影 presentation bundle |
 
-| Metric | Value | Source |
-|--------|-------|--------|
-| 12h replay duration | ~21.8 min (pre-hardening) / ~34 min (post-deferred) | STRATEGY_B_PERFORMANCE_HARDENING report |
-| 12h baseline | PASS | sb-viewer-baseline-12h-det |
-| Determinism | PASS (inherited, not re-run this round) | STRATEGY_B_VIEWER_MVP report |
-| Manifest digest | 1bdcbce5... | causal-replay-manifest.json |
-| A bundle | a-bundle-32cafad4ee280f286d8eb049 | work_package_a |
-| L2 preflight | PASS | replay-viewer-preflight.json |
-| Timeline frames | 721 | bundle.json |
-| Risk horizon selections | Current/+6h/+12h/+24h with fail-closed availability | presentation.risk-overlay.v1 |
-| Product-round integration | 2 passed / 2334.71s / 38:54 | `.runtime/test-logs/orchestrator-integration-horizons-20260820.log` |
+```text
+A PreparedWindow / DatasetBundle.v2
+  -> B BInputEnvelope / bc.risk-frame.v2
+  -> C RiskSourcePlanningIngress
+  -> RoutePlan.v2 or FourLayerRoutePlanSet.v3
+  -> Orchestrator replay/presentation export
+  -> replay.viewer-bundle.v1
+  -> D Viewer
+```
 
-## Viewer Product Mainline（2026-08-20 22:50 +08:00）
+## 能力与证据等级（2026-08-21 23:18）
 
-The governance phase is closed for this milestone. The current product
-milestone is **Viewer Product Mainline**. The existing formal artifact
-`sb-viewer-baseline-12h-det` is exported through the Orchestrator adapter and
-rendered by D. A real Firefox browser run verified GEBCO, active route,
-completed track, continuous vessel motion, current-risk frames, separate hard
-reasons, pending/adopted route states, controls, and zero console errors.
+| Capability | Implementation | Validation | Current qualification |
+|---|---|---|---|
+| A 12-type public data bundle | IMPLEMENTED | AUTHORITATIVE_PASS | 夏季 RC1/RC2 制品；winter artifact 未建立 |
+| B hourly deterministic risk frame | IMPLEMENTED | AUTHORITATIVE_PASS | 模型仍为 `demo_unvalidated`，不是科学标定结论 |
+| B fixed target grid | IMPLEMENTED | UNIT/ARTIFACT_PASS | RC2 显式 31×11；代码默认配置可为 16×7 |
+| B adaptive grid | NOT_IMPLEMENTED | NOT_RUN | 研究计划，不得隐式改变 C regular-grid contract |
+| C three objectives | IMPLEMENTED | AUTHORITATIVE_PASS | fastest / low_risk / recommended |
+| C four layers × three objectives | IMPLEMENTED | AUTHORITATIVE_PASS | `FourLayerRoutePlanSet.v3` 明确验证 12 路线 |
+| C causal replay planning | IMPLEMENTED | AUTHORITATIVE_PASS | 12h determinism inherited；48h product artifact verified |
+| D presentation Viewer | IMPLEMENTED | BROWSER_E2E_PASS | Firefox；单 Simulation Clock；artifact driven |
+| 48h replay Viewer | IMPLEMENTED | BROWSER_E2E_PASS | 49 snapshots、2881 minute states、49 risk frames |
+| C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
+| Winter scenario | NOT_IMPLEMENTED | NOT_RUN | A 有通用冰数据接口，但无冬季正式 artifact 证据 |
 
-The Viewer contract is now:
+## 冻结语义（2026-08-21 23:18）
 
-- Orchestrator owns presentation export and validates formal B risk frames;
-- D is the sole Viewer runtime owner and uses one Simulation Clock;
-- `REPLAN_DECIDED` exposes pending future state, while `REPLAN_ADOPTED`
-  changes the active route at the effective time;
-- completed track remains append-only; `DATA_UNAVAILABLE` and other hard
-  reasons are not rendered as safe risk;
-- current/+6h/+12h/+24h risk selections are presentation-complete; exact,
-  floor, and unavailable semantics are explicit in the export contract;
-- Presentation Mode defaults to a clean demo view, while Engineering Debug
-  remains available; Risk, Hard/Availability, Routes, and Completed Track are
-  independently toggleable;
-- 10:30 +6h displays 16:00 / actual +5h30m; 10:30 +12h/+24h show UNAVAILABLE
-  because their requested valid times exceed the 22:00 formal frame range.
+- A→B 只通过公共 `PreparedWindow` / `DatasetBundle.v2` 和匹配的
+  `RunContext`；B 不扫描 A 私有 cache、SQLite 或 raw 目录。
+- B→C 以 `bc.risk-frame.v2` 为正式边界；unknown fail closed，
+  `DATA_UNAVAILABLE != safe`。
+- C 拥有最终路线、速度、ETA 和重规划决策；D 不重新计算。
+- `REPLAN_DECIDED != REPLAN_ADOPTED`，pending route 不提前替换 authoritative
+  route，completed track append-only。
+- D 是唯一 Viewer runtime owner；Orchestrator 只拥有 replay 与 presentation
+  adapter/export。
+- 当前正规网格是 rectilinear regular grid。Adaptive Grid 在 contract proposal
+  通过前只能作为隔离实验。
 
-## Viewer Presentation Polish（2026-08-21 01:20 +08:00）
+## 当前事实缺口（2026-08-21 23:18）
 
-The grid audit found that the coarse 31×11 risk/hard layer is inherited from
-B's `demo_unvalidated_smoke_grid_v3` target-grid realization (about
-0.3667°×1.2°), while A/GEBCO remains about 0.05°. C consumes the same RiskFrame
-grid for planning waypoints; D was not the source of the coarse data. The audit
-is recorded in `GRID_PRESENTATION_AUDIT_20260821.md`.
+1. shared contracts、B/C repo-local contracts 和 Orchestrator presentation schemas
+   分散，尚无统一 ownership/version index。
+2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
+   19 个时间修订版误称为 19 个候选。
+3. 有冬季采集能力，没有冬季 scenario + 12-type frozen bundle + B/C/D 验证链。
+4. B 规则模型未标定；没有 B 独立 grid/horizon 耗时和 RSS 基线；adaptive grid
+   未实现。
+5. C 已建立 objective-level 受控并行，但 replay 规划仍是主要耗时；共享搜索和
+   incremental replanning 尚未实现。
+6. D 已适合演示和验证，但 route candidate compare、专业导航图层和研究证据交互
+   尚未建立。
 
-The Viewer polish is now complete at product level: Presentation Mode uses
-pixel-aligned exact cells and softer colors, Engineering Debug retains the raw
-cell grid, routes use only collinear display densification/round joins, and the
-ship uses a segment-bearing top-down icon while keeping backend ETA motion.
-Orchestrator bundle metadata makes these display-only boundaries explicit.
-Real Firefox smoke passed with zero console errors/warnings and HTTP 200
-required resources. Next milestone is demo rehearsal, then Demo Freeze.
+详细依据见
+[RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。
 
-## Version Summary
+## 当前阻塞与风险（2026-08-21 23:18）
 
-| Package | Version |
-|---------|---------|
-| arctic_route_contracts | 0.3.0 |
-| work_package_a | 0.4.2 |
-| work_package_b | 0.2.0 |
-| work_package_c | 0.4.0 |
-| work_package_d | 0.1.0 |
-| arctic_route_orchestrator | 0.1.0 |
+| Risk | State | Handling |
+|---|---|---|
+| 多人并行前 contract 所有权不清 | BLOCKED for parallel implementation | P0 建立 registry 与 version proposal |
+| winter artifact 不存在 | BLOCKED for winter validation | P1 建 scenario/data acceptance，不复用夏季数据冒充 |
+| B grid policy 与 C regular-grid 假设耦合 | PLANNED | 固定网格对照先行，adaptive sidecar 后行 |
+| C candidate 未投影到 replay bundle | PLANNED | backward-compatible presentation proposal |
+| 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
 
-## Ownership
+## 本轮验证边界（2026-08-21 23:18）
 
-| Capability | Owner |
-|-----------|-------|
-| Replay / Snapshot / Manifest | Orchestrator |
-| Navigation execution / replan lifecycle | Orchestrator |
-| Presentation Adapter (business semantics) | Orchestrator |
-| L1/L2 preflight | Orchestrator |
-| Presentation artifact export | Orchestrator |
-| Viewer application (HTML/JS/CSS) | D |
-| Simulation Clock UI | D |
-| Ship / route / track rendering | D |
-| Static server | D |
-| Proof renderer | D |
-
-## Governance
-
-- `/root/my_project` is a **recovery / historical safety source** that still retains
-  its original ProjectDoc Git repo (`demo-engineering` @ `3812b5d`). It is intentionally
-  NOT retired this round. Governance docs live in `arctic_route_governance/` (this repo),
-  which is the canonical governance source. Final root-Git retirement is a human-reviewed
-  cutover step (not performed by automation).
-- Branch mapping: main=RC1 frozen, rc2-development=RC2 frozen, demo-engineering=active.
-- Documentation follows `standards/ENGINEERING_GOVERNANCE_STANDARD.md`.
-
-## Known Limitations
-
-1. Full 144h historical causal replay is not supported by current provenance.
-2. Pending-Plan Gate (performance debt): deferred adoption causes TIME-only candidates to be recomputed during pending period, increasing runtime from ~21.8 min to ~34 min. Tracked as TD.
-3. Edge-interior planner origin: physical vessel position may differ from planner origin node at mid-edge replan. Tracked as TD.
-4. The default restricted sandbox blocks browser daemon/socket startup, but the
-   attended run used the available escalated local Firefox path and completed
-   the browser E2E baseline. This is an execution-environment note, not a
-   product verification gap.
-5. Rich route-transition animation, demo rehearsal, and final freeze remain
-   open. Horizon availability is intentionally bounded by
-   the existing formal artifact and is not extrapolated.
-
-## What Is NOT Done
-
-- Dynamic Risk + Hard Reason + Current/+6h/+12h/+24h horizon presentation are
-  complete; unavailable horizons fail closed.
-- Superseded route visualization and adoption-state presentation are complete
-  at MVP level; richer animation remains NEXT.
-- Final UI polish (COMPLETE; BROWSER_E2E_PASS)
-- Demo rehearsal (NOT STARTED)
-- Final freeze (NOT STARTED)
+本轮是文档治理和只读能力审查，没有修改 A/B/C/D/Orchestrator 业务代码，也没有
+运行 48h replay、heavy integration 或新的 determinism twin-run。既有 Firefox E2E、
+48h artifact 和 12h authoritative determinism 均为继承证据，不写成当轮重跑。

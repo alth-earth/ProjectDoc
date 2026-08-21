@@ -1,8 +1,12 @@
 ---
-Document Status: ACTIVE_CANONICAL
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - PLANNED
+Document Role: CANONICAL
 Scope: simulation replay engine + presentation adapter + viewer artifact boundary
 Canonical For: how replay snapshots, digests, presentation export and Viewer handoff work
-Branch: demo-engineering
+Branch: research-validation-system
 Last Verified: 2026-08-20
 ---
 
