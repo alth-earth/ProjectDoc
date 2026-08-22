@@ -26,7 +26,7 @@ historical reports.
 | 模块 | 已有能力 | 已验证证据 | 缺口 | 建议 |
 |---|---|---|---|---|
 | Contracts | identity loaders plus ownership/change gate; 8 scenario configs | 19 tests; winter config loader/CLI | future proposal owner approvals | apply registry/template per change |
-| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer bundles; 9/12 winter rows coverage-complete | no winter bundle; GFS source absent and 6 h/3 h cadence gate unresolved | resolve only GFS rows, then exact bundle publication |
+| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer bundles; 9/12 winter rows coverage-complete; CARRA catalogue source validated | no winter bundle; CDS credentials/terms and projection-aware CARRA adapter unapproved | approve source proposal, acquire only three rows, then exact bundle publication |
 | B | hourly deterministic risk plus synthetic and formal fixed-grid experiment harnesses | 78 formal frames on 16×7/31×11/60×21 | `demo_unvalidated`; incremental RSS/variance not isolated; no adaptive grid | repeat bounded formal comparison before proposal |
 | C | time-dependent A*, 12-route publication, profiler, BC benchmark, default-off bounded sample LRU | medium LRU 3-run median 65.012 s vs 76.281 s off; semantic digest equal | no formal-ingress/12-route cache gate; no shared/incremental search; fine not run | validate cache across ingress, layers and objectives |
 | Orchestrator | causal replay, navigation execution, process-level objective parallelism, preflight, presentation export | 12h authoritative/inherited; 48h real artifact | presentation candidate package empty | versioned projection from real C artifact only |
@@ -41,7 +41,7 @@ with explicit UTC windows and causal visibility. Existing formal evidence is Jul
 - winter data interface: `IMPLEMENTED`;
 - winter scenario config identity: `IMPLEMENTED / UNIT_VALIDATED`;
 - winter source rows: `PARTIAL / 9_OF_12_COMPLETE`;
-- winter frozen DatasetBundle: `NOT_IMPLEMENTED / BLOCKED_BY_GFS`;
+- winter frozen DatasetBundle: `NOT_IMPLEMENTED / BLOCKED_WITH_DECISION`;
 - winter A→B→C→D validation: `NOT_RUN`.
 
 ## B Grid and scientific gap（2026-08-21 23:18）

@@ -31,13 +31,13 @@ Last Verified: 2026-08-22
 
 | ID | Item | State | Next control |
 |---|---|---|---|
-| TD-55 | Winter 12-type dataset/artifact | PARTIAL / 9_OF_12_COMPLETE | resolve GFS source and 6 h/3 h cadence; do not start B before exact resolver passes |
+| TD-55 | Winter 12-type dataset/artifact | PARTIAL / 9_OF_12_COMPLETE | approve and implement CARRA source path; do not start B before exact resolver passes |
 | TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
 | TD-57 | C repeated risk-sampling cost | EXPERIMENTAL LRU PASS | 14.77% median gain at 50k; formal ingress/12-route equality before promotion |
 | TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |
 | TD-59 | B grid refinement grows C search super-linearly | MEASURED / EXPERIMENTAL | 112→341 nodes produced 10.51→75.00 s; require bounded fine pilot and repeated-run variance before acceptance |
 | TD-60 | February static-mask knowledge-time policy | CONTROLLED / RETROSPECTIVE_DIAGNOSTIC_PASS | explicit August cutoff accepted cached GEBCO; preserve cutoff in future bundle evidence |
-| TD-61 | NCEI winter source and cadence mismatch | BLOCKER | 202602 archive paths absent; f000 adapter is 6 h while coverage gate is 3 h; A owner proposal required |
+| TD-61 | Winter meteorological source resolution | BLOCKED_WITH_DECISION | NCEI direct paths absent; CARRA source validated but CDS token/terms and projection-aware A adapter await approval; prior cadence-mismatch claim narrowed because v2 accepts declared 6 h |
 
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。

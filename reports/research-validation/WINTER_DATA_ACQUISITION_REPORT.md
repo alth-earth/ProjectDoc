@@ -13,6 +13,19 @@ Last Verified: 2026-08-22
 
 # Winter Data Acquisition Report
 
+## Round4 correction（2026-08-22 13:03 +08:00）
+
+This report preserves the Round3 acquisition checkpoint. Its statement that a
+6-hour retrospective adapter necessarily conflicts with a 3-hour formal gate
+was too broad. Current code resolves record-declared cadence before the 3-hour
+metadata-free fallback, and `DatasetBundle.v2` allows 3 h or 6 h for these three
+types. With zero winter records, the diagnostic showed the fallback value.
+
+The NCEI direct-object blocker remains valid. Current source strategy and
+candidate evidence are superseded by
+[WINTER_SOURCE_VALIDATION_REPORT.md](WINTER_SOURCE_VALIDATION_REPORT.md) and the
+canonical [Winter Scenario Status](../../current/reference/WINTER_SCENARIO_STATUS.md).
+
 ## Verdict（2026-08-22 02:34 +08:00）
 
 Status: `PARTIAL / 9_OF_12_COVERAGE_COMPLETE / BLOCKED_BY_GFS`.

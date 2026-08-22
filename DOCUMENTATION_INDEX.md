@@ -47,11 +47,14 @@ The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest implementation evidence:
-[RESEARCH_VALIDATION_ROUND2_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ROUND2_REPORT.md).
+[RESEARCH_VALIDATION_ROUND3_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ROUND3_REPORT.md).
 
 Focused Round 2 evidence:
 
 - [WINTER_DATA_FEASIBILITY_REPORT.md](reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md)
+- [WINTER_SOURCE_VALIDATION_REPORT.md](reports/research-validation/WINTER_SOURCE_VALIDATION_REPORT.md)
+- [WINTER_MET_SOURCE_COMPARISON.md](reports/research-validation/WINTER_MET_SOURCE_COMPARISON.md)
+- [WINTER_DATA_POLICY_PROPOSAL.md](current/proposals/WINTER_DATA_POLICY_PROPOSAL.md)
 - [ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md](current/proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md)
 - B: `B_FORMAL_GRID_COMPARISON_REPORT.md`
 - C: `BC_COUPLING_PERFORMANCE_REPORT.md` and `C_OPTIMIZATION_PROPOSAL.md`

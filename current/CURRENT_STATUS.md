@@ -13,6 +13,34 @@ Last Verified: 2026-08-22
 
 # Research Validation System Current Status
 
+## 第四阶段 Winter Source Resolution（2026-08-22 13:03 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| Winter required coverage | PARTIAL / 9_OF_12_COMPLETE | existing eight Copernicus rows plus GEBCO mask unchanged |
+| NCEI Grid 4 direct source | BLOCKED | exact February archive and THREDDS objects remain HTTP 404 |
+| NCEI archive recovery | CANDIDATE / EXTERNAL_ORDER | official metadata exposes HAS/tape order; not an automated A path |
+| C3S CARRA source | SOURCE_VALIDATED / ADAPTER_PENDING | target month/domain and all three variables; 3 h, 2.5 km, CC-BY-4.0 |
+| Winter source policy | DRAFT / PENDING_APPROVAL | `A-WINTER-MET-001`; recommends atomic CARRA 3 h acquisition |
+| Winter formal bundle | NOT_IMPLEMENTED | no CDS token/terms evidence and no projection-aware A adapter |
+
+Current verdict: `BLOCKED_WITH_DECISION`. The data source question is no longer
+open-ended: CARRA is the recommended official source, but catalogue availability
+is not a download and a proposal is not approval. The existing Copernicus Marine
+credentials cannot be reused for the Climate Data Store.
+
+Round4 also corrected the prior cadence diagnosis. A's 3-hour value is a
+metadata-free fallback; real NCEI retrospective records declare 6 h, and formal
+`DatasetBundle.v2` already accepts 3 h or 6 h for the three meteorological rows.
+The immediate NCEI blocker is missing direct objects, not an unavoidable bundle
+cadence rejection. No policy, schema, risk formula, or frozen artifact changed.
+
+Supporting evidence:
+
+- [Winter source validation](../reports/research-validation/WINTER_SOURCE_VALIDATION_REPORT.md)
+- [Meteorological source comparison](../reports/research-validation/WINTER_MET_SOURCE_COMPARISON.md)
+- [Draft winter data policy](proposals/WINTER_DATA_POLICY_PROPOSAL.md)
+
 ## 第三阶段真实实验结果（2026-08-22 02:34 +08:00）
 
 | Workstream | Current state | Evidence |
@@ -119,7 +147,7 @@ A PreparedWindow / DatasetBundle.v2
 | 48h replay Viewer | IMPLEMENTED | BROWSER_E2E_PASS | 49 snapshots、2881 minute states、49 risk frames |
 | C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
 | Winter scenario configuration | IMPLEMENTED | UNIT_PASS | config plus nine complete A source rows; DatasetBundle not persisted |
-| Winter A→B→C→D artifact | NOT_IMPLEMENTED | BLOCKED_BY_GFS | three meteorological rows missing; downstream winter chain not started |
+| Winter A→B→C→D artifact | NOT_IMPLEMENTED | BLOCKED_WITH_DECISION | CARRA source validated; token/terms, adapter approval and acquisition still pending |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -144,8 +172,9 @@ A PreparedWindow / DatasetBundle.v2
    proposal 逐项审批，registry 本身不等于 proposal 批准。
 2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
    19 个时间修订版误称为 19 个候选。
-3. 冬季场景已配置，九个 A source rows 已通过覆盖；三个 GFS rows 和 12-type frozen
-   bundle 仍缺失，因此 B/C/D 冬季验证链未开始。
+3. 冬季场景已配置，九个 A source rows 已通过覆盖；三个气象 rows 和 12-type frozen
+   bundle 仍缺失。CARRA 已成为有官方目录证据的推荐源，但 CDS token/terms、A adapter
+   审批和真实下载尚未完成，因此 B/C/D 冬季验证链未开始。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
@@ -162,7 +191,7 @@ A PreparedWindow / DatasetBundle.v2
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| winter artifact 不存在 | PARTIAL / BLOCKED_BY_GFS | 九行 complete；只解决三行 GFS 与 cadence gate，不重下 Copernicus |
+| winter artifact 不存在 | PARTIAL / BLOCKED_WITH_DECISION | 九行 complete；审批 CARRA proposal 后只补三行，不重下 Copernicus |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
 | C candidate 未投影到 replay bundle | DRAFT / PLANNED | proposal exists; current NOT_PUBLISHED semantics unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
@@ -171,7 +200,9 @@ A PreparedWindow / DatasetBundle.v2
 ## 本轮验证边界（2026-08-21 23:18）
 
 本轮没有运行 48h replay、heavy integration 或新的 determinism twin-run。
-A doctor 5,232 PASS；C 152 个 non-integration tests PASS、Ruff clean。Contracts/B/D
+Round4 A focused 51 PASS、doctor 5,232 PASS、12-type coverage 仍为 9/12 且未持久
+bundle；相关文件 Ruff PASS。全 A `src tests` Ruff 发现两个既有 E501，未在来源审计轮
+跨范围修复。C 152 个 non-integration tests PASS 为 Round3 继承；Contracts/B/D
 代码未改，其前轮测试证据继承。D 63 PASS、JS syntax 与 Firefox
 48h artifact 回归均为前轮继承证据：required resources 200，console errors/warnings 0，
 10:00/10:30 船位与 13:30/15:00 adoption 状态未回退。

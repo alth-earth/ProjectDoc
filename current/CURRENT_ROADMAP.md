@@ -40,18 +40,20 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-21 23:18）
 
-状态：`PARTIAL_ACQUISITION / 9_OF_12_COMPLETE / BLOCKED_BY_GFS`。
+状态：`PARTIAL_ACQUISITION / 9_OF_12_COMPLETE / BLOCKED_WITH_DECISION`。
 
 1. 在 contracts 中提出新的 winter scenario identity，不修改冻结 scenario。
-2. A 已获取八个真实 Copernicus 类型并复用一个 GEBCO static row；下一步只解决
-   wind/temperature/visibility 的 NCEI 202602 缺档和 6 h/3 h cadence policy，随后建立
-   provenance-complete frozen bundle。不得用夏季数据或旧 9-type artifact 代替。
+2. A 已获取八个真实 Copernicus 类型并复用一个 GEBCO static row。Round4 已确认
+   NCEI 直接路径缺档，同时验证 C3S CARRA 可覆盖目标月、区域和全部三个变量。
+   下一步审批 `A-WINTER-MET-001`，配置 CDS token/terms，先跑 projection/vector-rotation
+   一帧 smoke，再只获取 wind/temperature/visibility。不得用夏季数据或旧 9-type
+   artifact 代替。
 3. B 在旧模型版本上先做 input/grid/unknown 分布基线，再决定是否创建新 calibration
    version；禁止静默改权重或 level policy。
 4. C/D 只在 A/B acceptance 通过后接入，比较夏季/冬季风险、可达性、路线和 replanning。
 
-退出条件：A doctor/exact resolver、B risk distribution、C route integrity、D artifact
-presentation 均有独立证据。
+退出条件：CARRA adapter/source policy 获批；A doctor/exact resolver、B risk
+distribution、C route integrity、D artifact presentation 均有独立证据。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 

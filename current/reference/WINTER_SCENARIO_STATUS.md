@@ -13,6 +13,27 @@ Last Verified: 2026-08-22
 
 # Winter Scenario Status
 
+## Round4 source decision（2026-08-22 13:03 +08:00）
+
+| Item | State | Evidence |
+|---|---|---|
+| Existing winter rows | 9/12 COMPLETE | unchanged; no redownload or mutation |
+| NCEI direct recovery | BLOCKED | archive and THREDDS exact February objects return 404 |
+| CARRA catalogue | SOURCE_VALIDATED | 3-hourly analyses, 2.5 km, East Arctic domain, all three variables, target month covered |
+| CARRA acquisition | NOT_STARTED | CDS token/terms absent; A adapter and true-vector rotation not approved |
+| Source/cadence proposal | DRAFT | `A-WINTER-MET-001`, Option A recommended |
+| Winter DatasetBundle | NOT_GENERATED | fail-closed 9/12 state preserved |
+
+Canonical verdict is now `BLOCKED_WITH_DECISION`: a credible official source is
+identified, but production use is gated by approval, authentication, source
+normalization and real-payload validation. The previous `BLOCKED_BY_GFS` label
+remains historical context, not the current source strategy.
+
+The previous 6 h/3 h wording is also narrowed: the metadata-free service
+fallback is 3 h, while actual NCEI retrospective records declare 6 h and formal
+bundle validation allows either cadence. Missing NCEI objects are the current
+runtime blocker. The recommended CARRA path meets 3 h without relaxing policy.
+
 ## Current verdict（2026-08-22 02:34 +08:00）
 
 | Item | State | Evidence |
@@ -21,7 +42,7 @@ Last Verified: 2026-08-22
 | Winter scenario configuration | IMPLEMENTED | `tromso_isfjorden_february_2026_research_v1` uses existing `scenario.v2` without schema changes |
 | Scenario validation | VALIDATED | contracts loader/CLI/unit test |
 | Winter source dataset | PARTIAL / 9_OF_12_COMPLETE | eight Copernicus rows acquired plus cached GEBCO mask; A coverage diagnostic passed these nine |
-| Winter GFS rows | BLOCKED_BY_SOURCE_AND_CADENCE | NCEI 202602 paths absent; adapter 6 h cadence conflicts with current 3 h dynamic coverage gate |
+| Winter GFS rows | BLOCKED_BY_SOURCE | NCEI 202602 direct paths absent; 6 h records would be formally accepted if actually published |
 | Winter `PreparedWindow` / `DatasetBundle.v2` | NOT_IMPLEMENTED | depends on complete source acquisition and QC |
 | Winter B/C/D artifacts | NOT_IMPLEMENTED | downstream work prohibited until A publication passes |
 
@@ -55,7 +76,7 @@ a new scenario revision and a recorded source-availability review.
 
 | Data group | Existing path | Winter readiness |
 |---|---|---|
-| wind, temperature, visibility | GFS/NCEI acquisition and normalization | BLOCKED: no 202602 archive path and unresolved 6 h/3 h cadence gate |
+| wind, temperature, visibility | GFS/NCEI acquisition and normalization | NCEI direct path BLOCKED; CARRA source validated, adapter/credentials pending |
 | wave | Copernicus global wave | 49 records, COMPLETE |
 | ocean current, water level | Copernicus Arctic physical products | 145 each, COMPLETE; current is detided fallback |
 | ice concentration/drift/thickness | Copernicus Arctic physical products | 145 each, COMPLETE |
@@ -80,18 +101,20 @@ Before B may consume the scenario, A must produce:
 
 ## Blockers and acquisition plan（2026-08-22 00:02）
 
-Current blocker: `BLOCKED_BY_GFS`. The Copernicus and static rows must be reused;
-only the three meteorological rows remain missing. A diagnostic retrospective
-cutoff explicitly accepted the later GEBCO release. No formal bundle may be
-published while the GFS rows fail start support and horizon coverage.
+Current blocker: `BLOCKED_WITH_DECISION`. The Copernicus and static rows must be
+reused; only the three meteorological rows remain missing. A diagnostic
+retrospective cutoff explicitly accepted the later GEBCO release. No formal
+bundle may be published before an approved source produces complete real rows.
 
 Next controlled action:
 
-1. resolve NCEI February availability and the 6 h analysis versus 3 h coverage gate;
-2. acquire only wind, temperature and visibility from an approved A source;
-3. keep Windows-host free space `UNKNOWN` until host verification;
-4. rerun doctor/exact coverage without incomplete mode before starting B;
-5. preserve the nine completed rows and never substitute summer data.
+1. review and approve/reject `A-WINTER-MET-001` for CARRA 3-hour analyses;
+2. configure CDS credentials/terms, then prove one-frame variable, projection,
+   vector-rotation and provenance behavior;
+3. acquire only wind, temperature and visibility from the approved A source;
+4. keep Windows-host free space `UNKNOWN` until host verification;
+5. rerun doctor/exact coverage without incomplete mode before starting B;
+6. preserve the nine completed rows and never substitute summer data.
 
 ## Downstream acceptance（2026-08-22 00:02）
 
