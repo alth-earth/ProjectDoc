@@ -47,7 +47,13 @@ The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest Winter gate evidence:
-[WINTER_BUNDLE_REISSUE_REPORT.md](reports/research-validation/WINTER_BUNDLE_REISSUE_REPORT.md).
+[WINTER_FORMAL_HANDOFF_REPORT.md](reports/research-validation/WINTER_FORMAL_HANDOFF_REPORT.md).
+
+Current interface freeze evidence:
+
+- [B Interface Freeze Audit](reports/research-validation/B_INTERFACE_FREEZE_AUDIT.md)
+- [C Interface Freeze Audit](reports/research-validation/C_INTERFACE_FREEZE_AUDIT.md)
+- [D Interface Freeze Audit](reports/research-validation/D_INTERFACE_FREEZE_AUDIT.md)
 
 Focused Round 2 evidence:
 

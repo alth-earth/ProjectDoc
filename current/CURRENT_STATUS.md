@@ -13,23 +13,22 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
-## Winter Experiment Identity Gate（2026-08-23 00:48 +08:00）
+## Winter Formal Handoff Milestone（2026-08-23 01:16 +08:00）
 
 | Workstream | Current state | Evidence |
 |---|---|---|
 | Winter required coverage | 12_OF_12_COMPLETE | 1,212-record frozen A bundle |
 | Winter DatasetBundle | FROZEN_ARTIFACT_READY | active `a-bundle-a2146dd0adbaa7db77a6beb7`; 144 h minimum; parse/digest/doctor pass |
-| Winter RunContext | NOT_CREATED / GENERATOR_COMPATIBLE | official generator accepted the active bundle in memory; no file published |
-| A→B formal handoff | WAITING_FOR_RUN_CONTEXT | no persisted `RunContext.v2`/`ExecutionSpec.v1`; Orchestrator intake not run |
+| Winter RunContext | PUBLISHED / SCHEMA_PASS | `run-441b03c8-d45b-5414-b0e8-b7fd0d990c22`; official atomic generator |
+| Winter ExecutionSpec | PUBLISHED / SCHEMA_PASS | strict `orchestrator.execution-spec.v1`; identity aligned |
+| A→B formal handoff | READY_FOR_B_VALIDATION | exact archive intake-only PASS; B not started |
 | Winter B/C/D | NOT_STARTED | downstream execution remains prohibited |
 
-Current verdict: Winter source acquisition and the corrected A immutable bundle
-publication are complete. The active bundle requests and minimally requires all
-144 hours through `2026-02-21T00Z`; schema/digest/coverage/provenance/doctor pass,
-and the official RunContext generator accepts it in memory. No RunContext or
-ExecutionSpec file was published and intake was not run, so formal handoff is
-`WAITING_FOR_RUN_CONTEXT`, not `READY_FOR_B_VALIDATION`. The previous 132-hour
-minimum bundle is retained unchanged as superseded historical evidence.
+Current verdict: Winter source acquisition, corrected A immutable bundle,
+matching `RunContext.v2`, strict `ExecutionSpec.v1` and Orchestrator intake-only
+全部通过。intake 使用 exact archive resolver 复现 1,212 records；B/C/D 未执行，因此
+handoff 是 `READY_FOR_B_VALIDATION`，不是 `B_WINTER_VALIDATION=PASS`。旧 132 小时
+minimum bundle 继续作为 superseded historical evidence 保留。
 
 Supporting evidence:
 
@@ -38,6 +37,12 @@ Supporting evidence:
 - [Winter identity audit](../reports/research-validation/WINTER_EXPERIMENT_IDENTITY_AUDIT.md)
 - [Winter handoff validation](../reports/research-validation/WINTER_HANDOFF_VALIDATION_REPORT.md)
 - [Winter immutable bundle reissue](../reports/research-validation/WINTER_BUNDLE_REISSUE_REPORT.md)
+- [Winter formal handoff](../reports/research-validation/WINTER_FORMAL_HANDOFF_REPORT.md)
+
+Interface stabilization verdict：A→B `DatasetBundle.v2 + RunContext.v2`、B→C
+`bc.risk-frame.v2 + committed hourly window`、C formal v2/v3 与 Orchestrator→D
+presentation baseline 均可保持现有版本。Winter B validation 必须先审计 unknown 是否被
+正确 hard-mask；C route candidates 在 Replay Viewer 仍为 `NOT_PUBLISHED`。
 
 ## 第三阶段真实实验结果（2026-08-22 02:34 +08:00）
 
@@ -126,11 +131,15 @@ B/C/D 并行研究；不把规划中的冬季场景、自适应网格或候选�
 A PreparedWindow / DatasetBundle.v2
   -> B BInputEnvelope / bc.risk-frame.v2
   -> C RiskSourcePlanningIngress
-  -> RoutePlan.v2 or FourLayerRoutePlanSet.v3
+  -> cd.route-plan.v2 or cd.four-layer-route-plan-set.v3
   -> Orchestrator replay/presentation export
   -> replay.viewer-bundle.v1
   -> D Viewer
 ```
+
+`cd.route-plan.v3` 是 four-layer v3 集合内的单路线 schema，不是顶层
+ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bundle.v1`，
+不直接消费 four-layer aggregate。
 
 ## 能力与证据等级（2026-08-21 23:18）
 
@@ -148,8 +157,8 @@ A PreparedWindow / DatasetBundle.v2
 | C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
 | Winter scenario configuration | IMPLEMENTED | CONFIG_VALIDATED | 144 h scenario; 12/12 source rows complete |
 | Winter DatasetBundle | IMPLEMENTED | FROZEN_ARTIFACT_READY | active bundle ID/digest/SHA frozen；minimum/requested horizon 均为 144 h |
-| Winter A→B handoff | NOT_READY | WAITING_FOR_RUN_CONTEXT | generator compatibility PASS；RunContext/ExecutionSpec 未持久化；intake not run |
-| Winter B/C/D artifact | NOT_IMPLEMENTED | NOT_STARTED | 等待合法 experiment identity |
+| Winter A→B handoff | IMPLEMENTED | READY_FOR_B_VALIDATION | RunContext/ExecutionSpec/schema/exact intake-only PASS |
+| Winter B/C/D artifact | NOT_IMPLEMENTED | NOT_STARTED | 合法 experiment identity 已就绪；等待下一轮 |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -174,9 +183,9 @@ A PreparedWindow / DatasetBundle.v2
    proposal 逐项审批，registry 本身不等于 proposal 批准。
 2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
    19 个时间修订版误称为 19 个候选。
-3. 冬季场景、12 类 source rows 与 144 h minimum frozen bundle 已建立；当前缺口不是
-   数据下载或 bundle horizon，而是尚未持久化 matching RunContext/ExecutionSpec 并运行
-   intake-only。B/C/D 冬季验证链尚未开始。
+3. 冬季场景、12 类 source rows、144 h minimum frozen bundle、matching
+   RunContext/ExecutionSpec 与 intake-only 已建立。B/C/D 冬季验证链尚未开始；下一缺口是
+   批准显式 B Winter profile 并生成第一批正式 RiskFrame。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
@@ -193,16 +202,15 @@ A PreparedWindow / DatasetBundle.v2
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| Winter identity gate | WAITING_FOR_RUN_CONTEXT | active 144 h bundle 已发布；下一轮创建正式 RunContext/ExecutionSpec 并执行 intake-only |
+| Winter identity gate | READY_FOR_B_VALIDATION | formal identity + exact intake PASS；B 尚未运行 |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
 | C candidate 未投影到 replay bundle | DRAFT / PLANNED | proposal exists; current NOT_PUBLISHED semantics unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
 | B Murmansk default-grid integration expectation | OPEN FINDING | 未筛选 B suite 在 allowed-region endpoint mapping 失败；不在本轮改配置语义 |
 
-## 本轮验证边界（2026-08-23 00:48 +08:00）
+## 本轮验证边界（2026-08-23 01:16 +08:00）
 
-Winter A 新 bundle 经正式 producer 生成：12/12 complete、1,212 records、
-requested/minimum end 均为 `2026-02-21T00Z`。A doctor 5,461 checked、0 errors、0
-warnings；A focused tests 188 PASS，`ruff check src tests` PASS。官方 RunContext generator
-只在内存中接受性验证，没有发布 context 文件。本轮没有运行 B/C/D、Orchestrator intake、
-48h replay、heavy integration 或新的 determinism twin-run；这些旧证据均未提升为本轮重验。
+Winter formal identity 双 schema、重建 identity、run/spec binding 与 exact archive
+intake-only PASS。Contracts 19 PASS；Orchestrator fast 84 PASS、2 deselected；两仓库 Ruff
+clean。最终三件套 intake-only wall `3:26.43`、peak RSS `978,740 KiB`。本轮没有运行 B/C/D、48h
+replay、heavy integration 或新的 determinism twin-run；这些旧证据均未提升为本轮重验。

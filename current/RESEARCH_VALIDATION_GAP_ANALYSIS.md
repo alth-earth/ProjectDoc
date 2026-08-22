@@ -23,22 +23,23 @@ Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md
 | 模块 | 已有能力 | 已验证证据 | 缺口 | 建议 |
 |---|---|---|---|---|
 | Contracts | 标识加载器 + 所有权/变更门禁；8 个场景配置 | 19 个测试；冬季配置加载器/CLI | 未来提案负责人批准 | 每次变更套用登记册/模板 |
-| A | 12 类型采集/规整化/QC/溯源、PreparedWindow、DatasetBundle.v2、精确解析器、CARRA 与冰数据接口 | RC1/RC2 summer bundles；Winter 12/12 active 144 h minimum frozen bundle | matching RunContext/ExecutionSpec 尚未持久化；intake 未运行 | 创建正式 experiment identity 并执行 intake-only |
-| B | 逐时确定性风险 + 合成与正式固定网格实验框架 | 16×7/31×11/60×21 上的 78 个正式帧 | `demo_unvalidated`；增量 RSS/方差未隔离；无自适应网格 | 提案前重复有界正式比较 |
+| A | 12 类型采集/规整化/QC/溯源、PreparedWindow、DatasetBundle.v2、精确解析器、CARRA 与冰数据接口 | RC1/RC2 summer bundles；Winter active bundle + RunContext/ExecutionSpec + exact intake-only | Winter B 尚未执行 | 固定本轮 identity，下一轮只读交给 B |
+| B | 逐时确定性风险 + 合成与正式固定网格实验框架 | 16×7/31×11/60×21 上的 78 个正式帧 | `demo_unvalidated`；Winter unknown/hard policy 尚未实证；无自适应网格 | Winter formal build 前先冻结 profile 与 unknown gate |
 | C | 时变 A*、12 航线发布、剖析器、BC 基准、默认关闭的有界样本 LRU | medium LRU 3 次运行中位数 65.012 s 对比关闭 76.281 s；语义摘要相等 | 无正式接入/12 航线缓存门禁；无共享/增量搜索；fine 未运行 | 跨接入、层与目标验证缓存 |
 | Orchestrator | 因果重放、导航执行、进程级目标并行、预检、展示导出 | 12h 权威/继承；48h 真实制品 | 展示候选包为空 | 仅基于真实 C 制品的版本化投影 |
 | D | 48h Viewer + 经纬网/标注/比例尺/网格北与保宽高比地图 | 全新 Firefox BROWSER_E2E_PASS | 无真实候选比较；溯源/不确定性视图有限 | 消费拟议制品；暴露已发布质量 |
 
-## A 与 Winter 场景（2026-08-23 00:48 +08:00）
+## A 与 Winter 场景（2026-08-23 01:16 +08:00）
 
-A 可采集并表达 12 个必需 Winter 类型，含显式 UTC 窗口、溯源与因果可见性。CARRA/Copernicus/GEBCO 源集已作为冻结的 1,212 条记录 active bundle `a-bundle-a2146dd0adbaa7db77a6beb7` 发布。其 requested/minimum horizon 均为 144 h，并已被官方 RunContext generator 在内存中接受；本轮没有持久化 RunContext/ExecutionSpec 或运行 intake。因此：
+A 可采集并表达 12 个必需 Winter 类型，含显式 UTC 窗口、溯源与因果可见性。CARRA/Copernicus/GEBCO 源集已作为冻结的 1,212 条记录 active bundle `a-bundle-a2146dd0adbaa7db77a6beb7` 发布。其 requested/minimum horizon 均为 144 h；matching RunContext、strict ExecutionSpec 与 exact archive intake-only 已通过。因此：
 
 - winter 数据接口：`IMPLEMENTED`；
 - winter 场景配置标识：`IMPLEMENTED / UNIT_VALIDATED`；
 - winter 源行：`COMPLETE / 12_OF_12`；
 - winter 冻结 DatasetBundle：`FROZEN_ARTIFACT_READY`；
-- winter 实验标识：`WAITING_FOR_RUN_CONTEXT`；
-- winter A→B→C→D 验证：`NOT_RUN`。
+- winter 实验标识：`READY_FOR_B_VALIDATION`；
+- winter A→B intake：`PASS`；
+- winter B→C→D 验证：`NOT_RUN`。
 
 ## B 网格与科学缺口（2026-08-21 23:18）
 

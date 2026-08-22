@@ -36,6 +36,9 @@ Last Verified: 2026-08-23
 | 风险叠加展示 | Orchestrator 投影；B 拥有风险语义 | Orchestrator | D Viewer | `presentation.risk-overlay.v1` | FROZEN_COMPATIBLE | 当前/horizon 有效性与不可用失败关闭行为保留 |
 | Viewer bundle | Orchestrator 生产者；D 拥有运行时消费 | Orchestrator | D Viewer | `replay.viewer-bundle.v1` | FROZEN_COMPATIBLE | 允许可选增量包；必需 v1 字段与单时钟语义保留 |
 
+`cd.route-plan.v3` 是 `cd.four-layer-route-plan-set.v3` 内的单路线 schema，不是
+ExecutionSpec 可选择的顶层 planning contract；v3 顶层必须使用 four-layer set identity。
+
 ## 不可变制品要求（2026-08-22 00:02）
 
 - 标识包含模式版本，以及适用的场景、代次、修订、时间与内容摘要。
@@ -63,7 +66,7 @@ Last Verified: 2026-08-23
 
 | 拟议领域 | 状态 | 必需负责人审阅 |
 |---|---|---|
-| 冬季实验标识 | SCENARIO + 144H DATASET 已冻结；WAITING_FOR_RUN_CONTEXT | contracts + A + Orchestrator 接入负责人 |
+| 冬季实验标识 | FORMAL HANDOFF COMPLETE；READY_FOR_B_VALIDATION | contracts + A + Orchestrator 接入负责人 |
 | B 网格实验剖面 | EXPERIMENTAL，无正式 RiskFrame 变更 | B + C 兼容性审阅者 |
 | 自适应/非均匀网格契约 | PLANNED | B + C + Orchestrator |
 | [含真实几何/指标的候选航线展示](../proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md) | DRAFT / PLANNED；当前载荷仍为 NOT_PUBLISHED | C + Orchestrator + D |

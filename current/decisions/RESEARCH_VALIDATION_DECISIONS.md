@@ -161,3 +161,24 @@ RunContext generator 只做内存态接受性验证，本轮不持久化 RunCont
 **影响。** `A_TO_B_FORMAL_HANDOFF` 从 minimum-horizon blocker 前进到
 `WAITING_FOR_RUN_CONTEXT`；B/C/D 仍为 `NOT_STARTED`。下一门槛是 Formal Handoff，
 不是 Winter B 执行。
+
+## 第10批：Winter Formal Handoff 与 Cutoff 接口收敛（2026-08-23 01:16 +08:00）
+
+**背景。** Active 144 小时 bundle 已可生成 RunContext，需要发布正式 experiment identity
+并执行 intake-only。
+
+**问题。** 官方 RunContext/ExecutionSpec schema 与 binding 均通过后，Orchestrator intake
+仍以 `as_of_time == max(record.issue_time)` 拒绝 Winter retrospective bundle。共享 time
+contract 的不变量实际为 `max(issue_time) <= as_of_time`；logical cutoff 可晚于最后一条记录。
+
+**分析。** Bundle 已以 exact record IDs、checksums、source snapshots 和 content digest 锁定
+可见集合。要求 cutoff 与 max issue 相等不会增加可复现性，反而拒绝合法 retrospective
+identity；但任何 future-issued record 仍必须 fail closed。
+
+**决策。** 用官方 CLI 发布 matching `RunContext.v2`，复用 strict
+`orchestrator.execution-spec.v1`，并把 intake 门禁收敛为
+`max(issue_time) <= as_of_time`。不修改 bundle、schema 或 B/C/D 算法。Exact archive
+intake-only PASS 后，状态提升为 `READY_FOR_B_VALIDATION`。
+
+**影响。** Winter B 可以在下一轮消费固定 identity；B/C/D 仍为 `NOT_STARTED`。B→C 的
+unknown/hard policy 是下一 gate 的 conditional blocker，不能由 C 或 D 兜底。

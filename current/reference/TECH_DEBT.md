@@ -22,7 +22,7 @@ Last Verified: 2026-08-23
 | Priority | Existing debt / new gap | Current state |
 |---|---|---|
 | P0 | interface ownership/version registry; C→D candidate presentation proposal | REGISTRY COMPLETE; candidate proposal DRAFT |
-| P1 | winter scenario + provenance-complete 12-type artifact | 12/12 ACTIVE FROZEN BUNDLE; WAITING FOR RUN CONTEXT |
+| P1 | winter scenario + provenance-complete 12-type artifact | FORMAL HANDOFF COMPLETE; READY FOR B VALIDATION |
 | P2 | fixed-grid benchmark, then adaptive-grid proposal | FORMAL B BUILD COMPLETE; BASELINE/MEDIUM C COUPLING COMPLETE; REPEATABILITY PLANNED |
 | P3 | C edge traversal cache/shared-search/incremental feasibility | EXACT SAMPLE + DEFAULT-OFF 50K LRU VALIDATED EXPERIMENTALLY; FORMAL GATE NEXT |
 | P4 | D professional navigation and research validation views | NAVIGATION AIDS BROWSER PASS; RESEARCH VIEWS PLANNED |
@@ -31,14 +31,15 @@ Last Verified: 2026-08-23
 
 | ID | Item | State | Next control |
 |---|---|---|---|
-| TD-55 | Winter experiment identity | 144H BUNDLE REISSUED / WAITING FOR RUN CONTEXT | generate matching RunContext and strict ExecutionSpec, then run intake-only |
+| TD-55 | Winter experiment identity | RESOLVED / READY_FOR_B_VALIDATION | RunContext + ExecutionSpec + exact intake-only PASS |
 | TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
 | TD-57 | C repeated risk-sampling cost | EXPERIMENTAL LRU PASS | 14.77% median gain at 50k; formal ingress/12-route equality before promotion |
 | TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |
 | TD-59 | B grid refinement grows C search super-linearly | MEASURED / EXPERIMENTAL | 112→341 nodes produced 10.51→75.00 s; require bounded fine pilot and repeated-run variance before acceptance |
 | TD-60 | February static-mask knowledge-time policy | CONTROLLED / RETROSPECTIVE_DIAGNOSTIC_PASS | explicit August cutoff accepted cached GEBCO; preserve cutoff in future bundle evidence |
 | TD-61 | Winter meteorological source resolution | RESOLVED / CARRA ACQUIRED | 49 CARRA frames each for wind/temperature/visibility are bound in the frozen bundle; NCEI remains historical context |
-| TD-62 | Bundle eligibility vs scenario-bound readiness | DOCUMENTED / FAIL-CLOSED | `formal_run_eligible` only covers v2 + coverage; require successful RunContext generation and intake before `READY_FOR_B_VALIDATION` |
+| TD-62 | Bundle eligibility vs scenario-bound readiness | RESOLVED / FAIL-CLOSED PASS | `formal_run_eligible` + RunContext + intake all passed for active Winter identity |
+| TD-63 | Winter B unknown/hard policy | CONDITIONAL BLOCKING FOR C | B validation must prove navigable cells have finite risk or explicit `DATA_UNAVAILABLE` hard reason before C formal planning |
 
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。
@@ -53,7 +54,7 @@ Last Verified: 2026-08-23
 | TD-17 | Rolling A→B→C→D replay pipeline | HIGH | NEXT PHASE（未开始） | 当前 145 帧是单一 knowledge 快照，不能直接当播放器帧；需每 tick 固定知识边界重算 |
 | TD-18 | Simulation-clock Viewer | HIGH | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | 主控 = simulation_time；risk horizon（current/+6/+12/+24）与 C route state 已分离，切 horizon 不改变船位 |
 | TD-19 | GEBCO real-world coastline integrity | HIGH | **FOUNDATION ESTABLISHED（2026-08-19）** | EPSG:4326 canonical transform、coastline/L2 gate、GEBCO land mask 与 risk cells 已对齐 |
-| TD-20 | knowledge cutoff vs max-source-issue distinction | ~~HIGH~~ → **AUDITED / DOCUMENTED** | 2026-08-17：契约层允许 `as_of > max issue`（A 单测证明）；orchestrator intake 强制相等（生产约定）；causal replay 需放开 | 下一轮改 intake：接受逻辑 knowledge_as_of + visible_record_set_digest |
+| TD-20 | knowledge cutoff vs max-source-issue distinction | ~~HIGH~~ → **RESOLVED / UNIT+INTAKE_PASS（2026-08-23）** | Orchestrator intake 已与共享不变量对齐：`max(issue_time) <= as_of_time`；future-issued record 继续 fail closed；Winter exact intake PASS | rolling causal identity 仍按 TD-21/23 独立推进 |
 | TD-21 | causal equality enforcement（knowledge_as_of == simulation_time） | HIGH | NEXT PHASE（未开始） | 当前 frozen_forecast 只强制 as_of<=start；causal 模式需显式硬门 |
 | TD-22 | scenario_mode presentation propagation | ~~HIGH~~ → **RESOLVED** | 2026-08-17：demo-state + Viewer 展示 scenario_mode/simulation/knowledge_as_of | route/B 层仍不携带 mode（下一轮 contract proposal） |
 | TD-23 | rolling A visibility revision（normal tick + knowledge 前进） | HIGH | NEXT PHASE（未开始） | A 单层支持（same generation）；orchestrator 未端到端演练 |

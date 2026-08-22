@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: system architecture SSOT
 Canonical For: module boundaries, data flow, runtime semantics
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-23
 Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_INDEX.md
 ---
 
@@ -439,8 +439,9 @@ Live 小窗重规划：frozen committed risk window → 真实 C → worker watc
 > longest 44h）——**严格 144h tick-by-tick causal replay 不被历史证据
 > 支持**。原因：多数归档记录 issue_time 为单次 conservative retrieval
 > （A 中位数延迟 59h、B 53.5h）。这是历史证据限制，不是软件 bug；契约层
-> 已能表达 knowledge_as_of > max_source_issue_time，生产 intake 的相等
-> 约束属架构约定，需下一轮放开。权威：
+> 已能表达 knowledge_as_of > max_source_issue_time。2026-08-23 Orchestrator intake
+> 已与共享不变量 `max_source_issue_time <= knowledge_as_of` 对齐，并以 Winter exact
+> intake 验证；future-issued record 继续 fail closed。权威：
 > `CAUSAL_REPLAY_FEASIBILITY_AUDIT_20260817.md`；
 > 架构设计：`SIMULATION_REPLAY_ARCHITECTURE.md`。
 

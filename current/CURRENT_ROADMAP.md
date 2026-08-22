@@ -38,24 +38,24 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
 退出条件：接口 registry 经 A/B/C/D/Orchestrator owner 审阅；proposal 有 schema、
 fixtures、compatibility tests 和 rollback path。
 
-## P1 Winter Scenario（2026-08-23 00:48 +08:00）
+## P1 Winter Scenario（2026-08-23 01:16 +08:00）
 
-状态：`FROZEN_ARTIFACT_READY / WAITING_FOR_RUN_CONTEXT`。
+状态：`FORMAL_HANDOFF_COMPLETE / READY_FOR_B_VALIDATION`。
 
 1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
 2. A 已发布新的 immutable bundle `a-bundle-a2146dd0adbaa7db77a6beb7`，其
    `requested_end=minimum_required_end=2026-02-21T00Z`；旧 132 小时 minimum bundle
    保留为 superseded 历史 evidence，未覆盖或删除。
-3. 新 bundle 已通过 parse/digest/coverage/provenance/doctor，并被官方 RunContext
-   generator 在内存中接受；本轮按边界没有持久化 RunContext 或 ExecutionSpec。
-4. 下一轮创建 matching RunContext 与 strict ExecutionSpec，运行 Orchestrator
-   intake-only；通过后才标记 `READY_FOR_B_VALIDATION`。
-5. B 随后在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
+3. Matching `RunContext.v2` 与 strict `ExecutionSpec.v1` 已发布并通过 schema、identity 与
+   binding 验证；Orchestrator exact archive intake-only PASS。
+4. intake 的 logical cutoff 门禁已与共享 contract 对齐为
+   `max(issue_time) <= as_of_time`；仍 fail closed，未改变 records 或 schema。
+5. 下一轮 B 在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
    不改 risk formula 或 level policy。C/D 只在上游 acceptance 后接入。
 
-退出条件：matching RunContext、ExecutionSpec 与 Orchestrator intake 全部 PASS；随后 B
-risk distribution、C route integrity、D artifact presentation 依次提供独立证据。
+P1 formal handoff 退出条件已满足。下一 gate：B Winter RiskFrame + Summer/Winter risk
+distribution evidence；C route integrity 与 D artifact presentation 继续依赖真实上游产物。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
