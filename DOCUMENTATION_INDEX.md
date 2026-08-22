@@ -46,8 +46,8 @@ Last Verified: 2026-08-22
 The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
-Latest implementation evidence:
-[RESEARCH_VALIDATION_ROUND3_REPORT.md](reports/research-validation/RESEARCH_VALIDATION_ROUND3_REPORT.md).
+Latest Winter gate evidence:
+[WINTER_EXPERIMENT_IDENTITY_SETUP_REPORT.md](reports/research-validation/WINTER_EXPERIMENT_IDENTITY_SETUP_REPORT.md).
 
 Focused Round 2 evidence:
 

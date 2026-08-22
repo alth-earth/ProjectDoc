@@ -13,35 +13,33 @@ Last Verified: 2026-08-22
 
 # Research Validation System Current Status
 
-## 第四阶段 Winter Source Resolution（2026-08-22 13:03 +08:00）
+## Winter Experiment Identity Gate（2026-08-22 22:24 +08:00）
 
 | Workstream | Current state | Evidence |
 |---|---|---|
-| Winter required coverage | PARTIAL / 9_OF_12_COMPLETE | existing eight Copernicus rows plus GEBCO mask unchanged |
-| NCEI Grid 4 direct source | BLOCKED | exact February archive and THREDDS objects remain HTTP 404 |
-| NCEI archive recovery | CANDIDATE / EXTERNAL_ORDER | official metadata exposes HAS/tape order; not an automated A path |
-| C3S CARRA source | SOURCE_VALIDATED / ADAPTER_PENDING | target month/domain and all three variables; 3 h, 2.5 km, CC-BY-4.0 |
-| Winter source policy | DRAFT / PENDING_APPROVAL | `A-WINTER-MET-001`; recommends atomic CARRA 3 h acquisition |
-| Winter formal bundle | NOT_IMPLEMENTED | no CDS token/terms evidence and no projection-aware A adapter |
+| Winter required coverage | 12_OF_12_COMPLETE | 1,212-record frozen A bundle |
+| Winter DatasetBundle | FROZEN_ARTIFACT_READY | `a-bundle-bd8957c4f10c7c73f395de23`; parse/digest/doctor pass |
+| Winter RunContext | BLOCKED_BY_BUNDLE_MINIMUM_HORIZON | official generator rejects 132 h minimum horizon for 144 h scenario |
+| A→B formal handoff | BLOCKED | no legal `RunContext.v2`; Orchestrator intake not run |
+| Winter B/C/D | NOT_STARTED | downstream execution remains prohibited |
 
-Current verdict: `BLOCKED_WITH_DECISION`. The data source question is no longer
-open-ended: CARRA is the recommended official source, but catalogue availability
-is not a download and a proposal is not approval. The existing Copernicus Marine
-credentials cannot be reused for the Climate Data Store.
-
-Round4 also corrected the prior cadence diagnosis. A's 3-hour value is a
-metadata-free fallback; real NCEI retrospective records declare 6 h, and formal
-`DatasetBundle.v2` already accepts 3 h or 6 h for the three meteorological rows.
-The immediate NCEI blocker is missing direct objects, not an unavoidable bundle
-cadence rejection. No policy, schema, risk formula, or frozen artifact changed.
+Current verdict: Winter source acquisition and A bundle publication are complete,
+but experiment identity is not. The frozen bundle requests 144 hours through
+`2026-02-21T00Z` while its `minimum_required_end` stops at
+`2026-02-20T12Z`. Existing contract code fails closed, so no RunContext or
+ExecutionSpec was published and the handoff remains blocked. The frozen bundle,
+contract schemas, algorithms and Viewer were not changed.
 
 Supporting evidence:
 
 - [Winter source validation](../reports/research-validation/WINTER_SOURCE_VALIDATION_REPORT.md)
 - [Meteorological source comparison](../reports/research-validation/WINTER_MET_SOURCE_COMPARISON.md)
-- [Draft winter data policy](proposals/WINTER_DATA_POLICY_PROPOSAL.md)
+- [Winter identity audit](../reports/research-validation/WINTER_EXPERIMENT_IDENTITY_AUDIT.md)
+- [Winter handoff validation](../reports/research-validation/WINTER_HANDOFF_VALIDATION_REPORT.md)
 
 ## 第三阶段真实实验结果（2026-08-22 02:34 +08:00）
+
+> Historical Round3 checkpoint; the Winter identity gate above is the current state.
 
 | Workstream | Current state | Evidence |
 |---|---|---|
@@ -53,7 +51,7 @@ Supporting evidence:
 | C bounded LRU | IMPLEMENTED / EXPERIMENTAL_DEFAULT_OFF | 50k cap; median 76.281 s → 65.012 s; complete route digest unchanged |
 | B-C optimized medium path | EXPERIMENTAL / VALIDATED | fixed B input and endpoint; 3 independent runs per mode; no contract/publication change |
 
-No winter DatasetBundle, RiskFrame, route or Viewer artifact exists. The C LRU
+At this historical checkpoint no winter DatasetBundle, RiskFrame, route or Viewer artifact existed. The C LRU
 is available only through the experiment benchmark and is not used by formal
 ingress. Full 48h replay, heavy integration and determinism twin-run were not
 run.
@@ -136,7 +134,7 @@ A PreparedWindow / DatasetBundle.v2
 
 | Capability | Implementation | Validation | Current qualification |
 |---|---|---|---|
-| A 12-type public data bundle | IMPLEMENTED | AUTHORITATIVE_PASS | 夏季 RC1/RC2 制品；winter artifact 未建立 |
+| A 12-type public data bundle | IMPLEMENTED | ARTIFACT_PASS | 夏季 RC1/RC2 + Winter frozen bundle；Winter identity gate 尚未通过 |
 | B hourly deterministic risk frame | IMPLEMENTED | AUTHORITATIVE_PASS | 模型仍为 `demo_unvalidated`，不是科学标定结论 |
 | B fixed target grid | IMPLEMENTED | UNIT/ARTIFACT_PASS | RC2 显式 31×11；代码默认配置可为 16×7 |
 | B adaptive grid | NOT_IMPLEMENTED | NOT_RUN | 研究计划，不得隐式改变 C regular-grid contract |
@@ -146,8 +144,10 @@ A PreparedWindow / DatasetBundle.v2
 | D presentation Viewer | IMPLEMENTED | BROWSER_E2E_PASS | Firefox；单 Simulation Clock；artifact driven |
 | 48h replay Viewer | IMPLEMENTED | BROWSER_E2E_PASS | 49 snapshots、2881 minute states、49 risk frames |
 | C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
-| Winter scenario configuration | IMPLEMENTED | UNIT_PASS | config plus nine complete A source rows; DatasetBundle not persisted |
-| Winter A→B→C→D artifact | NOT_IMPLEMENTED | BLOCKED_WITH_DECISION | CARRA source validated; token/terms, adapter approval and acquisition still pending |
+| Winter scenario configuration | IMPLEMENTED | CONFIG_VALIDATED | 144 h scenario; 12/12 source rows complete |
+| Winter DatasetBundle | IMPLEMENTED | FROZEN_ARTIFACT_READY | bundle ID/digest/SHA frozen；minimum horizon 仅 132 h |
+| Winter A→B handoff | NOT_READY | BLOCKED_BY_BUNDLE_MINIMUM_HORIZON | matching RunContext cannot be generated；intake not run |
+| Winter B/C/D artifact | NOT_IMPLEMENTED | NOT_STARTED | 等待合法 experiment identity |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -172,9 +172,9 @@ A PreparedWindow / DatasetBundle.v2
    proposal 逐项审批，registry 本身不等于 proposal 批准。
 2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
    19 个时间修订版误称为 19 个候选。
-3. 冬季场景已配置，九个 A source rows 已通过覆盖；三个气象 rows 和 12-type frozen
-   bundle 仍缺失。CARRA 已成为有官方目录证据的推荐源，但 CDS token/terms、A adapter
-   审批和真实下载尚未完成，因此 B/C/D 冬季验证链未开始。
+3. 冬季场景、12 类 source rows 与 frozen bundle 已建立；当前缺口不是数据下载，而是
+   bundle 的 `minimum_required_end` 只覆盖 132 h，无法为 144 h scenario 创建 matching
+   RunContext。B/C/D 冬季验证链尚未开始。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
@@ -191,7 +191,7 @@ A PreparedWindow / DatasetBundle.v2
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| winter artifact 不存在 | PARTIAL / BLOCKED_WITH_DECISION | 九行 complete；审批 CARRA proposal 后只补三行，不重下 Copernicus |
+| Winter identity gate | BLOCKED_BY_BUNDLE_MINIMUM_HORIZON | 不改当前 frozen bundle；A owner 后续发布 minimum horizon=144 h 的新 immutable bundle identity |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
 | C candidate 未投影到 replay bundle | DRAFT / PLANNED | proposal exists; current NOT_PUBLISHED semantics unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |

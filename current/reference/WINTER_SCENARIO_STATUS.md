@@ -2,137 +2,127 @@
 Overall Status: ACTIVE
 Content Status:
   - COMPLETED
-  - IN_PROGRESS
   - BLOCKED
+  - PLANNED
 Document Role: CANONICAL
-Scope: winter research scenario configuration, data readiness, and acceptance gates
-Canonical For: what winter capability exists and what remains blocked
+Scope: winter research scenario configuration, data readiness, identity gate, and downstream acceptance
+Canonical For: current Winter capability, artifact identity, blockers, and next gate
 Branch: research-validation-system
 Last Verified: 2026-08-22
 ---
 
 # Winter Scenario Status
 
-## Round4 source decision（2026-08-22 13:03 +08:00）
+## 当前判定（2026-08-22 22:24 +08:00）
 
-| Item | State | Evidence |
+```text
+WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
+A_TO_B_FORMAL_HANDOFF = BLOCKED_BY_BUNDLE_MINIMUM_HORIZON
+B_WINTER_VALIDATION = NOT_STARTED
+C_WINTER_VALIDATION = NOT_STARTED
+D_WINTER_VISUALIZATION = NOT_STARTED
+```
+
+| Gate | State | Evidence |
 |---|---|---|
-| Existing winter rows | 9/12 COMPLETE (AM) → 12/12 COMPLETE (PM) | CARRA 3 类补齐 + 方案 (a) 补采非 CARRA 末尾时次 |
-| NCEI direct recovery | BLOCKED | archive and THREDDS exact February objects return 404 |
-| CARRA catalogue | SOURCE_VALIDATED | 3-hourly analyses, 2.5 km, East Arctic domain, all three variables, target month covered |
-| CARRA acquisition | COMPLETE | 147 帧全发布（route_id 已修正为 `tromso_to_isfjorden_outer`），doctor ok |
-| Source/cadence proposal | APPROVED | `A-WINTER-MET-001` 已批准 2026-08-22 |
-| Winter DatasetBundle | READY_FOR_GENERATION | 12/12 complete；12h 缺口已闭合（方案 a），G6 默认 horizon=144 全 complete |
+| Winter source acquisition | COMPLETE | 12 required types; CARRA + Copernicus + GEBCO |
+| A immutable bundle | FROZEN_ARTIFACT_READY | tracked `a.dataset-bundle.v2`, parse/digest/doctor pass |
+| Matching `RunContext.v2` | NOT_CREATED / FAIL_CLOSED | official generator rejects minimum horizon |
+| `ExecutionSpec.v1` | NOT_CREATED / FAIL_CLOSED | no valid RunContext-bound experiment identity exists |
+| Orchestrator intake | NOT_RUN | required RunContext is absent |
+| B/C/D Winter artifacts | NOT_STARTED | downstream execution remains prohibited |
 
-Canonical verdict is now `BLOCKED_WITH_DECISION`: a credible official source is
-identified, but production use is gated by approval, authentication, source
-normalization and real-payload validation. The previous `BLOCKED_BY_GFS` label
-remains historical context, not the current source strategy.
+这取代同一 current 文档中旧的 `9/12`、`READY_FOR_GENERATION`、
+`DatasetBundle NOT_IMPLEMENTED` 和 `BLOCKED_WITH_DECISION` 陈述。那些状态只属于早期
+Round3/Round4 supporting reports，不再是当前事实。
 
-The previous 6 h/3 h wording is also narrowed: the metadata-free service
-fallback is 3 h, while actual NCEI retrospective records declare 6 h and formal
-bundle validation allows either cadence. Missing NCEI objects are the current
-runtime blocker. The recommended CARRA path meets 3 h without relaxing policy.
-
-## Round5 closure（2026-08-22 下午 +08:00）
-
-| Item | State | Evidence |
-|---|---|---|
-| CARRA 3 类补齐 | COMPLETE | 147 帧全发布，`tromso_to_isfjorden_outer`，doctor ok（5379 校验 0 error） |
-| 非 CARRA 末尾补采（方案 a） | COMPLETE | 8 类动态源补 02-21T03/06/09/12Z，`scripts/winter_non_carra_tail_acquisition.py`，doctor ok（5461 校验 0 error） |
-| land_sea_mask | STATIC (unchanged) | GEBCO 派生静态掩膜，与时间无关，无需补时次 |
-| 12h 末端缺口 | CLOSED | 数据末端对齐至 02-21T12Z |
-| Winter source dataset | **12/12 COMPLETE** | 12 类在 02-15T00Z..02-21T12Z 全部 complete |
-| G6（默认 `horizon=144`） | PASS | `all_required_complete=True`，12 类全 complete，无需退用 `--horizon-hours 132` |
-| winter_bundle 冻结 | FROZEN | `data/tromso_to_isfjorden_outer_winter_20260215T000000Z_bundle.json`（generation_id 0），replay 不带 `--allow-incomplete` 闸门通过；doctor ok 5461/0 |
-
-Canonical verdict is now `READY_FOR_GENERATION`: all twelve required winter sources
-are complete for the 2026-02-15..02-21T12Z window; the previously documented 9/12
-partial state and 12h tail gap are both resolved. Downstream B/C/D artifacts may
-proceed once a `DatasetBundle` is persisted (per A required outputs).
-
-## Current verdict（2026-08-22 02:34 +08:00）
-
-| Item | State | Evidence |
-|---|---|---|
-| A generic winter-capable acquisition interfaces | IMPLEMENTED | GFS/NCEI, Copernicus, GEBCO and deterministic ice derivations already support explicit UTC windows |
-| Winter scenario configuration | IMPLEMENTED | `tromso_isfjorden_february_2026_research_v1` uses existing `scenario.v2` without schema changes |
-| Scenario validation | VALIDATED | contracts loader/CLI/unit test |
-| Winter source dataset | **12_OF_12_COMPLETE** | CARRA 3 类补齐 + 方案 (a) 补采 8 类动态非 CARRA 末尾时次；G6 默认 horizon=144 全 complete |
-| Winter GFS rows | BLOCKED_BY_SOURCE (historical) | NCEI 202602 direct paths absent; 已被 CARRA（风/温/能见度）与 Copernicus 替代覆盖，6 h 记录不再必需 |
-| Winter `PreparedWindow` / `DatasetBundle.v2` | NOT_IMPLEMENTED | depends on complete source acquisition and QC |
-| Winter B/C/D artifacts | NOT_IMPLEMENTED | downstream work prohibited until A publication passes |
-
-The configuration is not a winter artifact and is not evidence that the 12
-required sources are complete for the selected period.
-
-Feasibility history is in
-[WINTER_DATA_FEASIBILITY_REPORT.md](../../reports/research-validation/WINTER_DATA_FEASIBILITY_REPORT.md);
-current acquisition evidence is in
-[WINTER_DATA_ACQUISITION_REPORT.md](../../reports/research-validation/WINTER_DATA_ACQUISITION_REPORT.md).
-
-## Configuration skeleton（2026-08-22 00:02）
+## 冻结 DatasetBundle（2026-08-22 22:24 +08:00）
 
 | Field | Value |
 |---|---|
-| Scenario | `tromso_isfjorden_february_2026_research_v1` |
-| Version | `0.1.0` |
-| Corridor | `tromso_to_isfjorden_outer` `1.2.0` |
-| Mode | `retrospective_best_estimate` |
-| Window | 2026-02-15 00:00Z → 2026-02-21 00:00Z |
-| Horizon | 144 h |
-| Required profile | existing 12 formal data types |
-| Optional | bathymetry, long-term restricted area |
-| Artifact state | nine source rows complete; DatasetBundle not persisted |
+| Artifact | `work_package_a/data/tromso_to_isfjorden_outer_winter_20260215T000000Z_bundle.json` |
+| Schema | `a.dataset-bundle.v2` |
+| Bundle ID | `a-bundle-bd8957c4f10c7c73f395de23` |
+| Bundle digest | `bd8957c4f10c7c73f395de2354f56e2b6bde2d0b7204b99c60e0d56284394d9b` |
+| File SHA-256 | `5cf81c15162756f992bca83854e0b17cfac6be66197aed332d22ec29f8d4b795` |
+| Corridor | `tromso_to_isfjorden_outer` v1.2.0 |
+| Requested window | 2026-02-15T00:00:00Z → 2026-02-21T00:00:00Z |
+| Minimum required end | 2026-02-20T12:00:00Z |
+| Records | 1,212 |
+| Required data profile | 12/12 coverage complete |
 
-The February window is a reproducible research target, not a claim about source
-availability or winter representativeness. Changing the target period requires
-a new scenario revision and a recorded source-availability review.
+正式场景窗口固定为 144 小时，结束于 `2026-02-21T00Z`。`2026-02-21T12Z` 的尾部缓存
+不属于该冻结 bundle，也不能作为它的窗口证据。本阶段不修改冻结 bundle、不补 12Z。
 
-## Existing acquisition capability（2026-08-22 00:02）
+## Experiment Identity Gate（2026-08-22 22:24 +08:00）
 
-| Data group | Existing path | Winter readiness |
+现有生成器必须由 scenario、corridor、vessel 与经过重验的 bundle 创建 RunContext，禁止
+手写或跳过语义校验。实际执行：
+
+```text
+arctic-route-context create
+  scenario = tromso_isfjorden_february_2026_research_v1
+  bundle = a-bundle-bd8957c4f10c7c73f395de23
+
+result:
+DatasetBundle minimum_required_end does not cover the scenario
+```
+
+原因是 scenario `simulation_end=2026-02-21T00Z`，而 bundle 的
+`minimum_required_end=2026-02-20T12Z`。`create_run_context()` 要求 minimum horizon
+覆盖完整 simulation window；Orchestrator intake 还要求正式 bundle 的
+`minimum_required_end == requested_end`。因此：
+
+- 不能为当前 bundle 生成合法 `RunContext.v2`；
+- 不能通过手写 JSON 绕过生成器；
+- 不能把仅通过 coverage/doctor 的 bundle 宣称为 A→B handoff ready；
+- 本轮不创建孤立的 ExecutionSpec，以免形成看似可运行但没有合法 RunContext 的身份。
+
+## 数据源与语义边界（2026-08-22 22:24 +08:00）
+
+| Data group | Winter source | Current qualification |
 |---|---|---|
-| wind, temperature, visibility | CARRA single-levels (East Arctic) | COMPLETE (147 帧, 2026-08-22)；CARRA 单层级地表风为真东/真北，无需旋转 |
-| wave | Copernicus global wave | 49 records, COMPLETE |
-| ocean current, water level | Copernicus Arctic physical products | 145 each, COMPLETE; current is detided fallback |
-| ice concentration/drift/thickness | Copernicus Arctic physical products | 145 each, COMPLETE |
-| ice type/edge | neXtSIM concentration components and deterministic derivation | 145 each, COMPLETE |
-| land/sea mask | GEBCO-derived static mask | cached row COMPLETE under explicit later retrospective cutoff |
+| wind / temperature / visibility | C3S/ECMWF CARRA East domain | 49 three-hourly records each through 21T00Z |
+| wave | Copernicus global wave | 49 three-hourly records in frozen window |
+| current / water level | Copernicus Arctic PHY | 145 hourly records each; current uses labelled detided fallback |
+| sea ice concentration/drift/thickness/type/edge | Copernicus/neXtSIM-derived | 145 hourly records each |
+| land/sea mask | GEBCO-derived static mask | static; `1=sea`, `0=land_or_coast` |
 
-A supports `retrospective_best_estimate` and `frozen_forecast`, explicit UTC
-windows, source snapshots, issue/valid/ingest provenance and atomic publication.
-This makes the configuration technically consumable, but does not remove data,
-credentials, coverage or source-version gates.
+Winter A 数据源迁移不改变 `DatasetBundle.v2` schema、canonical variables、units 或
+fail-closed 语义。B 不得扫描 A 私有 cache；D 不得读取 A/B/C 私有数据。
 
-## Required A outputs（2026-08-22 00:02）
+## 接口稳定性（2026-08-22 22:24 +08:00）
 
-Before B may consume the scenario, A must produce:
+```text
+DatasetBundle.v2
+  -> RunContext.v2
+  -> RiskFrame.v2
+  -> RoutePlan.v2 / FourLayerRoutePlanSet.v3
+  -> Presentation Artifact
+```
 
-1. source snapshot and manifest for all 12 required types;
-2. one-valid-time-per-frame normalized records with UTC issue/valid/ingest time;
-3. complete coverage and QC with no synthetic zero fill;
-4. immutable `PreparedWindow` and persisted `a.dataset-bundle.v2`;
-5. matching RunContext and exact-resolver proof;
-6. source/grid/provenance digests and recorded missing/unknown counts.
+现有 `orchestrator.execution-spec.v1` 是严格 schema，不包含 bundle SHA、Git commit、
+B config path 或 C config path。不得为 Winter 临时追加字段：
 
-## Blockers and acquisition plan（2026-08-22 00:02, superseded by Round5）
+- bundle ID/digest 由 RunContext 绑定；
+- bundle file SHA 与代码版本由 experiment audit/report 记录；
+- B config 由正式 CLI `--b-config` 显式选择，当前仍待批准；
+- C config root 由 CLI 显式传入，默认 planner 语义不变。
 
-Former blocker: `BLOCKED_WITH_DECISION` — only the three meteorological rows
-(CARRA) remained missing. This is now **resolved** (see Round5): CARRA 3 类补齐
-+ 方案 (a) 补采 8 类动态非 CARRA 末尾时次，12/12 complete，12h 缺口闭合。
+## 下一门槛（2026-08-22 22:24 +08:00）
 
-Remaining controlled action before downstream B/C/D:
+下一轮应由 A owner 明确批准一个**新 immutable bundle identity**，使用同一已冻结 source
+record set、`requested_end=minimum_required_end=2026-02-21T00Z` 重新发布；不得覆盖或修改
+当前 bundle。新 bundle 通过 parse/digest/exact resolver 后，再按顺序：
 
-1. persist the immutable `PreparedWindow` and `a.dataset-bundle.v2` for the
-   2026-02-15..02-21T12Z window (A required output #4);
-2. run exact coverage / doctor without incomplete mode as the bundle gate;
-3. preserve all twelve completed rows and never substitute summer data.
+1. 用官方 `arctic-route-context create` 创建 matching RunContext；
+2. 创建同 run ID / scenario ID / generated_at 的 strict ExecutionSpec；
+3. 运行 Orchestrator intake-only；
+4. 状态更新为 `READY_FOR_B_VALIDATION`；
+5. 下一轮才启动 Winter B Risk Validation。
 
-## Downstream acceptance（2026-08-22 00:02）
+详细证据见：
 
-After A passes, B must record winter risk/hard/unknown distributions and model
-identity without changing the frozen risk formula. C must pass route integrity,
-coverage and determinism gates. D may consume only Orchestrator presentation
-artifacts and must label scientific status `demo_unvalidated` until calibration
-evidence exists.
+- [Winter A Freeze Audit](../../reports/research-validation/WINTER_A_FREEZE_AUDIT_REPORT.md)
+- [Winter Experiment Identity Audit](../../reports/research-validation/WINTER_EXPERIMENT_IDENTITY_AUDIT.md)
+- [Winter Handoff Validation](../../reports/research-validation/WINTER_HANDOFF_VALIDATION_REPORT.md)

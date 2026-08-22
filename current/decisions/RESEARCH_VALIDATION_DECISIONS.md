@@ -118,3 +118,24 @@ contracts 分散。
 **决策。** P0 先建立 contract registry 和 proposal gate；不做 ABCD 多进程同步改造。
 
 **影响。** 后续每个 owner 修改 producer 和 tests，跨包字段只通过经审批的新版本扩展。
+
+## 第8批：Winter Experiment Identity Fail-closed（2026-08-22 22:24 +08:00）
+
+**背景。** Winter 12 类 source records 与 `a.dataset-bundle.v2` 已冻结，需要建立 matching
+`RunContext.v2` 与 Orchestrator `ExecutionSpec.v1` 后才能进入 B validation。
+
+**问题。** 冻结 bundle 的 requested window 为 144 h，但
+`minimum_required_end=2026-02-20T12Z`，只覆盖 132 h；scenario 在
+`2026-02-21T00Z` 结束。官方 RunContext 生成器按现有 contract 拒绝该不一致。
+
+**分析。** 手写 RunContext、缩短 scenario 或向 strict ExecutionSpec 添加 Winter-only
+字段都会绕过既有接口门禁。直接改 frozen bundle 还会破坏其 content-addressed identity。
+
+**决策。** 当前 handoff 保持 `BLOCKED_BY_BUNDLE_MINIMUM_HORIZON`。不创建孤立
+ExecutionSpec，不修改 frozen bundle，不修改 contract。下一轮由 A owner 发布一个使用
+同一已验证 source record set、但 minimum horizon 为 144 h 的新 immutable bundle
+identity，再通过官方生成器和 intake-only 门禁。
+
+**影响。** B/C/D 继续 `NOT_STARTED`；当前 bundle 保留为 A acquisition evidence，但不能
+作为该 144 h scenario 的正式 A→B experiment identity。ExecutionSpec 不承载 bundle SHA、
+Git 版本或 B/C 配置路径，这些继续由 RunContext、CLI 参数和 experiment report 分工记录。

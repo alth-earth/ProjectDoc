@@ -26,22 +26,24 @@ historical reports.
 | 模块 | 已有能力 | 已验证证据 | 缺口 | 建议 |
 |---|---|---|---|---|
 | Contracts | identity loaders plus ownership/change gate; 8 scenario configs | 19 tests; winter config loader/CLI | future proposal owner approvals | apply registry/template per change |
-| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, ice data interfaces | RC1/RC2 summer bundles; 9/12 winter rows coverage-complete; CARRA catalogue source validated | no winter bundle; CDS credentials/terms and projection-aware CARRA adapter unapproved | approve source proposal, acquire only three rows, then exact bundle publication |
+| A | 12-type acquisition/normalization/QC/provenance, PreparedWindow, DatasetBundle.v2, exact resolver, CARRA and ice data interfaces | RC1/RC2 summer bundles; Winter 12/12 frozen bundle; CARRA/Copernicus/GEBCO records | Winter bundle minimum horizon is 132 h for a 144 h scenario; no legal RunContext | publish a new immutable 144 h-minimum bundle identity, then create RunContext/intake |
 | B | hourly deterministic risk plus synthetic and formal fixed-grid experiment harnesses | 78 formal frames on 16×7/31×11/60×21 | `demo_unvalidated`; incremental RSS/variance not isolated; no adaptive grid | repeat bounded formal comparison before proposal |
 | C | time-dependent A*, 12-route publication, profiler, BC benchmark, default-off bounded sample LRU | medium LRU 3-run median 65.012 s vs 76.281 s off; semantic digest equal | no formal-ingress/12-route cache gate; no shared/incremental search; fine not run | validate cache across ingress, layers and objectives |
 | Orchestrator | causal replay, navigation execution, process-level objective parallelism, preflight, presentation export | 12h authoritative/inherited; 48h real artifact | presentation candidate package empty | versioned projection from real C artifact only |
 | D | 48h Viewer plus graticule/labels/scale/grid north and aspect-preserving map | fresh Firefox BROWSER_E2E_PASS | no real candidate compare; limited provenance/uncertainty views | consume proposed artifact; expose published quality |
 
-## A 与 Winter Scenario（2026-08-21 23:18）
+## A 与 Winter Scenario（2026-08-22 22:24 +08:00）
 
-A can technically acquire and represent sea-ice concentration, drift, thickness, type and edge,
-with explicit UTC windows and causal visibility. Existing formal evidence is July/August; the old
-9-type long window is legacy evidence and cannot satisfy the current 12-type chain. Therefore:
+A can acquire and represent the 12 required Winter types with explicit UTC windows, provenance and
+causal visibility. The CARRA/Copernicus/GEBCO source set has been published as a frozen 1,212-record
+bundle. Its requested window is 144 h, but its minimum horizon is only 132 h; existing RunContext and
+Orchestrator intake contracts reject that mismatch. Therefore:
 
 - winter data interface: `IMPLEMENTED`;
 - winter scenario config identity: `IMPLEMENTED / UNIT_VALIDATED`;
-- winter source rows: `PARTIAL / 9_OF_12_COMPLETE`;
-- winter frozen DatasetBundle: `NOT_IMPLEMENTED / BLOCKED_WITH_DECISION`;
+- winter source rows: `COMPLETE / 12_OF_12`;
+- winter frozen DatasetBundle: `FROZEN_ARTIFACT_READY`;
+- winter experiment identity: `BLOCKED_BY_BUNDLE_MINIMUM_HORIZON`;
 - winter A→B→C→D validation: `NOT_RUN`.
 
 ## B Grid and scientific gap（2026-08-21 23:18）

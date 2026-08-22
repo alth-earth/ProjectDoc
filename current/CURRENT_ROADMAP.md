@@ -38,22 +38,24 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
 退出条件：接口 registry 经 A/B/C/D/Orchestrator owner 审阅；proposal 有 schema、
 fixtures、compatibility tests 和 rollback path。
 
-## P1 Winter Scenario（2026-08-21 23:18）
+## P1 Winter Scenario（2026-08-22 22:24 +08:00）
 
-状态：`PARTIAL_ACQUISITION / 9_OF_12_COMPLETE / BLOCKED_WITH_DECISION`。
+状态：`FROZEN_ARTIFACT_READY / IDENTITY_BLOCKED_BY_MINIMUM_HORIZON`。
 
-1. 在 contracts 中提出新的 winter scenario identity，不修改冻结 scenario。
-2. A 已获取八个真实 Copernicus 类型并复用一个 GEBCO static row。Round4 已确认
-   NCEI 直接路径缺档，同时验证 C3S CARRA 可覆盖目标月、区域和全部三个变量。
-   下一步审批 `A-WINTER-MET-001`，配置 CDS token/terms，先跑 projection/vector-rotation
-   一帧 smoke，再只获取 wind/temperature/visibility。不得用夏季数据或旧 9-type
-   artifact 代替。
-3. B 在旧模型版本上先做 input/grid/unknown 分布基线，再决定是否创建新 calibration
-   version；禁止静默改权重或 level policy。
-4. C/D 只在 A/B acceptance 通过后接入，比较夏季/冬季风险、可达性、路线和 replanning。
+1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter bundle 已冻结；
+   不再把数据获取列为当前 blocker。
+2. 当前 bundle 的 `requested_end=2026-02-21T00Z`，但
+   `minimum_required_end=2026-02-20T12Z`。官方 RunContext 生成器按 contract 拒绝该
+   132 h / 144 h 不一致；禁止手写绕过，禁止修改 frozen bundle。
+3. 下一轮由 A owner 审批并发布一个新 immutable bundle identity，使 requested/minimum
+   end 均为 21T00Z；只复用已验证 source records，不补 21T12Z，不覆盖当前 artifact。
+4. 新 bundle 通过 exact resolver 后，创建 matching RunContext 与 strict ExecutionSpec，
+   运行 Orchestrator intake-only；通过后才标记 `READY_FOR_B_VALIDATION`。
+5. B 在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
+   不改 risk formula 或 level policy。C/D 只在上游 acceptance 后接入。
 
-退出条件：CARRA adapter/source policy 获批；A doctor/exact resolver、B risk
-distribution、C route integrity、D artifact presentation 均有独立证据。
+退出条件：matching RunContext、ExecutionSpec 与 Orchestrator intake 全部 PASS；随后 B
+risk distribution、C route integrity、D artifact presentation 依次提供独立证据。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 

@@ -81,7 +81,7 @@ explicit unsupported/unavailable state when it cannot interpret a publication.
 
 | Proposed area | State | Required owner review |
 |---|---|---|
-| Winter scenario identity | EXPERIMENTAL CONFIG, DATA BLOCKED | contracts + A + integration owner |
+| Winter experiment identity | SCENARIO + DATASET FROZEN; RUN CONTEXT BLOCKED BY MINIMUM HORIZON | contracts + A + Orchestrator intake owner |
 | B grid experiment profiles | EXPERIMENTAL, no formal RiskFrame change | B + C compatibility reviewer |
 | Adaptive/non-uniform grid contract | PLANNED | B + C + Orchestrator |
 | [Candidate route presentation with real geometry/metrics](../proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md) | DRAFT / PLANNED; current payload remains NOT_PUBLISHED | C + Orchestrator + D |

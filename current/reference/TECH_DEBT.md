@@ -22,7 +22,7 @@ Last Verified: 2026-08-22
 | Priority | Existing debt / new gap | Current state |
 |---|---|---|
 | P0 | interface ownership/version registry; C→D candidate presentation proposal | REGISTRY COMPLETE; candidate proposal DRAFT |
-| P1 | winter scenario + provenance-complete 12-type artifact | 9/12 ROWS COMPLETE; GFS SOURCE/CADENCE BLOCKED |
+| P1 | winter scenario + provenance-complete 12-type artifact | 12/12 FROZEN BUNDLE; IDENTITY BLOCKED BY 132H MINIMUM HORIZON |
 | P2 | fixed-grid benchmark, then adaptive-grid proposal | FORMAL B BUILD COMPLETE; BASELINE/MEDIUM C COUPLING COMPLETE; REPEATABILITY PLANNED |
 | P3 | C edge traversal cache/shared-search/incremental feasibility | EXACT SAMPLE + DEFAULT-OFF 50K LRU VALIDATED EXPERIMENTALLY; FORMAL GATE NEXT |
 | P4 | D professional navigation and research validation views | NAVIGATION AIDS BROWSER PASS; RESEARCH VIEWS PLANNED |
@@ -31,13 +31,14 @@ Last Verified: 2026-08-22
 
 | ID | Item | State | Next control |
 |---|---|---|---|
-| TD-55 | Winter 12-type dataset/artifact | PARTIAL / 9_OF_12_COMPLETE | approve and implement CARRA source path; do not start B before exact resolver passes |
+| TD-55 | Winter experiment identity | DATASET FROZEN / HANDOFF BLOCKED | publish a new immutable bundle with 144 h minimum horizon; then generate RunContext and run intake-only |
 | TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
 | TD-57 | C repeated risk-sampling cost | EXPERIMENTAL LRU PASS | 14.77% median gain at 50k; formal ingress/12-route equality before promotion |
 | TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |
 | TD-59 | B grid refinement grows C search super-linearly | MEASURED / EXPERIMENTAL | 112→341 nodes produced 10.51→75.00 s; require bounded fine pilot and repeated-run variance before acceptance |
 | TD-60 | February static-mask knowledge-time policy | CONTROLLED / RETROSPECTIVE_DIAGNOSTIC_PASS | explicit August cutoff accepted cached GEBCO; preserve cutoff in future bundle evidence |
-| TD-61 | Winter meteorological source resolution | BLOCKED_WITH_DECISION | NCEI direct paths absent; CARRA source validated but CDS token/terms and projection-aware A adapter await approval; prior cadence-mismatch claim narrowed because v2 accepts declared 6 h |
+| TD-61 | Winter meteorological source resolution | RESOLVED / CARRA ACQUIRED | 49 CARRA frames each for wind/temperature/visibility are bound in the frozen bundle; NCEI remains historical context |
+| TD-62 | Bundle eligibility vs scenario-bound readiness | DOCUMENTED / FAIL-CLOSED | `formal_run_eligible` only covers v2 + coverage; require successful RunContext generation and intake before `READY_FOR_B_VALIDATION` |
 
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。
