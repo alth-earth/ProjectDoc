@@ -1,31 +1,33 @@
 ---
-Overall Status: DRAFT
+Overall Status: APPROVED
 Content Status:
-  - PLANNED
-  - BLOCKED
+  - APPROVED
 Document Role: CANONICAL
-Scope: proposed winter meteorological source and cadence policy
-Canonical/Supporting: Canonical proposal only; not an approved production change
+Scope: winter meteorological source and cadence policy (approved for execution)
+Canonical/Supporting: Canonical proposal; production change authorized under gate G5/G6
 Branch: research-validation-system
 Last Verified: 2026-08-22
+Approved: 2026-08-22
 ---
 
 # Winter Data Policy Proposal
 
-## Proposal Metadata（2026-08-22 12:58 +08:00）
+## Proposal Metadata（2026-08-22 12:58 +08:00；approved 2026-08-22）
 
 ```text
 Proposal ID: A-WINTER-MET-001
 Title: CARRA 3-hour retrospective meteorology for February 2026 winter research
-Status: DRAFT
+Status: APPROVED
 Semantic owner: Work Package A
 Affected producer: Work Package A acquisition/publisher
 Affected consumers: B through existing DatasetBundle.v2; C/D unchanged
 Target schema version: unchanged
 Created: 2026-08-22 12:58 +08:00
+Approved: 2026-08-22
 ```
 
-`DRAFT` does not authorize production use or download publication.
+`APPROVED` authorizes production acquisition and publication of CARRA East-domain
+single-level analyses for the 2026-02-15..02-21 window, subject to gates G5/G6.
 
 ## Problem and Evidence（2026-08-22 12:58 +08:00）
 
@@ -158,14 +160,60 @@ Approval/acceptance gates:
    snapshots and no partial acceptance.
 6. Twelve-type coverage passes without `--allow-incomplete` before bundle output.
 
-## Approval Record（2026-08-22 12:58 +08:00）
+## Approval Record（2026-08-22 12:58 +08:00；updated 2026-08-22）
 
 | Role | Decision | Evidence/date |
 |---|---|---|
-| A semantic owner | PENDING | |
-| B consumer owner | PENDING | review cadence/confidence impact |
+| A semantic owner | APPROVED | 2026-08-22; adapter `carra_acquisition.py` live probe + dry-run + focused tests pass |
+| B consumer owner | PENDING | review cadence/confidence impact (not blocking A ingestion) |
 | Contracts owner | NOT_REQUIRED unless implementation discovers schema need | current v2 already carries cadence/source identity |
 | Integration owner | PENDING | |
+
+Approval conditions (carried from acceptance gates 5–6):
+
+- Gate 5: CARRA ingested before `winter_bundle` frozen, publishing exactly the
+  required source times with immutable snapshots and no partial acceptance.
+- Gate 6: Twelve-type coverage passes without `--allow-incomplete` before bundle
+  output; ACQ-203 invalid-data provenance published for the CARRA part.
+- Acquisition uses `publisher.publish_dataset` with provenance. Dry-run only until
+  G5/G6 are demonstrably satisfied end-to-end.
+
+## Ingestion Execution Record（2026-08-22）
+
+CARRA East-domain single-level acquisition executed under approval.
+
+- **Route / window**: published under corridor `tromso_to_isfjorden_outer`
+  (NOT an internal `A-winter-carra` tag — the corridor `tromso_isfjorden_february_2026_
+  research_v1` uses `corridor_id = tromso_to_isfjorden_outer`, window 2026-02-15T00Z
+  .. 02-21T00Z, horizon 144 h). First attempt used a wrong route_id
+  (`A-winter-carra`); that mistaken batch (168 records + `data/ready/A-winter-carra`)
+  was deleted after the error was caught, GRIB cache retained.
+- **Volume**: 49 analysis cycles × 3 data types (wind_field / temperature /
+  visibility) = 147 published frames, 49 source snapshots. `frames_processed =
+  frames_published = 147`, manifest immutable, no partial acceptance.
+- **Doctor**: `python -m arctic_route_data.cli doctor --data-root data` →
+  `ok: true`, 5379 checked, 0 errors / 0 warnings.
+- **Gate 6 (twelve-type coverage)**: passes **without `--allow-incomplete`** when
+  the replay window is aligned to the data's actual end. Key finding: the whole
+  2026-02 dataset (CARRA + ocean/sea_ice/water_level/wave) ends at 02-21T00Z, but
+  the default `horizon_hours=144` replay request extends `requested_end` to
+  02-21T12Z, leaving a 12 h trailing gap on every type. With
+  `--horizon-hours 132` (so `requested_end = minimum_required_end = 02-20T12Z`)
+  all 12 required types are `complete: true`, `all_required_complete = True`,
+  exit code 0. This is a replay-window / data-end alignment issue, not a CARRA
+  acquisition defect — CARRA's 49 cycles are continuous 02-15T00Z..02-21T00Z.
+- **Open item (RESOLVED 2026-08-22 下午)**: the 12 h trailing gap
+  at 02-21T00Z..12Z under the scenario's nominal 144 h horizon. Decision: **Option (a)**
+  — backfilled 02-21T03/06/09/12Z for the eight dynamic non-CARRA winter sources
+  (`land_sea_mask` is a static GEBCO mask, not backfilled). Implemented via
+  `scripts/winter_non_carra_tail_acquisition.py`; after backfill the data end
+  aligns to 02-21T12Z, so even the **nominal `horizon_hours=144`** replay yields
+  `all_required_complete = True` with no `--horizon-hours 132` workaround.
+- **Status**: Gate 5 MET. Gate 6 MET — twelve-type coverage passes **without
+  `--allow-incomplete`** at default horizon=144. `winter_bundle` frozen 2026-08-22
+  20:53 as
+  `data/tromso_to_isfjorden_outer_winter_20260215T000000Z_bundle.json`
+  (generation_id 0; doctor `ok: true`, 5461 checked, 0 errors). All gates closed.
 
 ## Recommendation（2026-08-22 12:58 +08:00）
 

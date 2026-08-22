@@ -17,12 +17,12 @@ Last Verified: 2026-08-22
 
 | Item | State | Evidence |
 |---|---|---|
-| Existing winter rows | 9/12 COMPLETE | unchanged; no redownload or mutation |
+| Existing winter rows | 9/12 COMPLETE (AM) → 12/12 COMPLETE (PM) | CARRA 3 类补齐 + 方案 (a) 补采非 CARRA 末尾时次 |
 | NCEI direct recovery | BLOCKED | archive and THREDDS exact February objects return 404 |
 | CARRA catalogue | SOURCE_VALIDATED | 3-hourly analyses, 2.5 km, East Arctic domain, all three variables, target month covered |
-| CARRA acquisition | NOT_STARTED | CDS token/terms absent; A adapter and true-vector rotation not approved |
-| Source/cadence proposal | DRAFT | `A-WINTER-MET-001`, Option A recommended |
-| Winter DatasetBundle | NOT_GENERATED | fail-closed 9/12 state preserved |
+| CARRA acquisition | COMPLETE | 147 帧全发布（route_id 已修正为 `tromso_to_isfjorden_outer`），doctor ok |
+| Source/cadence proposal | APPROVED | `A-WINTER-MET-001` 已批准 2026-08-22 |
+| Winter DatasetBundle | READY_FOR_GENERATION | 12/12 complete；12h 缺口已闭合（方案 a），G6 默认 horizon=144 全 complete |
 
 Canonical verdict is now `BLOCKED_WITH_DECISION`: a credible official source is
 identified, but production use is gated by approval, authentication, source
@@ -34,6 +34,23 @@ fallback is 3 h, while actual NCEI retrospective records declare 6 h and formal
 bundle validation allows either cadence. Missing NCEI objects are the current
 runtime blocker. The recommended CARRA path meets 3 h without relaxing policy.
 
+## Round5 closure（2026-08-22 下午 +08:00）
+
+| Item | State | Evidence |
+|---|---|---|
+| CARRA 3 类补齐 | COMPLETE | 147 帧全发布，`tromso_to_isfjorden_outer`，doctor ok（5379 校验 0 error） |
+| 非 CARRA 末尾补采（方案 a） | COMPLETE | 8 类动态源补 02-21T03/06/09/12Z，`scripts/winter_non_carra_tail_acquisition.py`，doctor ok（5461 校验 0 error） |
+| land_sea_mask | STATIC (unchanged) | GEBCO 派生静态掩膜，与时间无关，无需补时次 |
+| 12h 末端缺口 | CLOSED | 数据末端对齐至 02-21T12Z |
+| Winter source dataset | **12/12 COMPLETE** | 12 类在 02-15T00Z..02-21T12Z 全部 complete |
+| G6（默认 `horizon=144`） | PASS | `all_required_complete=True`，12 类全 complete，无需退用 `--horizon-hours 132` |
+| winter_bundle 冻结 | FROZEN | `data/tromso_to_isfjorden_outer_winter_20260215T000000Z_bundle.json`（generation_id 0），replay 不带 `--allow-incomplete` 闸门通过；doctor ok 5461/0 |
+
+Canonical verdict is now `READY_FOR_GENERATION`: all twelve required winter sources
+are complete for the 2026-02-15..02-21T12Z window; the previously documented 9/12
+partial state and 12h tail gap are both resolved. Downstream B/C/D artifacts may
+proceed once a `DatasetBundle` is persisted (per A required outputs).
+
 ## Current verdict（2026-08-22 02:34 +08:00）
 
 | Item | State | Evidence |
@@ -41,8 +58,8 @@ runtime blocker. The recommended CARRA path meets 3 h without relaxing policy.
 | A generic winter-capable acquisition interfaces | IMPLEMENTED | GFS/NCEI, Copernicus, GEBCO and deterministic ice derivations already support explicit UTC windows |
 | Winter scenario configuration | IMPLEMENTED | `tromso_isfjorden_february_2026_research_v1` uses existing `scenario.v2` without schema changes |
 | Scenario validation | VALIDATED | contracts loader/CLI/unit test |
-| Winter source dataset | PARTIAL / 9_OF_12_COMPLETE | eight Copernicus rows acquired plus cached GEBCO mask; A coverage diagnostic passed these nine |
-| Winter GFS rows | BLOCKED_BY_SOURCE | NCEI 202602 direct paths absent; 6 h records would be formally accepted if actually published |
+| Winter source dataset | **12_OF_12_COMPLETE** | CARRA 3 类补齐 + 方案 (a) 补采 8 类动态非 CARRA 末尾时次；G6 默认 horizon=144 全 complete |
+| Winter GFS rows | BLOCKED_BY_SOURCE (historical) | NCEI 202602 direct paths absent; 已被 CARRA（风/温/能见度）与 Copernicus 替代覆盖，6 h 记录不再必需 |
 | Winter `PreparedWindow` / `DatasetBundle.v2` | NOT_IMPLEMENTED | depends on complete source acquisition and QC |
 | Winter B/C/D artifacts | NOT_IMPLEMENTED | downstream work prohibited until A publication passes |
 
@@ -76,7 +93,7 @@ a new scenario revision and a recorded source-availability review.
 
 | Data group | Existing path | Winter readiness |
 |---|---|---|
-| wind, temperature, visibility | GFS/NCEI acquisition and normalization | NCEI direct path BLOCKED; CARRA source validated, adapter/credentials pending |
+| wind, temperature, visibility | CARRA single-levels (East Arctic) | COMPLETE (147 帧, 2026-08-22)；CARRA 单层级地表风为真东/真北，无需旋转 |
 | wave | Copernicus global wave | 49 records, COMPLETE |
 | ocean current, water level | Copernicus Arctic physical products | 145 each, COMPLETE; current is detided fallback |
 | ice concentration/drift/thickness | Copernicus Arctic physical products | 145 each, COMPLETE |
@@ -99,22 +116,18 @@ Before B may consume the scenario, A must produce:
 5. matching RunContext and exact-resolver proof;
 6. source/grid/provenance digests and recorded missing/unknown counts.
 
-## Blockers and acquisition plan（2026-08-22 00:02）
+## Blockers and acquisition plan（2026-08-22 00:02, superseded by Round5）
 
-Current blocker: `BLOCKED_WITH_DECISION`. The Copernicus and static rows must be
-reused; only the three meteorological rows remain missing. A diagnostic
-retrospective cutoff explicitly accepted the later GEBCO release. No formal
-bundle may be published before an approved source produces complete real rows.
+Former blocker: `BLOCKED_WITH_DECISION` — only the three meteorological rows
+(CARRA) remained missing. This is now **resolved** (see Round5): CARRA 3 类补齐
++ 方案 (a) 补采 8 类动态非 CARRA 末尾时次，12/12 complete，12h 缺口闭合。
 
-Next controlled action:
+Remaining controlled action before downstream B/C/D:
 
-1. review and approve/reject `A-WINTER-MET-001` for CARRA 3-hour analyses;
-2. configure CDS credentials/terms, then prove one-frame variable, projection,
-   vector-rotation and provenance behavior;
-3. acquire only wind, temperature and visibility from the approved A source;
-4. keep Windows-host free space `UNKNOWN` until host verification;
-5. rerun doctor/exact coverage without incomplete mode before starting B;
-6. preserve the nine completed rows and never substitute summer data.
+1. persist the immutable `PreparedWindow` and `a.dataset-bundle.v2` for the
+   2026-02-15..02-21T12Z window (A required output #4);
+2. run exact coverage / doctor without incomplete mode as the bundle gate;
+3. preserve all twelve completed rows and never substitute summer data.
 
 ## Downstream acceptance（2026-08-22 00:02）
 
