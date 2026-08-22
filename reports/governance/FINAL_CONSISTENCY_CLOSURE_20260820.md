@@ -10,7 +10,7 @@ Supersedes: (this is the closure companion to ROOT_GOVERNANCE_AUDIT_FINAL_202608
 Related Canonical Docs: ROOT_GOVERNANCE_AUDIT_FINAL_20260820.md, ENGINEERING_GOVERNANCE_STANDARD.md
 ---
 
-# FINAL CONSISTENCY CLOSURE — Engineering Report (2026-08-20)
+# 最终一致性收口 — 工程报告（2026-08-20）
 
 ## 0. 执行原则
 
@@ -44,7 +44,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 2. Scope / Non-Scope
+## 2. 范围 / 非范围
 
 **做了**：8-repo Git baseline；4 子代理并行审计（governance/viewer-ownership/test-report/subproject）；D conftest 验证；orchestrator viewer residual 删除；真实 artifact Viewer smoke 重跑；语义覆盖抽样；Tier-1 freshness（5 文档补 banner）；3 处子项目文档 stale 修复；报告内部矛盾修正；4 repo 本地提交。
 
@@ -52,7 +52,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 3. Starting Baseline
+## 3. 起始基线
 
 - root HEAD `3812b5d`（recovery source，保留）；governance `ade24ab`；D `1c419b6`；orch `54cccf0`；contracts `54ee071`；A `c6d0718`；B `6269420`；C `42e951c`
 - 上一轮已知矛盾：ROOT_GOVERNANCE_AUDIT_FINAL 内 "26-min NOT RUN" vs "41m35s re-run"、"INHERITED" vs "re-run"、"writes outside NONE"
@@ -60,7 +60,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 4. Git Final State
+## 4. Git 最终状态
 
 | repo | branch | start HEAD | end HEAD | origin | ahead/behind | dirty | expected untracked | commits | push |
 |---|---|---|---|---|---|---|---|---|---|
@@ -77,7 +77,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 5. Filesystem & Resource Safety
+## 5. 文件系统与资源安全
 
 - **KNOWN PROCESS-POLICY VIOLATION（previous closure run）**：`/tmp/orch_integ.log` 为早期 integration 测试日志。Impact: test logging only，无产品语义影响。Correction: 本轮日志统一 `/root/my_project/.runtime/test-logs/`（export + serve.log）。
 - **this closure run**: writes outside allowed root = **NONE**（全部在 /root/my_project 下）
@@ -86,7 +86,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 6. Code / Architecture Changes
+## 6. 代码 / 架构变更
 
 | changed component | old behavior | new behavior | reason |
 |---|---|---|---|
@@ -98,7 +98,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 7. Semantic / Contract Changes
+## 7. 语义 / 契约变更
 
 - **无业务/运行时语义变更**。纯文档 + dead-source 清理。
 - contracts 增加极性显式声明（1=sea, 0=land_or_coast），与实际数据一致（非变更）。
@@ -106,14 +106,14 @@ PASS claim 必须指向证据
 
 ---
 
-## 8. Experiments / Alternatives
+## 8. 实验 / 备选方案
 
 - orchestrator viewer residual：尝试"保留 KEEP_WITH_FIX" vs "删除" → 全局 grep 证实 0 消费者 → **选择删除**（新 commit，不改历史），满足规则 #22/#69（REMOVED 而非模糊态）。
 - conftest：尝试"改 pytest config" vs "conftest sys.path" → 选最小 conftest 修复（已提交 1c419b6），不重构打包。
 
 ---
 
-## 9. Authoritative Run / Real Validation
+## 9. 权威运行 / 真实验证
 
 - **Viewer real artifact smoke（本轮重跑 P4）**：
   - export: `replay_viewer_export.py` on `sb-viewer-baseline-12h-det` → preflight=PASS, l2=PASS, timeline=721, bundle 263KB, GEBCO PNG, metadata
@@ -125,13 +125,13 @@ PASS claim 必须指向证据
 
 ---
 
-## 10. Performance Breakdown
+## 10. 性能分解
 
 - 非性能主目标。D test 1.46s；orch fast 2.66s。无退步。
 
 ---
 
-## 11. Correctness / Validation
+## 11. 正确性 / 验证
 
 - unit: D 50 passed (re-run)；orch 73 fast passed (re-run)
 - integration/real-artifact: orch 2 passed (re-run earlier)
@@ -144,7 +144,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 12. Determinism / Reproducibility
+## 12. 确定性 / 可复现性
 
 - determinism unit/contract tests: **RE-RUN PASS** (75 suite includes replay_determinism/replay_digests)
 - **12h authoritative semantic digest determinism: INHERITED**（未重跑 twin-run；不冒充）
@@ -152,7 +152,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 13. Artifacts / Provenance
+## 13. 制品 / 溯源
 
 | artifact | source | digest/status | tracked/ignored (verified) | provenance |
 |---|---|---|---|---|
@@ -164,7 +164,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 14. Known Limitations / Technical Debt
+## 14. 已知局限 / 技术债
 
 | TD-ID | impact | severity | next action |
 |---|---|---|---|
@@ -175,7 +175,7 @@ PASS claim 必须指向证据
 
 ---
 
-## 15. Decision / Next Phase
+## 15. 决策 / 下一阶段
 
 - **项目状态**：治理闭环达成。Governance = READY FOR HUMAN CUTOVER；Docs = CURRENT + CONSISTENT + TRACEABLE；D = SINGLE VIEWER OWNER；Orchestrator = A-B-C-D COORDINATOR；D tests = FULL PASS；orch tests = FULL PASS；root `.git` = RETAINED。
 - **下一里程碑（产品主线）**：Dynamic Risk Overlay → Hard Reason Overlay → Superseded/Replanning Animation → Browser Rehearsal → Presentation Polish → Demo Freeze。
@@ -183,7 +183,7 @@ PASS claim 必须指向证据
 
 ---
 
-## Key Delta Table
+## 关键增量表
 
 | Claim / Metric | Before Closure | After Closure | Evidence | Verdict |
 |---|---|---|---|---|

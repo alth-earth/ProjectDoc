@@ -6,7 +6,7 @@ Branch: demo-engineering
 Generated: 2026-08-20
 ---
 
-# Full Test Re-Run Report (2026-08-20)
+# 完整测试重跑报告（2026-08-20）
 
 > 背景：首次执行时因误操作提前终止。本轮从头完整执行所有相关测试，未被中断。
 > 两个仓库均用 `uv` 管理；D 测试 1.6s，orchestrator 含 2 个长耗时 integration 场景（共 41m35s）。
@@ -99,7 +99,7 @@ tests/integration/test_formal_run.py::
 
 ---
 
-## 3. Combined Summary
+## 3. 合并摘要
 
 | Repo | ruff | pytest | duration | Level |
 |---|---|---|---|---|
@@ -107,20 +107,20 @@ tests/integration/test_formal_run.py::
 | arctic_route_orchestrator | clean | 75 passed (73 fast + 2 integration) | 41m35s (integration) | REAL_E2E_PASS |
 | **TOTAL** | **clean** | **125 passed, 0 failed, 0 error** | — | — |
 
-### Correctness/Validation coverage (re-verified this session)
+### 正确性/验证覆盖（本轮复核）
 - unit: D 50 + orch 73 → all pass
 - integration/real-artifact: orch 2 → both pass (formal archive→B→C + 6h replan, v2 & v3)
 - ruff: both repos clean
 - (Viewer HTTP smoke + L2 polarity + D ownership: inherited REAL_E2E from prior round, unchanged)
 
-### Notes / Limitations
+### 说明 / 局限
 - orchestrator integration 场景为真实重计算（6-hour replan），耗时 41m35s，属预期；本轮已完整跑完未被中断。
 - D `conftest.py`（repo-root sys.path 注入）为测试基础设施修复，已 ruff-fixed，尚未在 D 仓库提交（待用户审阅）。
 - 无 OOM / 无 timeout / 无 orphan。
 
 ---
 
-## 4. Verdict
+## 4. 判定
 
 ```
 ALL TESTS PASS:  YES  (125 passed, 0 failed)
