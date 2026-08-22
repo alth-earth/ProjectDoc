@@ -8,13 +8,13 @@ Document Role: CANONICAL
 Scope: non-blocking items + NEXT PHASE technical debt
 Canonical For: registered technical debt and next-phase work
 Branch: research-validation-system
-Last Verified: 2026-08-22
+Last Verified: 2026-08-23
 ---
 
 # 技术债登记
 
 状态：CURRENT（当前）
-最后更新：2026-08-22
+最后更新：2026-08-23
 范围：非阻塞事项 + Research Validation System Enhancement Phase
 
 ## Research Validation 优先级映射（2026-08-21 23:18）
@@ -22,7 +22,7 @@ Last Verified: 2026-08-22
 | Priority | Existing debt / new gap | Current state |
 |---|---|---|
 | P0 | interface ownership/version registry; C→D candidate presentation proposal | REGISTRY COMPLETE; candidate proposal DRAFT |
-| P1 | winter scenario + provenance-complete 12-type artifact | 12/12 FROZEN BUNDLE; IDENTITY BLOCKED BY 132H MINIMUM HORIZON |
+| P1 | winter scenario + provenance-complete 12-type artifact | 12/12 ACTIVE FROZEN BUNDLE; WAITING FOR RUN CONTEXT |
 | P2 | fixed-grid benchmark, then adaptive-grid proposal | FORMAL B BUILD COMPLETE; BASELINE/MEDIUM C COUPLING COMPLETE; REPEATABILITY PLANNED |
 | P3 | C edge traversal cache/shared-search/incremental feasibility | EXACT SAMPLE + DEFAULT-OFF 50K LRU VALIDATED EXPERIMENTALLY; FORMAL GATE NEXT |
 | P4 | D professional navigation and research validation views | NAVIGATION AIDS BROWSER PASS; RESEARCH VIEWS PLANNED |
@@ -31,7 +31,7 @@ Last Verified: 2026-08-22
 
 | ID | Item | State | Next control |
 |---|---|---|---|
-| TD-55 | Winter experiment identity | DATASET FROZEN / HANDOFF BLOCKED | publish a new immutable bundle with 144 h minimum horizon; then generate RunContext and run intake-only |
+| TD-55 | Winter experiment identity | 144H BUNDLE REISSUED / WAITING FOR RUN CONTEXT | generate matching RunContext and strict ExecutionSpec, then run intake-only |
 | TD-56 | B Murmansk default-grid integration expectation | OPEN FINDING | default 11×26 grid has no node in the narrow destination allowed region; requires B/C/contracts owner review, not an experimental-profile patch |
 | TD-57 | C repeated risk-sampling cost | EXPERIMENTAL LRU PASS | 14.77% median gain at 50k; formal ingress/12-route equality before promotion |
 | TD-58 | D canvas aspect distortion | RESOLVED / BROWSER_E2E_PASS | `object-fit: contain` preserves 1024×1024 canonical map; scale uses haversine centre-latitude distance |

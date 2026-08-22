@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: research validation roadmap
 Canonical For: next work, phase gates, and dependency order
 Branch: research-validation-system
-Last Verified: 2026-08-22
+Last Verified: 2026-08-23
 Supersedes: competition-demo Viewer Product Mainline roadmap
 ---
 
@@ -38,20 +38,20 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
 退出条件：接口 registry 经 A/B/C/D/Orchestrator owner 审阅；proposal 有 schema、
 fixtures、compatibility tests 和 rollback path。
 
-## P1 Winter Scenario（2026-08-22 22:24 +08:00）
+## P1 Winter Scenario（2026-08-23 00:48 +08:00）
 
-状态：`FROZEN_ARTIFACT_READY / IDENTITY_BLOCKED_BY_MINIMUM_HORIZON`。
+状态：`FROZEN_ARTIFACT_READY / WAITING_FOR_RUN_CONTEXT`。
 
-1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter bundle 已冻结；
+1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
-2. 当前 bundle 的 `requested_end=2026-02-21T00Z`，但
-   `minimum_required_end=2026-02-20T12Z`。官方 RunContext 生成器按 contract 拒绝该
-   132 h / 144 h 不一致；禁止手写绕过，禁止修改 frozen bundle。
-3. 下一轮由 A owner 审批并发布一个新 immutable bundle identity，使 requested/minimum
-   end 均为 21T00Z；只复用已验证 source records，不补 21T12Z，不覆盖当前 artifact。
-4. 新 bundle 通过 exact resolver 后，创建 matching RunContext 与 strict ExecutionSpec，
-   运行 Orchestrator intake-only；通过后才标记 `READY_FOR_B_VALIDATION`。
-5. B 在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
+2. A 已发布新的 immutable bundle `a-bundle-a2146dd0adbaa7db77a6beb7`，其
+   `requested_end=minimum_required_end=2026-02-21T00Z`；旧 132 小时 minimum bundle
+   保留为 superseded 历史 evidence，未覆盖或删除。
+3. 新 bundle 已通过 parse/digest/coverage/provenance/doctor，并被官方 RunContext
+   generator 在内存中接受；本轮按边界没有持久化 RunContext 或 ExecutionSpec。
+4. 下一轮创建 matching RunContext 与 strict ExecutionSpec，运行 Orchestrator
+   intake-only；通过后才标记 `READY_FOR_B_VALIDATION`。
+5. B 随后在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
    不改 risk formula 或 level policy。C/D 只在上游 acceptance 后接入。
 
 退出条件：matching RunContext、ExecutionSpec 与 Orchestrator intake 全部 PASS；随后 B

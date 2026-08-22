@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: cross-repository contract ownership, version, compatibility, and change gates
 Canonical For: who may change each interface and how consumers must handle it
 Branch: research-validation-system
-Last Verified: 2026-08-22
+Last Verified: 2026-08-23
 ---
 
 # 契约所有权登记册
@@ -63,7 +63,7 @@ Last Verified: 2026-08-22
 
 | 拟议领域 | 状态 | 必需负责人审阅 |
 |---|---|---|
-| 冬季实验标识 | SCENARIO + DATASET 已冻结；RUN CONTEXT 因最小 horizon 受阻 | contracts + A + Orchestrator 接入负责人 |
+| 冬季实验标识 | SCENARIO + 144H DATASET 已冻结；WAITING_FOR_RUN_CONTEXT | contracts + A + Orchestrator 接入负责人 |
 | B 网格实验剖面 | EXPERIMENTAL，无正式 RiskFrame 变更 | B + C 兼容性审阅者 |
 | 自适应/非均匀网格契约 | PLANNED | B + C + Orchestrator |
 | [含真实几何/指标的候选航线展示](../proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md) | DRAFT / PLANNED；当前载荷仍为 NOT_PUBLISHED | C + Orchestrator + D |

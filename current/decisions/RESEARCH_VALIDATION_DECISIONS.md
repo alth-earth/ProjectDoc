@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: phase history and architecture decisions relevant to research validation
 Canonical For: why current boundaries and roadmap priorities exist
 Branch: research-validation-system
-Last Verified: 2026-08-21
+Last Verified: 2026-08-23
 ---
 
 # Research Validation Decisions
@@ -139,3 +139,25 @@ identity，再通过官方生成器和 intake-only 门禁。
 **影响。** B/C/D 继续 `NOT_STARTED`；当前 bundle 保留为 A acquisition evidence，但不能
 作为该 144 h scenario 的正式 A→B experiment identity。ExecutionSpec 不承载 bundle SHA、
 Git 版本或 B/C 配置路径，这些继续由 RunContext、CLI 参数和 experiment report 分工记录。
+
+## 第9批：Winter A 不可变 Bundle 重发（2026-08-23 00:48 +08:00）
+
+**背景。** 旧 bundle 的 1,212 条真实 source records 已通过 coverage/provenance，但其
+minimum horizon 只有 132 小时，无法绑定 144 小时 scenario。
+
+**问题。** 直接修改旧 JSON、缩短 scenario 或伪造尾部 coverage 都会破坏不可变制品和
+fail-closed handoff。
+
+**分析。** A 正式 producer 支持独立的 requested/minimum horizon 参数。使用同一 records
+与 source snapshots，并显式传入 144 小时 minimum，可发布一个新的 content-addressed
+identity；不需要重新下载，也不改变 `a.dataset-bundle.v2`。
+
+**决策。** 发布 active bundle `a-bundle-a2146dd0adbaa7db77a6beb7`，其
+`requested_end=minimum_required_end=2026-02-21T00Z`。旧 bundle
+`a-bundle-bd8957c4f10c7c73f395de23` 保留不变，作为 superseded 历史 A evidence。官方
+RunContext generator 只做内存态接受性验证，本轮不持久化 RunContext/ExecutionSpec，
+不运行 intake。
+
+**影响。** `A_TO_B_FORMAL_HANDOFF` 从 minimum-horizon blocker 前进到
+`WAITING_FOR_RUN_CONTEXT`；B/C/D 仍为 `NOT_STARTED`。下一门槛是 Formal Handoff，
+不是 Winter B 执行。

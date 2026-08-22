@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: documentation navigation map
 Canonical For: which document to trust for each question
 Branch: research-validation-system
-Last Verified: 2026-08-22
+Last Verified: 2026-08-23
 ---
 
 # Documentation Index
@@ -47,7 +47,7 @@ The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest Winter gate evidence:
-[WINTER_EXPERIMENT_IDENTITY_SETUP_REPORT.md](reports/research-validation/WINTER_EXPERIMENT_IDENTITY_SETUP_REPORT.md).
+[WINTER_BUNDLE_REISSUE_REPORT.md](reports/research-validation/WINTER_BUNDLE_REISSUE_REPORT.md).
 
 Focused Round 2 evidence:
 
