@@ -13,15 +13,42 @@ Last Verified: 2026-08-23
 
 # Winter Scenario Status
 
-## 当前判定（2026-08-23 01:16 +08:00）
+## 当前判定（2026-08-23 02:44 +08:00）
 
 ```text
 WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
 A_TO_B_FORMAL_HANDOFF = READY_FOR_B_VALIDATION
-B_WINTER_VALIDATION = NOT_STARTED
+B_WINTER_VALIDATION = COMPLETED
 C_WINTER_VALIDATION = NOT_STARTED
 D_WINTER_VISUALIZATION = NOT_STARTED
 ```
+
+## B First Scientific Run（2026-08-23 02:44 +08:00）
+
+```text
+WINTER_RISKFRAME_AVAILABLE = YES
+WINTER_RISKFRAME_SCHEMA = bc.risk-frame.v2
+WINTER_RISKFRAME_FRAMES = 145
+WINTER_B_PROFILE = medium / 31x11
+SUMMER_WINTER_RISK_COMPARISON = AVAILABLE
+WINTER_ENVIRONMENT_TO_RISK_DISTRIBUTION_CHANGE = OBSERVED
+C_VALIDATION = NOT_STARTED
+D_VALIDATION = NOT_STARTED
+```
+
+本轮使用固定 bundle、RunContext、ExecutionSpec generation `0`，没有修改 A artifact 或
+实验 identity。Winter B 输出已写入新的 runtime experiment store，commit 为
+`risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2`。
+同一 medium realized grid 的 Summer/Winter 对照显示 finite risk mean 从
+`0.045027961` 上升到 `0.119015786`；同时 `DATA_UNAVAILABLE` hard 区域增加，因此需要
+将环境风险上升和数据可用性变化分层解释。
+
+Supporting evidence:
+
+- [Winter B baseline decision](../../reports/research-validation/WINTER_B_BASELINE_CONFIG_DECISION.md)
+- [Winter B smoke report](../../reports/research-validation/WINTER_B_SMOKE_REPORT.md)
+- [Winter risk distribution audit](../../reports/research-validation/WINTER_RISK_DISTRIBUTION_AUDIT.md)
+- [Winter B validation report](../../reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md)
 
 | Gate | State | Evidence |
 |---|---|---|
@@ -30,7 +57,8 @@ D_WINTER_VISUALIZATION = NOT_STARTED
 | Matching `RunContext.v2` | PUBLISHED / PASS | official atomic generator; schema/rebuild identity PASS |
 | `ExecutionSpec.v1` | PUBLISHED / PASS | strict existing schema; run/scenario/time aligned |
 | Orchestrator intake | INTAKE_ONLY_PASS | exact archive resolution; no B/C/D execution |
-| B/C/D Winter artifacts | NOT_STARTED | downstream execution remains prohibited |
+| B Winter RiskFrame | COMPLETED / AVAILABLE | 145 formal hourly `bc.risk-frame.v2`；schema/store/readback PASS |
+| C/D Winter artifacts | NOT_STARTED | 本轮只完成 B；C/D 仍未执行 |
 
 这取代同一 current 文档中旧的 `9/12`、`READY_FOR_GENERATION`、
 `DatasetBundle NOT_IMPLEMENTED` 和 `BLOCKED_WITH_DECISION` 陈述。那些状态只属于早期
@@ -114,15 +142,14 @@ B config path 或 C config path。不得为 Winter 临时追加字段：
 - B config 由正式 CLI `--b-config` 显式选择，当前仍待批准；
 - C config root 由 CLI 显式传入，默认 planner 语义不变。
 
-## 下一门槛（2026-08-23 01:16 +08:00）
+## 下一门槛（2026-08-23 02:44 +08:00）
 
-Formal handoff 已完成。下一轮才启动 Winter B Risk Validation：
+Winter B 首轮 RiskFrame 与分布审计已完成。下一轮启动 Winter C consumer smoke：
 
-1. 明确批准 B Winter grid/model config；
-2. 固定本轮 RunContext 与 generation 0，不创建漂移 identity；
-3. 生成并校验 `bc.risk-frame.v2`；
-4. 审计 risk/hard/unknown distribution；
-5. 与 Summer baseline 做同口径比较后，再开放 C/D Winter 消费。
+1. 复核 `bc.risk-frame.v2` committed window、unknown/hard gate 和 `DATA_UNAVAILABLE` 空间位置；
+2. 由 C 使用精确 committed window 做最小 route/integrity smoke；
+3. 对比 Summer/Winter route success、ETA、speed factor 和 risk exposure；
+4. C 通过后再开放 D Winter artifact/presentation 消费。
 
 详细证据见：
 

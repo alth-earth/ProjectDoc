@@ -49,6 +49,13 @@ current canonical documents; they are not parallel sources of project truth.
 Latest Winter gate evidence:
 [WINTER_FORMAL_HANDOFF_REPORT.md](reports/research-validation/WINTER_FORMAL_HANDOFF_REPORT.md).
 
+Latest Winter B validation evidence:
+
+- [WINTER_B_BASELINE_CONFIG_DECISION.md](reports/research-validation/WINTER_B_BASELINE_CONFIG_DECISION.md)
+- [WINTER_B_SMOKE_REPORT.md](reports/research-validation/WINTER_B_SMOKE_REPORT.md)
+- [WINTER_RISK_DISTRIBUTION_AUDIT.md](reports/research-validation/WINTER_RISK_DISTRIBUTION_AUDIT.md)
+- [WINTER_B_RISK_VALIDATION_REPORT.md](reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md)
+
 Current interface freeze evidence:
 
 - [B Interface Freeze Audit](reports/research-validation/B_INTERFACE_FREEZE_AUDIT.md)

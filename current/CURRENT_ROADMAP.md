@@ -38,9 +38,9 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
 退出条件：接口 registry 经 A/B/C/D/Orchestrator owner 审阅；proposal 有 schema、
 fixtures、compatibility tests 和 rollback path。
 
-## P1 Winter Scenario（2026-08-23 01:16 +08:00）
+## P1 Winter Scenario（2026-08-23 01:16 +08:00；B 首轮结果同步于 2026-08-23 02:44 +08:00）
 
-状态：`FORMAL_HANDOFF_COMPLETE / READY_FOR_B_VALIDATION`。
+状态：`B_FIRST_VALIDATION_COMPLETED / C_GATE_PENDING`。
 
 1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
@@ -51,11 +51,12 @@ fixtures、compatibility tests 和 rollback path。
    binding 验证；Orchestrator exact archive intake-only PASS。
 4. intake 的 logical cutoff 门禁已与共享 contract 对齐为
    `max(issue_time) <= as_of_time`；仍 fail closed，未改变 records 或 schema。
-5. 下一轮 B 在已批准的显式 grid/model config 上先做 input/grid/unknown/risk distribution 基线；
-   不改 risk formula 或 level policy。C/D 只在上游 acceptance 后接入。
+5. B 首轮已在 medium 显式 grid/model config 上生成 145 个 formal hourly RiskFrame，并完成
+   unknown/hard 与 Summer/Winter 分布审计；不改 risk formula 或 level policy。
+6. C/D 只在本轮 B 输出经过 consumer acceptance 后接入；当前仍未运行。
 
-P1 formal handoff 退出条件已满足。下一 gate：B Winter RiskFrame + Summer/Winter risk
-distribution evidence；C route integrity 与 D artifact presentation 继续依赖真实上游产物。
+P1 formal handoff 与 B 首轮风险分布门槛已满足。下一 gate：Winter C route/integrity
+consumer smoke；D artifact presentation 继续依赖 C 的真实上游产物。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
