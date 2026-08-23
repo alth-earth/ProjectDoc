@@ -9,6 +9,11 @@ Branch: research-validation-system
 Last Verified: 2026-08-22
 ---
 
+> **声明（About this template）**：本文档是 Arctic Route 项目中跨包（cross-package）合约变更的**强制模板**。
+> 任何涉及生产者/消费者之间数据、Schema 或语义契约的变更，都必须复制本模板并逐项填写后才能进入审批流程。
+> 本模板的作用是：1) 统一提案结构与证据要求；2) 强制完成兼容性与失败行为分析；3) 作为语义/生产者/消费者/集成四方审批门控（approval gate）的唯一依据。
+> 只有状态为 `APPROVED` 且审批记录齐全的提案才被允许推进到生产环境。
+
 # Contract Change Proposal Template
 
 ## Proposal metadata（2026-08-22 00:02）

@@ -74,11 +74,3 @@ canonical SSOT documentation.
 - GEBCO L2 preflight: PASS (real Scenario B route)
 - Bundle export: PASS (721 timeline frames)
 
-## Resource Safety
-
-- free -h start: 6.2Gi available, swap 0B
-- Lowest available: ~6.0Gi
-- Swap peak: 0B (never used)
-- OOM: NO
-- Heavy-task overlap: orchestrator test (292MB RSS, single process, no risk)
-- Writes outside /root/my_project: NONE
