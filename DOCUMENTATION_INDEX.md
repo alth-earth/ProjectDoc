@@ -53,6 +53,10 @@ Latest A→B→C→D risk identity and Winter data evidence:
 
 - [RISK_PIPELINE_AUDIT_AND_WINTER_DATA_VALIDATION_REPORT.md](reports/research-validation/RISK_PIPELINE_AUDIT_AND_WINTER_DATA_VALIDATION_REPORT.md)
 
+Latest B risk calibration research evidence:
+
+- [RISK_CALIBRATION_RESEARCH_REPORT.md](reports/research-validation/RISK_CALIBRATION_RESEARCH_REPORT.md)
+
 Latest B/C/D interface and D Research Phase 1 evidence:
 
 - [B_C_D_INTERFACE_STATUS.md](reports/research-validation/B_C_D_INTERFACE_STATUS.md)

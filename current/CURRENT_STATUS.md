@@ -13,6 +13,26 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
+## B Risk Calibration Research Gate（2026-08-23 20:45 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| Current B scale | DETERMINISTIC_ENGINEERING_BASELINE | 11 normalized components weighted sum；`demo_unvalidated` |
+| Scientific calibration | NOT_ESTABLISHED | 无 expert/outcome/physics threshold validation |
+| Winter finite distribution | REAL_ARTIFACT_AUDIT_PASS | mean `0.119016`；P95 `0.226415`；93.069778% L1 |
+| Threshold change | NOT_APPROVED | `0.2/0.4/0.6/0.8` 保持 frozen baseline |
+| Component attribution | NOT_IMPLEMENTED | RiskFrame 无逐格 contribution；sidecar 仍为 DRAFT |
+| B/C/D runtime semantics | PRESERVED | 零代码、零 artifact 修改；C route response evidence 继承 |
+
+当前 `risk_score` 只能解释为 weighted normalized hazard index，不是事故概率或经过实船结果
+标定的严重度。等宽 level policy 对本 Winter 分布存在明显压缩，但这不足以单独批准新阈值。
+下一 gate 是定义 operational target、建立跨场景 calibration dataset、发布 B-owned shadow
+component contribution，并比较 expert/physics/statistical/outcome-based 方法。
+
+Supporting evidence:
+
+- [Risk calibration research](../reports/research-validation/RISK_CALIBRATION_RESEARCH_REPORT.md)
+
 ## Winter Combined Research Viewer（2026-08-23 20:14 +08:00）
 
 | Workstream | Current state | Evidence |

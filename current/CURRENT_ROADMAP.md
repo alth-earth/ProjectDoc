@@ -64,6 +64,28 @@ P1 formal handoff、B 风险分布、C 路线与 D combined visualization 门槛
 navigation timeline 是 C waypoint ETA 的 presentation projection，不是 causal replay。
 下一 gate 由人工决定：冻结该 package，或另立 Winter causal replay/replanning milestone。
 
+## P1.5 B Risk Calibration Protocol（2026-08-23 20:45 +08:00）
+
+状态：`RESEARCH_AUDIT_COMPLETED / SCIENTIFIC_CALIBRATION_NOT_ESTABLISHED`。
+
+当前 `demo_unvalidated` risk 是 11 个 normalized component 的 weighted sum；固定
+`0.2/0.4/0.6/0.8` 仅是 equal-width engineering policy。Winter 31,543 个 finite cells 中
+93.069778% 为 L1，证明 level resolution 与当前 score distribution 不匹配，但不能单独证明
+threshold 错误或允许按展示效果重标。
+
+下一 gate：
+
+1. 明确 level 对应 expert action、physics severity、ordinal outcome 或 probability 中的哪一种；
+2. 建立跨场景、跨时间块、跨 corridor/vessel 的 immutable calibration/validation dataset；
+3. 由 B 以 backward-compatible shadow sidecar 发布 normalized components 与 additive
+   contribution，禁止 D 反算；
+4. 比较现行 baseline、expert+physics constraints、descriptive percentile 与有标签
+   outcome calibration；只有 evidence review 通过后才提交新 config/version proposal；
+5. 旧 weights、thresholds、RiskFrame 与 Winter/Summer artifacts 保持冻结。
+
+退出条件：目标语义、gold/weak labels、split policy、评价指标、OOD/fail-closed gate 和 rollback
+方案均获批准，并有至少两个独立场景的 shadow result；本阶段不以“颜色更丰富”为验收条件。
+
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
 状态：`FORMAL_FIXED_GRID_EXPERIMENT_COMPLETED / BC_BASELINE_MEDIUM_COMPLETED`。
