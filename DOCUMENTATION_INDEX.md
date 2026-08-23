@@ -49,6 +49,10 @@ current canonical documents; they are not parallel sources of project truth.
 Latest Winter gate evidence:
 [WINTER_C_VALIDATION_FINAL_REPORT.md](reports/research-validation/WINTER_C_VALIDATION_FINAL_REPORT.md).
 
+Latest A→B→C→D risk identity and Winter data evidence:
+
+- [RISK_PIPELINE_AUDIT_AND_WINTER_DATA_VALIDATION_REPORT.md](reports/research-validation/RISK_PIPELINE_AUDIT_AND_WINTER_DATA_VALIDATION_REPORT.md)
+
 Latest B/C/D interface and D Research Phase 1 evidence:
 
 - [B_C_D_INTERFACE_STATUS.md](reports/research-validation/B_C_D_INTERFACE_STATUS.md)
