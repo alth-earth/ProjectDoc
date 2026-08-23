@@ -126,7 +126,9 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
    `SINGLE_ROUTE_FALLBACK`。
 2. 已增加 run/scenario、RiskFrame schema、grid/frame/candidate-set metadata；DatasetBundle
    identity 等未发布字段明确显示 `not published`，不从私有 artifact 推断。
-3. 评估专业导航图层和环境 contributor，但只消费 Orchestrator 已发布数据。
+3. `risk-explanation.v1` optional consumer 与点击格点面板已通过 Firefox E2E；只显示
+   producer 字段并在缺失/invalid/mismatch 时失败关闭。真实 B producer 与 Orchestrator
+   immutable transport 仍是下一 gate，D 不生成 contributor。
 4. 保留 Research Validation / Operational Replay / Engineering Debug 三态和单一
    Simulation Clock。
 
@@ -134,7 +136,9 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 已通过 Firefox。同一 Winter identity 的 145-frame risk、12-route candidates 与
 ETA-driven navigation simulation 已由 Orchestrator 组装并通过 Research View Browser
 E2E；现有 Summer frozen fallback 继续保留。下一步不得把该 ETA projection 写成 causal
-replay；如需重规划展示，必须发布真实 Winter replay events。
+replay；如需重规划展示，必须发布真实 Winter replay events。Risk explanation 的下一步必须
+先由 B 发布真实、可追溯 sidecar，再由 Orchestrator 绑定相同 RiskWindow/RiskFrame identity；
+synthetic browser fixture 不能提升 producer 成熟度。
 
 ## 全局验收与资源规则（2026-08-21 23:18）
 

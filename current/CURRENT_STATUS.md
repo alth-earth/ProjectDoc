@@ -13,6 +13,24 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
+## D Risk Explanation Consumer Gate（2026-08-23 21:51 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| D optional consumer | BROWSER_E2E_PASS | synthetic sidecar + real Winter base；missing/invalid/PARTIAL/COMPLETE；Firefox 点击格点 panel |
+| RiskFrame authority | PRESERVED | level/score/confidence 只读 `bc.risk-frame.v2`；risk/route/simulation 不变 |
+| Identity fail-closed | PASS | schema、RiskWindow、RiskFrame、grid/坐标 mismatch 拒绝 sidecar |
+| Browser console/network | PASS | 0 errors；0 warnings；8 required resources HTTP 200 |
+| D regression | PASS | `91 passed / 3 causal-replay-only skipped`；Ruff/JS syntax PASS |
+| B producer artifact | NOT_IMPLEMENTED | 仅 synthetic/design-example fixture；无真实 contributor claim |
+| Orchestrator immutable transport | NOT_IMPLEMENTED | D 已接受可选字段；正式发布链尚未闭合 |
+
+D 的 `risk-explanation.v1` 支持是可选、增量且 explanation-scope fail closed。sidecar 缺失或
+不匹配时，Viewer 显示 `Explanation unavailable`，基础 Winter RiskFrame、route candidates
+与 ETA simulation 继续工作。`PARTIAL` 不补零或自动生成 reason；`COMPLETE` 仅展示 producer
+字段。Browser E2E 的 PARTIAL/COMPLETE 内容是明确标记的 synthetic B fixture，因此成熟度只
+证明 D consumer，不证明真实 B 解释已发布或经过科学验证。
+
 ## B Risk Calibration Research Gate（2026-08-23 20:45 +08:00）
 
 | Workstream | Current state | Evidence |
@@ -21,7 +39,7 @@ Last Verified: 2026-08-23
 | Scientific calibration | NOT_ESTABLISHED | 无 expert/outcome/physics threshold validation |
 | Winter finite distribution | REAL_ARTIFACT_AUDIT_PASS | mean `0.119016`；P95 `0.226415`；93.069778% L1 |
 | Threshold change | NOT_APPROVED | `0.2/0.4/0.6/0.8` 保持 frozen baseline |
-| Component attribution | NOT_IMPLEMENTED | RiskFrame 无逐格 contribution；sidecar 仍为 DRAFT |
+| Component attribution | PRODUCER NOT_IMPLEMENTED | RiskFrame 无逐格 contribution；D optional consumer 已 BROWSER_E2E_PASS（synthetic fixture），sidecar contract 仍为 DRAFT |
 | B/C/D runtime semantics | PRESERVED | 零代码、零 artifact 修改；C route response evidence 继承 |
 
 当前 `risk_score` 只能解释为 weighted normalized hazard index，不是事故概率或经过实船结果
@@ -39,7 +57,7 @@ Supporting evidence:
 |---|---|---|
 | Winter combined presentation | REAL_E2E_PASS | one scenario/run/bundle/RiskWindow/candidate identity；145 frames；12 routes |
 | D Winter Research View | REAL_E2E_PASS | Firefox；risk/hard/routes/ship/Run/Pause/layer selector |
-| Browser console/network | PASS | 0 errors；0 warnings；7 required resources HTTP 200 |
+| Browser console/network | PASS | 0 errors；0 warnings；8 required resources HTTP 200（含 optional consumer validator） |
 | Navigation simulation | EXPERIMENTAL / REAL_E2E_PASS | 3,206 1-minute states；C selected route waypoint ETA projection |
 | Winter causal replay/replanning | NOT_IMPLEMENTED | 无同 identity manifest/snapshots/events；未伪造 |
 | A/B/C/contracts/frozen artifacts | PRESERVED | 本轮零修改、零重算 |
@@ -306,9 +324,9 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
    benchmark 中取得 14.77% median 收益。formal ingress/12-route promotion、共享搜索与
    incremental replanning 均未实现。
-6. D 已建立基础专业导航辅助层、Research View、candidate geometry、四层三目标 compare
-   与 Winter combined Browser E2E；环境 contributor / per-cell uncertainty presentation
-   contract 仍待实现。
+6. D 已建立基础专业导航辅助层、Research View、candidate geometry、四层三目标 compare、
+   Winter combined Browser E2E 与可选 per-cell risk explanation consumer。真实 B contributor
+   producer、Orchestrator immutable transport 和独立环境 factor layer contract 仍待实现。
 
 详细依据见
 [RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。

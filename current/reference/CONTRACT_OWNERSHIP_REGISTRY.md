@@ -71,4 +71,4 @@ ExecutionSpec 可选择的顶层 planning contract；v3 顶层必须使用 four-
 | 自适应/非均匀网格契约 | PLANNED | B + C + Orchestrator |
 | [含真实几何/指标的候选航线展示](../proposals/ROUTE_PRESENTATION_CONTRACT_PROPOSAL.md) | ACCEPTED / IMPLEMENTED / INTERFACE_VALIDATED；Winter sidecar 已发布，地图候选层仍为 D 后续工作 | C + Orchestrator + D |
 | 环境因素展示包 | PLANNED | A/B 语义负责人 + Orchestrator + D |
-| [逐格风险解释 sidecar](../../reports/research-validation/RISK_EXPLANATION_SIDECAR_DESIGN_REPORT.md)（[schema](../proposals/risk-explanation.v1.schema.json)） | DRAFT / UNIT_PASS / NOT_IMPLEMENTED；不修改 `bc.risk-frame.v2` | B 风险语义负责人 + Orchestrator + D |
+| [逐格风险解释 sidecar](../../reports/research-validation/RISK_EXPLANATION_SIDECAR_DESIGN_REPORT.md)（[schema](../proposals/risk-explanation.v1.schema.json)） | DRAFT contract；D optional consumer `BROWSER_E2E_PASS`（synthetic fixture + real Winter base）；B producer / Orchestrator immutable transport `NOT_IMPLEMENTED`；不修改 `bc.risk-frame.v2` | B 风险语义负责人 + Orchestrator + D |
