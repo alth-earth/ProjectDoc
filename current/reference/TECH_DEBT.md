@@ -41,6 +41,17 @@ Last Verified: 2026-08-23
 | TD-62 | Bundle eligibility vs scenario-bound readiness | RESOLVED / FAIL-CLOSED PASS | `formal_run_eligible` + RunContext + intake all passed for active Winter identity |
 | TD-63 | Winter B unknown/hard policy | CONDITIONAL BLOCKING FOR C | B validation must prove navigable cells have finite risk or explicit `DATA_UNAVAILABLE` hard reason before C formal planning |
 
+## Risk Calibration research debt（2026-08-23 22:01 +08:00）
+
+| ID | Item | State | Next control |
+|---|---|---|---|
+| CAL-01 | Operational action / severity / outcome labels 缺失 | BLOCKING SCIENTIFIC CALIBRATION | 双专家标注、adjudication、label provenance 与 agreement |
+| CAL-02 | 只有一个 Winter scenario/run/corridor/vessel | BLOCKING EXTERNAL VALIDITY | 至少两个独立 ScenarioRunGroup；外层 group holdout |
+| CAL-03 | 单场景 time/space purge 宽度缺少自相关证据 | EXPERIMENTAL | 估计 temporal/spatial correlation length 后批准 purge policy |
+| CAL-04 | C route metrics 与 RiskWindow 同源，存在 circular validation | CONTROLLED / NOT_USED_AS_LABEL | 只作后置 route utility，不作为 calibration truth |
+| CAL-05 | B component attribution 与 vessel physics limits 未正式发布/批准 | BLOCKING PHYSICS GATE | B-owned immutable sidecar + vessel-specific limit review |
+| CAL-06 | Statistical quantile 只有 relative strata 语义 | CONTROLLED / DESCRIPTIVE_ONLY | 禁止用于正式 level；仅作为 comparator 和 drift sensitivity |
+
 既有 TD 编号保留为历史追踪；当前执行顺序以
 [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 为准。
 

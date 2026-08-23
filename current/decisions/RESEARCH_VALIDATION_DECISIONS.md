@@ -182,3 +182,24 @@ intake-only PASS 后，状态提升为 `READY_FOR_B_VALIDATION`。
 
 **影响。** Winter B 可以在下一轮消费固定 identity；B/C/D 仍为 `NOT_STARTED`。B→C 的
 unknown/hard policy 是下一 gate 的 conditional blocker，不能由 C 或 D 兜底。
+
+## 第11批：Risk Calibration Shadow 边界（2026-08-23 22:01 +08:00）
+
+**背景。** Winter finite risk 均值为 `0.119016`，93.069778% 映射为 L1；现行
+`demo_unvalidated_rule_baseline.v2` 缺少航行行动或事故结果标定。
+
+**问题。** 按展示效果改变 threshold 会把分布颜色与科学语义混为一谈；单场景 quantile
+又会强制产生高等级，无法形成跨场景绝对含义。
+
+**分析。** 当前 `risk_score` 只能作为 weighted normalized hazard index。正式 L1–L5 是
+equal-width engineering discretization，不是 probability、validated severity 或 operational
+action level。已有 C route metrics 来自同一 RiskWindow，不能作为独立 calibration labels。
+
+**决策。** 冻结正式 B formula、weights、threshold 和 RiskFrame；所有候选先进入独立
+research-only sidecar，不馈入 C/D。统计 quantile 只允许 `EXECUTED_DESCRIPTIVE`；Expert、
+Physics、Ordinal 方法在规则、component attribution、物理限值和 labels 齐备前保持
+`BLOCKED`。下一阶段主目标优先定义为 `operational_action_level`，并按独立
+ScenarioRunGroup 做外层验证。
+
+**影响。** Shadow infrastructure 可用于复现实验设计和证据门禁，但当前 Winter 单场景结果
+仍是 `DIAGNOSTIC_ONLY_NOT_EXTERNAL_CALIBRATION`，不得批准正式 threshold 变化。
