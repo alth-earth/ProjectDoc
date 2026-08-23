@@ -1,0 +1,135 @@
+{
+  "schema_version": "risk-explanation.v1",
+  "publication_status": "COMPLETE",
+  "identity": {
+    "risk_window_id": "risk-window-sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "run_id": "run-12345678-1234-5678-9abc-1234567890ab",
+    "scenario_id": "risk-explanation-design-example",
+    "corridor_id": "murmansk_to_dikson",
+    "vessel_profile_id": "arc7_demo_v1",
+    "config_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "model_config_digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "generation_id": 0,
+    "as_of_time": "2026-08-15T00:00:00Z"
+  },
+  "producer": {
+    "producer_id": "design.example",
+    "generated_at": "2026-08-23T11:55:00Z",
+    "formula_version": "deterministic_environment_components_v2",
+    "formula_component_ids": [
+      "ice_concentration",
+      "ice_thickness",
+      "ice_type",
+      "ice_edge",
+      "ice_drift_speed",
+      "wave_height",
+      "ocean_current_speed",
+      "wind_speed",
+      "freezing_deficit",
+      "visibility_deficit",
+      "water_level_magnitude"
+    ],
+    "decomposition_method": "weighted_additive_decomposition_v1",
+    "calibration_status": "demo_unvalidated",
+    "source_risk_provenance": "synthetic",
+    "sidecar_maturity": "design_example"
+  },
+  "frames": [
+    {
+      "risk_frame_id": "risk-sha256-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "frame_time": "2026-08-15T06:00:00Z",
+      "grid": {
+        "grid_id": "b-grid-design-example",
+        "crs": "EPSG:4326",
+        "rows": 1,
+        "columns": 1
+      },
+      "coverage": {
+        "expected_cell_count": 1,
+        "published_cell_count": 1,
+        "complete_cell_count": 1,
+        "partial_cell_count": 0,
+        "unavailable_cell_count": 0,
+        "omitted_cell_count": 0
+      },
+      "cells": [
+        {
+          "cell": {
+            "row_index": 0,
+            "column_index": 0,
+            "latitude": 72.25,
+            "longitude": 55.75
+          },
+          "explanation_status": "COMPLETE",
+          "risk": {
+            "score": 0.32,
+            "level": 2,
+            "confidence": 0.8
+          },
+          "contributors": [
+            {
+              "contributor_id": "ice",
+              "display_name": "Ice concentration and state",
+              "contribution": 0.12,
+              "component_ids": [
+                "ice_concentration",
+                "ice_thickness",
+                "ice_type",
+                "ice_edge",
+                "ice_drift_speed"
+              ],
+              "dominant_component_id": "ice_concentration"
+            },
+            {
+              "contributor_id": "wave",
+              "display_name": "Wave",
+              "contribution": 0.08,
+              "component_ids": ["wave_height"]
+            },
+            {
+              "contributor_id": "wind",
+              "display_name": "Wind",
+              "contribution": 0.05,
+              "component_ids": ["wind_speed"]
+            },
+            {
+              "contributor_id": "current",
+              "display_name": "Current",
+              "contribution": 0.04,
+              "component_ids": ["ocean_current_speed"]
+            },
+            {
+              "contributor_id": "water_level",
+              "display_name": "Water level",
+              "contribution": 0.03,
+              "component_ids": ["water_level_magnitude"]
+            },
+            {
+              "contributor_id": "freezing",
+              "display_name": "Freezing deficit",
+              "contribution": 0.0,
+              "component_ids": ["freezing_deficit"]
+            },
+            {
+              "contributor_id": "visibility",
+              "display_name": "Visibility deficit",
+              "contribution": 0.0,
+              "component_ids": ["visibility_deficit"]
+            }
+          ],
+          "reason": {
+            "code": "DOMINANT_CONTRIBUTOR",
+            "text": "High ice concentration contribution",
+            "locale": "en",
+            "main_contributor_ids": ["ice"]
+          },
+          "uncertainty": {
+            "status": "NONE",
+            "missing_data": [],
+            "explanation_gaps": []
+          }
+        }
+      ]
+    }
+  ]
+}

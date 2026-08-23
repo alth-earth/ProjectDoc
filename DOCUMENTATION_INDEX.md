@@ -57,6 +57,12 @@ Latest B/C/D interface and D Research Phase 1 evidence:
 
 - [B_C_D_INTERFACE_STATUS.md](reports/research-validation/B_C_D_INTERFACE_STATUS.md)
 
+Latest per-cell risk explanation sidecar design:
+
+- [RISK_EXPLANATION_SIDECAR_DESIGN_REPORT.md](reports/research-validation/RISK_EXPLANATION_SIDECAR_DESIGN_REPORT.md)
+- [`risk-explanation.v1` schema proposal](current/proposals/risk-explanation.v1.schema.json)
+- [`risk-explanation.v1` design example](current/proposals/risk-explanation.v1.example.json)
+
 Latest Winter C and D-interface evidence:
 
 - [WINTER_C_SMOKE_REPORT.md](reports/research-validation/WINTER_C_SMOKE_REPORT.md)
