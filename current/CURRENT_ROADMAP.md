@@ -42,7 +42,7 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-23 10:20 +08:00）
 
-状态：`C_FIRST_VALIDATION_COMPLETED / D_GATE_PENDING`。
+状态：`WINTER_A_B_C_COMPLETED / D_COMBINED_REAL_E2E_PASS`。
 
 1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
@@ -57,11 +57,12 @@ fixtures、compatibility tests 和 rollback path。
    unknown/hard 与 Summer/Winter 分布审计；不改 risk formula 或 level policy。
 6. C 已消费精确 committed window，发布 4 层 × 3 目标的 12-route v3 artifact；
    endpoint、schema、codec 与 12-route integrity 全部 PASS。
-7. C→D candidate sidecar 已通过 schema 与真实 artifact consumer 验收；D Winter combined
-   bundle、地图 candidate layer 与 Browser E2E 尚未执行。
+7. C→D candidate sidecar 已通过 schema 与真实 artifact consumer 验收；同一 Winter
+   identity 的 combined risk/route/ETA-simulation package 与 Firefox Browser E2E 已通过。
 
-P1 formal handoff、B 风险分布与 C 路线门槛均已满足。下一 gate：Winter D research
-visualization，使用已冻结 RiskFrame、C v3 与 route-candidates sidecar，不重算上游语义。
+P1 formal handoff、B 风险分布、C 路线与 D combined visualization 门槛均已满足。当前
+navigation timeline 是 C waypoint ETA 的 presentation projection，不是 causal replay。
+下一 gate 由人工决定：冻结该 package，或另立 Winter causal replay/replanning milestone。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 
@@ -96,7 +97,7 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 
 ## P4 D Professional Navigation Visualization（2026-08-21 23:18）
 
-状态：`RESEARCH_PHASE_1_IMPLEMENTED / FALLBACK_BROWSER_E2E_PASS`。
+状态：`WINTER_COMBINED_REAL_E2E_PASS / SUMMER_FALLBACK_PRESERVED`。
 
 1. 已接入真实 `presentation.route-candidates.v1`，支持四层 selector、三目标 compare、
    canonical metrics、candidate geometry 与 display-only highlight；空候选继续明确
@@ -107,10 +108,11 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 4. 保留 Research Validation / Operational Replay / Engineering Debug 三态和单一
    Simulation Clock。
 
-经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示和独立 layer
-toggle 已通过 Firefox。Phase 1 的现有 frozen fallback 也已复测；下一 gate 是由
-Orchestrator 组装同一 Winter identity 的 combined risk/replay/candidate bundle，再执行
-Research View Browser E2E。不得把现有 Summer replay 与 Winter candidates 混装作为证据。
+经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示和独立 layer toggle
+已通过 Firefox。同一 Winter identity 的 145-frame risk、12-route candidates 与
+ETA-driven navigation simulation 已由 Orchestrator 组装并通过 Research View Browser
+E2E；现有 Summer frozen fallback 继续保留。下一步不得把该 ETA projection 写成 causal
+replay；如需重规划展示，必须发布真实 Winter replay events。
 
 ## 全局验收与资源规则（2026-08-21 23:18）
 

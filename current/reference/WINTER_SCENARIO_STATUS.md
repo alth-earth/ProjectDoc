@@ -13,19 +13,47 @@ Last Verified: 2026-08-23
 
 # Winter Scenario Status
 
-## 当前判定（2026-08-23 16:59 +08:00）
+## 当前判定（2026-08-23 20:14 +08:00）
 
 ```text
 WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
 A_TO_B_FORMAL_HANDOFF = READY_FOR_B_VALIDATION
 B_WINTER_VALIDATION = COMPLETED
 C_WINTER_VALIDATION = COMPLETED
-D_WINTER_VISUALIZATION = PHASE_1_UNIT_PASS
+D_WINTER_VISUALIZATION = REAL_E2E_PASS
 C_TO_D_ROUTE_INTERFACE = STABLE
 D_PARALLEL_DEVELOPMENT = READY
+WINTER_COMBINED_PRESENTATION = REAL_E2E_PASS
+WINTER_CAUSAL_REPLAY = NOT_IMPLEMENTED
 ```
 
-## C First Route Validation 与 D Phase 1（2026-08-23 16:59 +08:00）
+## Winter Combined Research Viewer（2026-08-23 20:14 +08:00）
+
+```text
+WINTER_COMBINED_BUNDLE = PUBLISHED_RUNTIME_ARTIFACT
+WINTER_RESEARCH_BROWSER_E2E = REAL_E2E_PASS
+WINTER_RISK_FRAMES = 145
+WINTER_ROUTE_CANDIDATES = 12
+WINTER_NAVIGATION_TIMELINE = 3206_ETA_DRIVEN_SAMPLES
+WINTER_DYNAMIC_REPLANNING = NOT_IMPLEMENTED
+```
+
+combined assembly 严格绑定 active Winter DatasetBundle、RunContext、RiskWindow、C v3
+plan set、candidate set 与 12/12 route integrity。D 在 Firefox 中显示 Winter risk、独立
+hard availability、selected/candidate routes、ship 与 Voyage Progress；Run/Pause 和 layer
+selector 通过，console errors/warnings 为 0，required HTTP resources 全部 200。
+
+该 timeline 来自 C selected full-voyage recommended route waypoint ETA，明确标记
+`source_replay=null`。因此当前状态是 Winter navigation simulation `REAL_E2E_PASS`，不是
+Winter causal replay 或 replanning PASS。
+
+Supporting evidence:
+
+- [Winter combined Viewer integration](../../reports/research-validation/WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md)
+
+## C First Route Validation 与 D Phase 1 历史门槛（2026-08-23 16:59 +08:00）
+
+> 该区块记录 Phase 1 当时状态；当前 combined Browser 状态以上方最新区块为准。
 
 ```text
 WINTER_ROUTE_PLAN_SCHEMA = cd.four-layer-route-plan-set.v3
@@ -86,7 +114,7 @@ Supporting evidence:
 | B Winter RiskFrame | COMPLETED / AVAILABLE | 145 formal hourly `bc.risk-frame.v2`；schema/store/readback PASS |
 | C Winter route artifact | COMPLETED / AVAILABLE | formal v3 4×3=12；schema/codec/integrity PASS |
 | C→D route candidate interface | STABLE / AVAILABLE | real PUBLISHED sidecar；D metadata intake PASS |
-| D Winter visualization | PHASE_1_UNIT_PASS | candidate map/4×3 compare 已实现；combined bundle 与 Winter Browser E2E 未运行 |
+| D Winter visualization | REAL_E2E_PASS | combined package；Firefox risk/hard/12 routes/ship/controls PASS |
 
 这取代同一 current 文档中旧的 `9/12`、`READY_FOR_GENERATION`、
 `DatasetBundle NOT_IMPLEMENTED` 和 `BLOCKED_WITH_DECISION` 陈述。那些状态只属于早期
@@ -172,14 +200,16 @@ B config path 或 C config path。不得为 Winter 临时追加字段：
 - B config 由正式 CLI `--b-config` 显式选择，当前仍待批准；
 - C config root 由 CLI 显式传入，默认 planner 语义不变。
 
-## 下一门槛（2026-08-23 10:20 +08:00）
+## 下一门槛（2026-08-23 20:14 +08:00）
 
-Winter B 风险与 C 路线验证已完成。下一轮启动 Winter D Research Visualization：
+Winter B 风险、C 路线和 D combined research visualization 已完成。下一轮由人工在以下
+两个门槛中选择，不自动启动：
 
-1. 组合同一 Winter scenario 的 RiskFrame presentation 与 12-route candidate sidecar；
-2. 地图显示 candidate geometry，但不得改变 C route、ETA、ranking 或 risk metrics；
-3. 保持 `DATA_UNAVAILABLE` 独立 fail closed；
-4. 完成 Browser E2E 后再更新 `D_WINTER_VISUALIZATION`。
+1. 把当前 runtime combined package 纳入正式 artifact freeze/registry；
+2. 若需航中风险变化与 adoption 证据，建立正式 Winter causal replay/snapshots/events。
+
+任何下一轮都不得在 D 伪造 replanning、修改 C route/ETA/ranking/risk metrics，或把
+`DATA_UNAVAILABLE` 显示为 safe。
 
 详细证据见：
 

@@ -47,7 +47,7 @@ The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest Winter gate evidence:
-[WINTER_C_VALIDATION_FINAL_REPORT.md](reports/research-validation/WINTER_C_VALIDATION_FINAL_REPORT.md).
+[WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md](reports/research-validation/WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md).
 
 Latest A→B→C→D risk identity and Winter data evidence:
 

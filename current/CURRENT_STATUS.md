@@ -13,7 +13,31 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
-## D Research Visualization Phase 1（2026-08-23 16:59 +08:00）
+## Winter Combined Research Viewer（2026-08-23 20:14 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| Winter combined presentation | REAL_E2E_PASS | one scenario/run/bundle/RiskWindow/candidate identity；145 frames；12 routes |
+| D Winter Research View | REAL_E2E_PASS | Firefox；risk/hard/routes/ship/Run/Pause/layer selector |
+| Browser console/network | PASS | 0 errors；0 warnings；7 required resources HTTP 200 |
+| Navigation simulation | EXPERIMENTAL / REAL_E2E_PASS | 3,206 1-minute states；C selected route waypoint ETA projection |
+| Winter causal replay/replanning | NOT_IMPLEMENTED | 无同 identity manifest/snapshots/events；未伪造 |
+| A/B/C/contracts/frozen artifacts | PRESERVED | 本轮零修改、零重算 |
+
+当前 Viewer 已不再混用 Summer replay 与 Winter candidates。Orchestrator fail closed 绑定
+active DatasetBundle、RunContext、145-frame committed RiskWindow、C v3 plan set、12-route
+candidate sidecar 与 integrity evidence；D 再次校验 combined identity，并显式显示 scenario、
+DatasetBundle、RunContext、RiskWindow 与 assembly ID。航行时间线来自 C full-voyage
+recommended waypoint ETA，`source_replay=null`，因此该 milestone 证明 Winter research
+navigation simulation，不证明 Winter causal replay 或 dynamic replanning。
+
+Supporting evidence:
+
+- [Winter combined Viewer integration](../reports/research-validation/WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md)
+
+## D Research Visualization Phase 1 历史门槛（2026-08-23 16:59 +08:00）
+
+> 该表记录 Phase 1 结束时状态；当前 combined Browser 状态以上方最新里程碑为准。
 
 | Workstream | Current state | Evidence |
 |---|---|---|
@@ -228,7 +252,7 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 | Winter scenario configuration | IMPLEMENTED | CONFIG_VALIDATED | 144 h scenario; 12/12 source rows complete |
 | Winter DatasetBundle | IMPLEMENTED | FROZEN_ARTIFACT_READY | active bundle ID/digest/SHA frozen；minimum/requested horizon 均为 144 h |
 | Winter A→B handoff | IMPLEMENTED | READY_FOR_B_VALIDATION | RunContext/ExecutionSpec/schema/exact intake-only PASS |
-| Winter B RiskFrame / C/D artifact | B,C_IMPLEMENTED / D_NOT_IMPLEMENTED | B,C_FORMAL_VALIDATED / D_INTERFACE_READY | B 145 frames；C 12-route v3；D Winter Viewer 未开始 |
+| Winter B RiskFrame / C/D artifact | B,C,D_IMPLEMENTED | B,C_FORMAL_VALIDATED / D_REAL_E2E_PASS | B 145 frames；C 12-route v3；D combined Firefox PASS |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -254,17 +278,17 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 2. C→D 已发布一个真实 Winter 12-route candidate set；replay 的 19 个时间修订仍不是
    19 组候选。多 decision candidate-set timeline 尚未定义。
 3. 冬季场景、12 类 source rows、144 h minimum frozen bundle、matching
-   RunContext/ExecutionSpec、intake-only 与 B 首轮 145 帧 RiskFrame 已建立。下一缺口是
-   C Winter 12-route validation 已完成；下一缺口是 D Winter combined presentation artifact
-   与 Browser E2E。
+   RunContext/ExecutionSpec、B 145 帧 RiskFrame、C 12-route validation 与 D combined
+   Browser E2E 已建立。下一缺口是正式 Winter causal replay/replanning（若研究门槛需要）；
+   当前 3,206-state timeline 是 C waypoint ETA projection。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
    benchmark 中取得 14.77% median 收益。formal ingress/12-route promotion、共享搜索与
    incremental replanning 均未实现。
-6. D 已建立基础专业导航辅助层、Research View、candidate geometry 与四层三目标 compare；
-   Winter risk/route combined bundle、Browser E2E 与完整 provenance/uncertainty metadata
-   仍待实现。
+6. D 已建立基础专业导航辅助层、Research View、candidate geometry、四层三目标 compare
+   与 Winter combined Browser E2E；环境 contributor / per-cell uncertainty presentation
+   contract 仍待实现。
 
 详细依据见
 [RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。
@@ -274,7 +298,7 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| Winter A/B/C gate | C_FIRST_VALIDATION_COMPLETED / D_GATE_PENDING | formal identity、B 145 frames 与 C 12-route v3 PASS；下一步为 D Winter visualization |
+| Winter A/B/C/D gate | D_COMBINED_REAL_E2E_PASS | formal identity、B 145 frames、C 12-route v3 与 D Firefox PASS；causal replay 仍未实现 |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
 | C candidate presentation | CONTROLLED / INTERFACE_PASS | proposal accepted；真实 Winter sidecar PASS；frozen bundle fallback unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
