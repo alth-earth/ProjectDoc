@@ -96,18 +96,21 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 
 ## P4 D Professional Navigation Visualization（2026-08-21 23:18）
 
-状态：`FOUNDATION_BROWSER_E2E_PASS`。
+状态：`RESEARCH_PHASE_1_IMPLEMENTED / FALLBACK_BROWSER_E2E_PASS`。
 
-1. 接入真实 route candidate presentation contract，支持 layer/objective compare；空候选
-   继续明确 NOT_PUBLISHED。
-2. 增加 artifact identity、provenance、grid/resolution、data quality、uncertainty 和
-   comparison 视图；不以视觉插值掩盖缺测。
+1. 已接入真实 `presentation.route-candidates.v1`，支持四层 selector、三目标 compare、
+   canonical metrics、candidate geometry 与 display-only highlight；空候选继续明确
+   `SINGLE_ROUTE_FALLBACK`。
+2. 已增加 run/scenario、RiskFrame schema、grid/frame/candidate-set metadata；DatasetBundle
+   identity 等未发布字段明确显示 `not published`，不从私有 artifact 推断。
 3. 评估专业导航图层和环境 contributor，但只消费 Orchestrator 已发布数据。
-4. 保留 Presentation / Engineering Debug 双模式和单 Simulation Clock。
+4. 保留 Research Validation / Operational Replay / Engineering Debug 三态和单一
+   Simulation Clock。
 
 经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示和独立 layer
-toggle 已通过 Firefox。后续仍以真实 candidate/provenance/environment presentation
-contract 为前置条件。
+toggle 已通过 Firefox。Phase 1 的现有 frozen fallback 也已复测；下一 gate 是由
+Orchestrator 组装同一 Winter identity 的 combined risk/replay/candidate bundle，再执行
+Research View Browser E2E。不得把现有 Summer replay 与 Winter candidates 混装作为证据。
 
 ## 全局验收与资源规则（2026-08-21 23:18）
 

@@ -13,19 +13,19 @@ Last Verified: 2026-08-23
 
 # Winter Scenario Status
 
-## 当前判定（2026-08-23 10:20 +08:00）
+## 当前判定（2026-08-23 16:59 +08:00）
 
 ```text
 WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
 A_TO_B_FORMAL_HANDOFF = READY_FOR_B_VALIDATION
 B_WINTER_VALIDATION = COMPLETED
 C_WINTER_VALIDATION = COMPLETED
-D_WINTER_VISUALIZATION = NOT_STARTED
+D_WINTER_VISUALIZATION = PHASE_1_UNIT_PASS
 C_TO_D_ROUTE_INTERFACE = STABLE
 D_PARALLEL_DEVELOPMENT = READY
 ```
 
-## C First Route Validation（2026-08-23 10:20 +08:00）
+## C First Route Validation 与 D Phase 1（2026-08-23 16:59 +08:00）
 
 ```text
 WINTER_ROUTE_PLAN_SCHEMA = cd.four-layer-route-plan-set.v3
@@ -33,7 +33,9 @@ WINTER_ROUTE_COUNT = 12
 WINTER_ROUTE_INTEGRITY = 12_OF_12_PASS
 WINTER_ROUTE_DECISION_CHANGE_VS_SUMMER = OBSERVED
 ROUTE_CANDIDATE_SIDECAR = PUBLISHED
-WINTER_VIEWER = NOT_IMPLEMENTED
+WINTER_VIEWER = RESEARCH_PHASE_1_IMPLEMENTED
+WINTER_COMBINED_BUNDLE = NOT_IMPLEMENTED
+WINTER_RESEARCH_BROWSER_E2E = NOT_RUN
 ```
 
 Winter full-voyage recommended 为 921.379560 km / 53.405581 h；相对 Summer 48h
@@ -84,7 +86,7 @@ Supporting evidence:
 | B Winter RiskFrame | COMPLETED / AVAILABLE | 145 formal hourly `bc.risk-frame.v2`；schema/store/readback PASS |
 | C Winter route artifact | COMPLETED / AVAILABLE | formal v3 4×3=12；schema/codec/integrity PASS |
 | C→D route candidate interface | STABLE / AVAILABLE | real PUBLISHED sidecar；D metadata intake PASS |
-| D Winter visualization | NOT_STARTED | combined bundle、candidate map 与 Browser E2E 未运行 |
+| D Winter visualization | PHASE_1_UNIT_PASS | candidate map/4×3 compare 已实现；combined bundle 与 Winter Browser E2E 未运行 |
 
 这取代同一 current 文档中旧的 `9/12`、`READY_FOR_GENERATION`、
 `DatasetBundle NOT_IMPLEMENTED` 和 `BLOCKED_WITH_DECISION` 陈述。那些状态只属于早期

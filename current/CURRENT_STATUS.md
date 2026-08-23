@@ -13,6 +13,28 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
+## D Research Visualization Phase 1（2026-08-23 16:59 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| B→C interface | STABLE | `bc.risk-frame.v2` committed-window boundary；unknown fail closed |
+| C→Orchestrator interface | STABLE | real Winter `cd.four-layer-route-plan-set.v3`；4×3 atomic publication |
+| Orchestrator→D interface | STABLE | `presentation.route-candidates.v1` exact projection；no rerank/recompute |
+| D Research View | IMPLEMENTED / UNIT_PASS | 4 layer selector、3 objective compare、artifact metrics、candidate geometry |
+| Existing frozen Viewer fallback | BROWSER_E2E_PASS | Firefox；NOT_PUBLISHED → `SINGLE_ROUTE_FALLBACK`；console 0；required HTTP 200 |
+| Winter combined Viewer | NOT_IMPLEMENTED | 尚无同一 Winter identity 的 risk/replay/candidate combined bundle |
+
+D 现在只在完整、scenario-matched 的 12-route PUBLISHED package 下启用 Research View；
+用户 route selection 是 display-only highlight，不修改 C 的 `selected_candidate_id`。缺失
+sidecar、4×3 不完整、metrics/geometry 非法、hard violation 或 scenario mismatch 均 fail
+closed 回到现有 authoritative route。真实 Winter sidecar 的 metrics/identity 已由 78 项 D
+tests 验证；现有 48h frozen bundle 的 Operational Replay 由 Firefox 复测通过，但由于尚无
+Winter combined bundle，本轮不得声明 Winter Research Browser E2E。
+
+Supporting evidence:
+
+- [B/C/D interface status](../reports/research-validation/B_C_D_INTERFACE_STATUS.md)
+
 ## Winter C Validation 与 D 并行接口门禁（2026-08-23 10:20 +08:00）
 
 | Workstream | Current state | Evidence |
@@ -23,7 +45,7 @@ Last Verified: 2026-08-23
 | Winter route decision | OBSERVED_CHANGE | vs Summer authoritative initial：11/22 waypoint 不同，+11.658 km，+2.951 h |
 | C→D candidate sidecar | INTERFACE_PASS | `presentation.route-candidates.v1` PUBLISHED；12 candidates；fail-closed fallback preserved |
 | D parallel development | READY | D v3 loader 4 layers/12 plans；canonical risk metrics intake PASS |
-| D Winter visualization | NOT_STARTED | 尚未生成 combined bundle、candidate map 或 Browser E2E |
+| D Winter visualization | PHASE_1_UNIT_PASS | candidate map/compare 已实现；combined bundle 与 Winter Browser E2E 未完成 |
 
 本轮首次完成真实 Winter C formal v3 planning。推荐线为 921.379560 km、53.405581 h，
 avg/max risk 为 0.105651/0.189369。Summer Viewer 未发布 route-level risk metrics，故只对
@@ -240,8 +262,9 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
    benchmark 中取得 14.77% median 收益。formal ingress/12-route promotion、共享搜索与
    incremental replanning 均未实现。
-6. D 已建立基础专业导航辅助层并可消费 candidate metadata；地图 candidate geometry、
-   Winter risk/route combined bundle 与研究 provenance/uncertainty 交互仍待实现。
+6. D 已建立基础专业导航辅助层、Research View、candidate geometry 与四层三目标 compare；
+   Winter risk/route combined bundle、Browser E2E 与完整 provenance/uncertainty metadata
+   仍待实现。
 
 详细依据见
 [RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。
