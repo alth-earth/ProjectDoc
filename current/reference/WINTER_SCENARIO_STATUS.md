@@ -13,17 +13,41 @@ Last Verified: 2026-08-23
 
 # Winter Scenario Status
 
-## 当前判定（2026-08-23 02:44 +08:00）
+## 当前判定（2026-08-23 10:20 +08:00）
 
 ```text
 WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
 A_TO_B_FORMAL_HANDOFF = READY_FOR_B_VALIDATION
 B_WINTER_VALIDATION = COMPLETED
-C_WINTER_VALIDATION = NOT_STARTED
+C_WINTER_VALIDATION = COMPLETED
 D_WINTER_VISUALIZATION = NOT_STARTED
+C_TO_D_ROUTE_INTERFACE = STABLE
+D_PARALLEL_DEVELOPMENT = READY
 ```
 
-## B First Scientific Run（2026-08-23 02:44 +08:00）
+## C First Route Validation（2026-08-23 10:20 +08:00）
+
+```text
+WINTER_ROUTE_PLAN_SCHEMA = cd.four-layer-route-plan-set.v3
+WINTER_ROUTE_COUNT = 12
+WINTER_ROUTE_INTEGRITY = 12_OF_12_PASS
+WINTER_ROUTE_DECISION_CHANGE_VS_SUMMER = OBSERVED
+ROUTE_CANDIDATE_SIDECAR = PUBLISHED
+WINTER_VIEWER = NOT_IMPLEMENTED
+```
+
+Winter full-voyage recommended 为 921.379560 km / 53.405581 h；相对 Summer 48h
+authoritative initial recommended，11/22 waypoint 不同、距离 +11.658308 km、ETA
++2.951089 h。Summer route-level risk metrics 未发布，因此不作无来源数值比较。
+
+Supporting evidence:
+
+- [Winter C smoke](../../reports/research-validation/WINTER_C_SMOKE_REPORT.md)
+- [Winter C route validation](../../reports/research-validation/WINTER_C_ROUTE_VALIDATION_REPORT.md)
+- [D interface readiness](../../reports/research-validation/D_INTERFACE_READY_REPORT.md)
+- [Winter C final report](../../reports/research-validation/WINTER_C_VALIDATION_FINAL_REPORT.md)
+
+## B First Scientific Run（2026-08-23 02:44 +08:00；C 结果以上方最新门禁为准）
 
 ```text
 WINTER_RISKFRAME_AVAILABLE = YES
@@ -32,7 +56,7 @@ WINTER_RISKFRAME_FRAMES = 145
 WINTER_B_PROFILE = medium / 31x11
 SUMMER_WINTER_RISK_COMPARISON = AVAILABLE
 WINTER_ENVIRONMENT_TO_RISK_DISTRIBUTION_CHANGE = OBSERVED
-C_VALIDATION = NOT_STARTED
+C_VALIDATION = COMPLETED
 D_VALIDATION = NOT_STARTED
 ```
 
@@ -58,7 +82,9 @@ Supporting evidence:
 | `ExecutionSpec.v1` | PUBLISHED / PASS | strict existing schema; run/scenario/time aligned |
 | Orchestrator intake | INTAKE_ONLY_PASS | exact archive resolution; no B/C/D execution |
 | B Winter RiskFrame | COMPLETED / AVAILABLE | 145 formal hourly `bc.risk-frame.v2`；schema/store/readback PASS |
-| C/D Winter artifacts | NOT_STARTED | 本轮只完成 B；C/D 仍未执行 |
+| C Winter route artifact | COMPLETED / AVAILABLE | formal v3 4×3=12；schema/codec/integrity PASS |
+| C→D route candidate interface | STABLE / AVAILABLE | real PUBLISHED sidecar；D metadata intake PASS |
+| D Winter visualization | NOT_STARTED | combined bundle、candidate map 与 Browser E2E 未运行 |
 
 这取代同一 current 文档中旧的 `9/12`、`READY_FOR_GENERATION`、
 `DatasetBundle NOT_IMPLEMENTED` 和 `BLOCKED_WITH_DECISION` 陈述。那些状态只属于早期
@@ -120,7 +146,7 @@ intake 发现并修正 Orchestrator 额外的 cutoff equality 门禁，使其与
 Winter A 数据源迁移不改变 `DatasetBundle.v2` schema、canonical variables、units 或
 fail-closed 语义。B 不得扫描 A 私有 cache；D 不得读取 A/B/C 私有数据。
 
-## 接口稳定性（2026-08-22 22:24 +08:00）
+## 接口稳定性（2026-08-23 10:20 +08:00）
 
 ```text
 DatasetBundle.v2
@@ -132,7 +158,9 @@ DatasetBundle.v2
 
 其中 `cd.route-plan.v3` 是 four-layer v3 集合内的单路线 schema，不是 ExecutionSpec 的
 顶层 planning contract。当前 Replay Viewer 消费 `replay.viewer-bundle.v1`，不直接读取
-four-layer aggregate；候选路线仍为 `NOT_PUBLISHED`。
+four-layer aggregate；Orchestrator 已可选投影 `presentation.route-candidates.v1`。既有
+frozen Viewer bundle 仍为 `NOT_PUBLISHED`，新的 Winter sidecar 为 `PUBLISHED`，两者均
+符合 fail-closed 分支。
 
 现有 `orchestrator.execution-spec.v1` 是严格 schema，不包含 bundle SHA、Git commit、
 B config path 或 C config path。不得为 Winter 临时追加字段：
@@ -142,14 +170,14 @@ B config path 或 C config path。不得为 Winter 临时追加字段：
 - B config 由正式 CLI `--b-config` 显式选择，当前仍待批准；
 - C config root 由 CLI 显式传入，默认 planner 语义不变。
 
-## 下一门槛（2026-08-23 02:44 +08:00）
+## 下一门槛（2026-08-23 10:20 +08:00）
 
-Winter B 首轮 RiskFrame 与分布审计已完成。下一轮启动 Winter C consumer smoke：
+Winter B 风险与 C 路线验证已完成。下一轮启动 Winter D Research Visualization：
 
-1. 复核 `bc.risk-frame.v2` committed window、unknown/hard gate 和 `DATA_UNAVAILABLE` 空间位置；
-2. 由 C 使用精确 committed window 做最小 route/integrity smoke；
-3. 对比 Summer/Winter route success、ETA、speed factor 和 risk exposure；
-4. C 通过后再开放 D Winter artifact/presentation 消费。
+1. 组合同一 Winter scenario 的 RiskFrame presentation 与 12-route candidate sidecar；
+2. 地图显示 candidate geometry，但不得改变 C route、ETA、ranking 或 risk metrics；
+3. 保持 `DATA_UNAVAILABLE` 独立 fail closed；
+4. 完成 Browser E2E 后再更新 `D_WINTER_VISUALIZATION`。
 
 详细证据见：
 

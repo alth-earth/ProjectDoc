@@ -1,13 +1,13 @@
 ---
-Overall Status: DRAFT
+Overall Status: ACTIVE
 Content Status:
   - COMPLETED
   - PLANNED
 Document Role: CANONICAL
 Scope: backward-compatible publication of real C layered route candidates to D
-Canonical/Supporting: Canonical proposal only; not an approved or implemented contract change
+Canonical/Supporting: Canonical accepted backward-compatible presentation extension
 Branch: research-validation-system
-Last Verified: 2026-08-22
+Last Verified: 2026-08-23
 ---
 
 # 航线展示契约提案
@@ -17,13 +17,25 @@ Last Verified: 2026-08-22
 | 字段 | 值 |
 |---|---|
 | 提案 | `RVS-RCP-001` |
-| 状态 | `DRAFT / PLANNED` |
+| 状态 | `ACCEPTED / IMPLEMENTED / INTERFACE_VALIDATED` |
 | 语义负责人 | 航线候选归属 C；展示投影归属 Orchestrator |
 | 消费方负责人 | D |
 | 目标包 | 在 `replay.viewer-bundle.v1` 内增量新增 `presentation.route-candidates.v1` |
 | 既有模式版本 | 保持不变 |
 
-本提案不授权实施。当前 Viewer 真值仍为 `status=NOT_PUBLISHED`、`candidates=[]`。
+本提案已于 2026-08-23 由本轮主代理按用户授权实施并完成 producer/consumer 验收。
+既有 frozen Viewer bundle 继续保持 `status=NOT_PUBLISHED`、`candidates=[]`；新的 Winter
+sidecar 为真实 12-route `PUBLISHED`。实施未修改 C route schema 或 Viewer bundle version。
+
+## 实施结果（2026-08-23 10:20 +08:00）
+
+- Orchestrator projector 严格复制完整 `cd.four-layer-route-plan-set.v3`，部分集合拒绝；
+- schema 明确 `PUBLISHED` 12-route 与 `NOT_PUBLISHED` empty 两个分支；
+- `selected_candidate_id` 固定引用 C full-voyage recommended，不在 Orchestrator/D 排名；
+- `integrated_risk` 名称在实施时收敛为带单位的 `integrated_risk_hours`；
+- replay exporter 接受可选 sidecar 并拒绝 scenario mismatch；
+- D 已消费 selected identity 与 canonical avg/max risk metrics；地图 candidate layer 仍为后续 D 工作；
+- 真实 Winter sidecar schema PASS，D static v3 loader 4 layers / 12 plans PASS。
 
 ## 当前能力与缺口（2026-08-22 01:11 +08:00）
 
@@ -31,7 +43,7 @@ C 已验证 `cd.four-layer-route-plan-set.v3`：四层 × 三目标，原子完�
 
 缺失的能力是 C→Orchestrator→D 的展示投影。这不是 C 缺少候选的证据，D 也不得臆造或排序候选。
 
-## 拟议的可选包（2026-08-22 01:11 +08:00）
+## 已实施的可选包（2026-08-23 10:20 +08:00）
 
 ```json
 {
@@ -54,7 +66,7 @@ C 已验证 `cd.four-layer-route-plan-set.v3`：四层 × 三目标，原子完�
       "risk_metrics": {
         "average_risk": 0,
         "maximum_risk": 0,
-        "integrated_risk": 0,
+        "integrated_risk_hours": 0,
         "minimum_confidence": 0,
         "hard_violation_count": 0
       },
@@ -89,4 +101,5 @@ C 已验证 `cd.four-layer-route-plan-set.v3`：四层 × 三目标，原子完�
 - selected/recommended 区别显式，且绝不在 D 中计算；
 - 聚焦真实制品集成，将投影值与源 C JSON 比对；
 - 冻结的 Viewer bundle 与当前单航线重放回归保持绿色；
-- C、Orchestrator、D 负责人在状态由 DRAFT 变更前批准。
+- C、Orchestrator、D 的 producer/consumer 验收在状态转为
+  `ACCEPTED / IMPLEMENTED / INTERFACE_VALIDATED` 前通过。

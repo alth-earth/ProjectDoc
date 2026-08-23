@@ -21,15 +21,17 @@ identity，不覆盖 RC1/RC2/demo frozen artifact。
 
 ## P0 接口冻结与多人开发门禁（2026-08-21 23:18）
 
-状态：`REGISTRY_BASELINE_COMPLETED`。Ownership registry、change-proposal
-template 和 development ownership 已建立；具体 breaking proposal 仍需逐项审批。
+状态：`REGISTRY_BASELINE_COMPLETED / ROUTE_CANDIDATE_EXTENSION_ACCEPTED`。Ownership
+registry、change-proposal template 和 development ownership 已建立；
+`presentation.route-candidates.v1` 已通过真实 Winter 12-route producer/consumer 验收，
+其他 breaking proposal 仍需逐项审批。
 
 1. 建立 A→B、B→C、C route plan、C→D candidate presentation、Viewer bundle
    的 ownership/version/producer/consumer registry。
 2. 把既有接口标为 `FROZEN_COMPATIBLE`，把 proposed extension 标为
    `DRAFT`；禁止直接改旧 schema 的既有字段语义。
-3. 审批已建立的 `presentation.route-candidates` backward-compatible proposal，明确
-   planning layer、objective、geometry、metrics、selection 和 provenance。
+3. `presentation.route-candidates.v1` backward-compatible proposal 已实施并验收：明确
+   planning layer、objective、geometry、metrics、selection、provenance 与空包 fallback。
 4. 建立 B Adaptive Grid proposal 的 compatibility gate：grid identity、parent
    mapping、C regular-grid 可消费性和 fail-closed 重采样证据。
 5. 多人协作时每个 owner 只改自己的 producer 和 tests；消费者先接受旧版和新
@@ -38,9 +40,9 @@ template 和 development ownership 已建立；具体 breaking proposal 仍需�
 退出条件：接口 registry 经 A/B/C/D/Orchestrator owner 审阅；proposal 有 schema、
 fixtures、compatibility tests 和 rollback path。
 
-## P1 Winter Scenario（2026-08-23 01:16 +08:00；B 首轮结果同步于 2026-08-23 02:44 +08:00）
+## P1 Winter Scenario（2026-08-23 10:20 +08:00）
 
-状态：`B_FIRST_VALIDATION_COMPLETED / C_GATE_PENDING`。
+状态：`C_FIRST_VALIDATION_COMPLETED / D_GATE_PENDING`。
 
 1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
@@ -53,10 +55,13 @@ fixtures、compatibility tests 和 rollback path。
    `max(issue_time) <= as_of_time`；仍 fail closed，未改变 records 或 schema。
 5. B 首轮已在 medium 显式 grid/model config 上生成 145 个 formal hourly RiskFrame，并完成
    unknown/hard 与 Summer/Winter 分布审计；不改 risk formula 或 level policy。
-6. C/D 只在本轮 B 输出经过 consumer acceptance 后接入；当前仍未运行。
+6. C 已消费精确 committed window，发布 4 层 × 3 目标的 12-route v3 artifact；
+   endpoint、schema、codec 与 12-route integrity 全部 PASS。
+7. C→D candidate sidecar 已通过 schema 与真实 artifact consumer 验收；D Winter combined
+   bundle、地图 candidate layer 与 Browser E2E 尚未执行。
 
-P1 formal handoff 与 B 首轮风险分布门槛已满足。下一 gate：Winter C route/integrity
-consumer smoke；D artifact presentation 继续依赖 C 的真实上游产物。
+P1 formal handoff、B 风险分布与 C 路线门槛均已满足。下一 gate：Winter D research
+visualization，使用已冻结 RiskFrame、C v3 与 route-candidates sidecar，不重算上游语义。
 
 ## P2 B Adaptive Grid（2026-08-21 23:18）
 

@@ -13,6 +13,31 @@ Last Verified: 2026-08-23
 
 # Research Validation System Current Status
 
+## Winter C Validation 与 D 并行接口门禁（2026-08-23 10:20 +08:00）
+
+| Workstream | Current state | Evidence |
+|---|---|---|
+| A/B frozen inputs | PRESERVED | bundle、RunContext、ExecutionSpec、145-frame RiskWindow identity unchanged |
+| C Winter consumer | PASS | exact committed window、formal provenance、31×11 endpoint mapping |
+| C Winter validation | COMPLETED / EXPERIMENTAL | `cd.four-layer-route-plan-set.v3`；4×3=12；integrity 12/12 PASS |
+| Winter route decision | OBSERVED_CHANGE | vs Summer authoritative initial：11/22 waypoint 不同，+11.658 km，+2.951 h |
+| C→D candidate sidecar | INTERFACE_PASS | `presentation.route-candidates.v1` PUBLISHED；12 candidates；fail-closed fallback preserved |
+| D parallel development | READY | D v3 loader 4 layers/12 plans；canonical risk metrics intake PASS |
+| D Winter visualization | NOT_STARTED | 尚未生成 combined bundle、candidate map 或 Browser E2E |
+
+本轮首次完成真实 Winter C formal v3 planning。推荐线为 921.379560 km、53.405581 h，
+avg/max risk 为 0.105651/0.189369。Summer Viewer 未发布 route-level risk metrics，故只对
+有证据的 geometry/distance/ETA 做比较；不补造 Summer 风险数值，也不把观察性差异写成
+已隔离的季节因果。
+
+Supporting evidence:
+
+- [Winter C smoke](../reports/research-validation/WINTER_C_SMOKE_REPORT.md)
+- [Winter C route validation](../reports/research-validation/WINTER_C_ROUTE_VALIDATION_REPORT.md)
+- [D interface readiness](../reports/research-validation/D_INTERFACE_READY_REPORT.md)
+- [Winter data availability follow-up](../reports/research-validation/WINTER_DATA_AVAILABILITY_FOLLOWUP.md)
+- [Winter C final report](../reports/research-validation/WINTER_C_VALIDATION_FINAL_REPORT.md)
+
 ## Winter B First Scientific Run（2026-08-23 02:44 +08:00）
 
 | Workstream | Current state | Evidence |
@@ -177,11 +202,11 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 | C causal replay planning | IMPLEMENTED | AUTHORITATIVE_PASS | 12h determinism inherited；48h product artifact verified |
 | D presentation Viewer | IMPLEMENTED | BROWSER_E2E_PASS | Firefox；单 Simulation Clock；artifact driven |
 | 48h replay Viewer | IMPLEMENTED | BROWSER_E2E_PASS | 49 snapshots、2881 minute states、49 risk frames |
-| C route candidates in replay Viewer | NOT_IMPLEMENTED | NOT_PUBLISHED | bundle 明确 `status=NOT_PUBLISHED`, `candidates=[]` |
+| C route candidates presentation | IMPLEMENTED | INTERFACE_PASS | real Winter 12-route sidecar PUBLISHED；既有 frozen Viewer bundle 仍保持 NOT_PUBLISHED |
 | Winter scenario configuration | IMPLEMENTED | CONFIG_VALIDATED | 144 h scenario; 12/12 source rows complete |
 | Winter DatasetBundle | IMPLEMENTED | FROZEN_ARTIFACT_READY | active bundle ID/digest/SHA frozen；minimum/requested horizon 均为 144 h |
 | Winter A→B handoff | IMPLEMENTED | READY_FOR_B_VALIDATION | RunContext/ExecutionSpec/schema/exact intake-only PASS |
-| Winter B RiskFrame / C/D artifact | B_IMPLEMENTED / C,D_NOT_IMPLEMENTED | B_FORMAL_VALIDATED / C,D_NOT_STARTED | B 首轮 145 帧已发布到独立 runtime store；C/D 仍待后续门禁 |
+| Winter B RiskFrame / C/D artifact | B,C_IMPLEMENTED / D_NOT_IMPLEMENTED | B,C_FORMAL_VALIDATED / D_INTERFACE_READY | B 145 frames；C 12-route v3；D Winter Viewer 未开始 |
 | B fixed-grid experiment harness | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | formal builder comparison completed; output remains unpublished |
 | C component profiler / BC benchmark | IMPLEMENTED | UNIT_PASS / EXPERIMENTAL_REAL_DATA | real B frames and real C search; committed ingress not exercised |
 | D professional navigation aids | IMPLEMENTED | BROWSER_E2E_PASS | bundle metadata only; canonical transform/aspect preserved |
@@ -204,18 +229,19 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 
 1. Contract ownership registry 已建立；尚待各 owner 对未来 candidate/adaptive
    proposal 逐项审批，registry 本身不等于 proposal 批准。
-2. C 已有 12-route 输出，但 replay export 没有发布候选 geometry/metrics；不能把
-   19 个时间修订版误称为 19 个候选。
+2. C→D 已发布一个真实 Winter 12-route candidate set；replay 的 19 个时间修订仍不是
+   19 组候选。多 decision candidate-set timeline 尚未定义。
 3. 冬季场景、12 类 source rows、144 h minimum frozen bundle、matching
    RunContext/ExecutionSpec、intake-only 与 B 首轮 145 帧 RiskFrame 已建立。下一缺口是
-   C Winter consumer smoke；D 仍等待 C 的真实 route artifact。
+   C Winter 12-route validation 已完成；下一缺口是 D Winter combined presentation artifact
+   与 Browser E2E。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
    benchmark 中取得 14.77% median 收益。formal ingress/12-route promotion、共享搜索与
    incremental replanning 均未实现。
-6. D 已建立基础专业导航辅助层；route candidate compare 与研究 provenance/
-   uncertainty 交互仍取决于真实 presentation contract。
+6. D 已建立基础专业导航辅助层并可消费 candidate metadata；地图 candidate geometry、
+   Winter risk/route combined bundle 与研究 provenance/uncertainty 交互仍待实现。
 
 详细依据见
 [RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。
@@ -225,9 +251,9 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 | Risk | State | Handling |
 |---|---|---|
 | 多人并行前 contract 所有权不清 | CONTROLLED | registry/template/目录 ownership 已建立；breaking proposal 仍需 owner approval |
-| Winter identity / B gate | B_FIRST_VALIDATION_COMPLETED / C_GATE_PENDING | formal identity、exact intake 与 B 145-frame RiskFrame PASS；下一步为 C consumer smoke |
+| Winter A/B/C gate | C_FIRST_VALIDATION_COMPLETED / D_GATE_PENDING | formal identity、B 145 frames 与 C 12-route v3 PASS；下一步为 D Winter visualization |
 | B grid policy 与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | formal bounded build/C comparison complete for baseline+medium; fine needs explicit budget |
-| C candidate 未投影到 replay bundle | DRAFT / PLANNED | proposal exists; current NOT_PUBLISHED semantics unchanged |
+| C candidate presentation | CONTROLLED / INTERFACE_PASS | proposal accepted；真实 Winter sidecar PASS；frozen bundle fallback unchanged |
 | 当前 demo baseline 回退 | CONTROLLED | frozen branch/artifact 不改；研究 artifact 使用新 identity |
 | B Murmansk default-grid integration expectation | OPEN FINDING | 未筛选 B suite 在 allowed-region endpoint mapping 失败；不在本轮改配置语义 |
 

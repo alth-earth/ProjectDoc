@@ -41,13 +41,20 @@ Last Verified: 2026-08-23
 | RC1 (main branch) | [frozen/rc1-main/](frozen/rc1-main/) |
 | RC2 (rc2-development branch) | [frozen/rc2-rc2-development/](frozen/rc2-rc2-development/) |
 
-## Research Validation Supporting Reports（2026-08-21 23:18）
+## Research Validation Supporting Reports（2026-08-23 10:20 +08:00）
 
 The audit and kickoff reports under `reports/research-validation/` support the
 current canonical documents; they are not parallel sources of project truth.
 
 Latest Winter gate evidence:
-[WINTER_FORMAL_HANDOFF_REPORT.md](reports/research-validation/WINTER_FORMAL_HANDOFF_REPORT.md).
+[WINTER_C_VALIDATION_FINAL_REPORT.md](reports/research-validation/WINTER_C_VALIDATION_FINAL_REPORT.md).
+
+Latest Winter C and D-interface evidence:
+
+- [WINTER_C_SMOKE_REPORT.md](reports/research-validation/WINTER_C_SMOKE_REPORT.md)
+- [WINTER_C_ROUTE_VALIDATION_REPORT.md](reports/research-validation/WINTER_C_ROUTE_VALIDATION_REPORT.md)
+- [D_INTERFACE_READY_REPORT.md](reports/research-validation/D_INTERFACE_READY_REPORT.md)
+- [WINTER_DATA_AVAILABILITY_FOLLOWUP.md](reports/research-validation/WINTER_DATA_AVAILABILITY_FOLLOWUP.md)
 
 Latest Winter B validation evidence:
 
