@@ -241,7 +241,7 @@ Orchestrator 导出、冻结构件或 48 小时回放。
 | `demo-engineering` | 竞赛演示基线 | FROZEN |
 | `research-validation-system` | 研究验证增强 | ACTIVE |
 
-`/root/my_project` 是多个仓库的工作区，当前没有 root Git。各子仓库分别维护自己的
+`${ARCTIC_ROUTE_ROOT}` 是多个仓库的工作区，当前没有 root Git。各子仓库分别维护自己的
 `research-validation-system` 分支。
 
 ## 当前真实架构（2026-08-21 23:18）

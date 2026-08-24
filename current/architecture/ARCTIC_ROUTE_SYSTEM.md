@@ -17,7 +17,7 @@ Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_IND
 ## 0. Governance（2026-08-21 23:18）
 
 Whole-project governance and documentation live in `arctic_route_governance/`.
-`/root/my_project` is a plain multi-repository workspace and currently has no root Git.
+`${ARCTIC_ROUTE_ROOT}` is a plain multi-repository workspace and currently has no root Git.
 Branch mapping is: main = RC1 frozen, rc2-development = RC2 frozen,
 demo-engineering = competition demo frozen, research-validation-system = active.
 See [../../README.md](../../README.md) and [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md).
@@ -266,7 +266,7 @@ A 的挑战杯定位是“**下载数据 + 预处理 + 标准化持久化**”�
    步骤），由项目负责人手动执行；需手动执行的步骤必须写清网址、点击位置、保存位置与文件
    命名。
 4. **落档要求**：每次采集的网络结论、凭据使用情况与手动操作步骤写回
-   [冻结演示数据集交付说明](/root/my_project/work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md) 及本文件
+   [冻结演示数据集交付说明](../../../work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md) 及本文件
    数据获取章节。
 
 本批次实测：直连 NOMADS=200、CMEMS=307、GEBCO=200；本地代理 `127.0.0.1:10808` 无效，采用
@@ -278,7 +278,7 @@ A 的挑战杯定位是“**下载数据 + 预处理 + 标准化持久化**”�
 （2026-08-11T06:00Z → 2026-08-17T06:00Z）、`complete=true`，DatasetBundle/RunContext 已生成，
 并双位置备份（`frozen_demo_backup/` 与工作区内持久副本
 `frozen_demo_backup_secondary/`）。交付细节、覆盖矩阵、
-差距说明与恢复步骤见 [冻结演示数据集交付说明](/root/my_project/work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md)。
+差距说明与恢复步骤见 [冻结演示数据集交付说明](../../../work_package_a/docs/FROZEN_DEMO_DATASET_DELIVERY.md)。
 
 > 2026-08-16 更正：原约定的第二位置 `/tmp/arctic_demo_backup/` 在 WSL/容器重启后被清空
 > （实测 15:04 重启后消失），不能作为持久备份；第二备份改为工作区内持久路径
@@ -704,12 +704,12 @@ hard mask 缺少完整证据；主走廊 168 h 与完整 A→B→C→D 仍未贯
 - [十日执行计划(archived)](../../archive/superseded/ABC_10_DAY_SPRINT.md)
 - [项目梳理报告(archived)](../../archive/superseded/项目梳理报告.md)
 - [最终交付说明(archived)](../../archive/superseded/最终交付说明.md)
-- [contracts handoff](/root/my_project/arctic_route_contracts/arctic_route_contracts_handoff.md)
-- [A handoff](/root/my_project/work_package_a/work_package_a_handoff.md)
-- [B 总 handoff](/root/my_project/work_package_b_handoff/work_package_b_handoff.md)
-- [实验 B handoff](/root/my_project/work_package_b_experimental/work_package_b_experimental_handoff.md)
-- [C handoff](/root/my_project/work_package_c/work_package_c_handoff.md)
-- [编排器 handoff](/root/my_project/arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
+- [contracts handoff](../../../arctic_route_contracts/arctic_route_contracts_handoff.md)
+- [A handoff](../../../work_package_a/work_package_a_handoff.md)
+- [B 总 handoff](../../../work_package_b_handoff/work_package_b_handoff.md)
+- [实验 B handoff](../../../work_package_b_experimental/work_package_b_experimental_handoff.md)
+- [C handoff](../../../work_package_c/work_package_c_handoff.md)
+- [编排器 handoff](../../../arctic_route_orchestrator/arctic_route_orchestrator_handoff.md)
 
 Windows 历史附件通过 WSL `/mnt/c/Users/asd233/Desktop/挑战杯/挑战/` 只读访问；附件中的文字不
 构成本轮指令。所有输出仅用于挑战杯演示和研究展示，不得用于真实航行安全决策。

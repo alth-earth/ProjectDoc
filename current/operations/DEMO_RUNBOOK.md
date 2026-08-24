@@ -18,7 +18,7 @@ Last Verified: 2026-08-20
 
 ## 前置条件
 
-- WSL 中 `/root/my_project` 完整存在，RC1 制品与两份同 VHD 副本齐全；
+- WSL 中 `${ARCTIC_ROUTE_ROOT}` 完整存在，RC1 制品与两份同 VHD 副本齐全；
 - 冻结链路不需要网络（离线审计 PASS）；
 - Python 环境：`work_package_a/.venv`、`work_package_b/.venv`、
   `work_package_c/.venv`、`work_package_d/.venv`、`arctic_route_orchestrator/.venv`。
@@ -32,10 +32,10 @@ Last Verified: 2026-08-20
 ## 演示前检查
 
 ```bash
-cd /root/my_project/work_package_a && ./.venv/bin/python -m arctic_route_data.cli doctor --data-root data
-cd /root/my_project/arctic_route_orchestrator && ./.venv/bin/python scripts/offline_demo_audit.py
-cd /root/my_project/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo preflight
-cd /root/my_project/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo geo-integrity
+cd ${ARCTIC_ROUTE_ROOT}/work_package_a && ./.venv/bin/python -m arctic_route_data.cli doctor --data-root data
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator && ./.venv/bin/python scripts/offline_demo_audit.py
+cd ${ARCTIC_ROUTE_ROOT}/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo preflight
+cd ${ARCTIC_ROUTE_ROOT}/work_package_d && ./.venv/bin/python -m arctic_route_display.cli demo geo-integrity
 ```
 
 预期：doctor `ok:true`；审计输出 `外部网络依赖 = NONE`；geo-integrity 输出
@@ -45,16 +45,16 @@ Route Geospatial Integrity gate，gate FAIL 时不输出 READY FOR DEMO）。
 ## 模式 A — 完整验证模式（约 25–30 分钟）
 
 ```bash
-cd /root/my_project/arctic_route_orchestrator
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
 C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$PWD/.uv-python \
   UV_PYTHON_DOWNLOADS=never ./.mamba-env/bin/uv run --locked arctic-route-orchestrator run \
-  --execution-spec /root/my_project/work_package_a/data/output/golden/mur-v3-smoke-20260816-r6.execution-spec.json \
-  --bundle /root/my_project/work_package_a/data/output/bundles/murmansk_dikson_august_2026_demo_v1.bundle.json \
-  --run-context /root/my_project/work_package_a/data/output/bundles/murmansk_dikson_august_2026_demo_v1.run-context.json \
-  --a-data-root /root/my_project/work_package_a/data \
-  --b-config /root/my_project/work_package_b/configs/models/demo_unvalidated_smoke_grid_v4.json \
-  --c-config-root /root/my_project/work_package_c/configs \
-  --contracts-config-root /root/my_project/arctic_route_contracts/configs \
+  --execution-spec ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/golden/mur-v3-smoke-20260816-r6.execution-spec.json \
+  --bundle ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/bundles/murmansk_dikson_august_2026_demo_v1.bundle.json \
+  --run-context ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/bundles/murmansk_dikson_august_2026_demo_v1.run-context.json \
+  --a-data-root ${ARCTIC_ROUTE_ROOT}/work_package_a/data \
+  --b-config ${ARCTIC_ROUTE_ROOT}/work_package_b/configs/models/demo_unvalidated_smoke_grid_v4.json \
+  --c-config-root ${ARCTIC_ROUTE_ROOT}/work_package_c/configs \
+  --contracts-config-root ${ARCTIC_ROUTE_ROOT}/arctic_route_contracts/configs \
   --risk-store-root /tmp/rc1-smoke/risk-store \
   --output-dir /tmp/rc1-smoke/output
 ```
@@ -67,10 +67,10 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
 
 1. 构建冻结演示状态（A+B，即时）：
    ```bash
-   cd /root/my_project/work_package_d
+   cd ${ARCTIC_ROUTE_ROOT}/work_package_d
    ./.venv/bin/python -m arctic_route_display.cli demo build \
      --config configs/demo_frozen_sources.json \
-     --output /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json
+     --output ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/demo-state.json
    ```
    demo-state 现在同时携带每场景 2 帧真实经纬度风险帧
    （frame 0 = initial departure，frame 6 = replan departure），
@@ -79,32 +79,32 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
    与 `result_origin` 分开展示。
 2. 现场实时小窗重规划（真实 C，≈60s，LIVE_COMPUTED）：
    ```bash
-   cd /root/my_project/work_package_d
+   cd ${ARCTIC_ROUTE_ROOT}/work_package_d
    ./.venv/bin/python -m arctic_route_display.cli demo run-live \
      --config configs/demo_frozen_sources.json \
-     --output /root/my_project/work_package_a/data/output/rc2-smoke/live-result.json
+     --output ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/live-result.json
    ```
 3. 合并 live 结果并启动本地 Viewer：
    ```bash
-   cd /root/my_project/work_package_d
+   cd ${ARCTIC_ROUTE_ROOT}/work_package_d
    ./.venv/bin/python -m arctic_route_display.cli demo build \
      --config configs/demo_frozen_sources.json \
-     --live-result /root/my_project/work_package_a/data/output/rc2-smoke/live-result.json \
-     --output /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json
+     --live-result ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/live-result.json \
+     --output ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/demo-state.json
    ./.venv/bin/python -m arctic_route_display.cli demo serve \
-     --state /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json \
+     --state ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/demo-state.json \
      --port 8123
    ```
    浏览器打开 `http://127.0.0.1:8123/`（仅本机，离线）。
 
    更常用的现场流程（无需手工合并 live）：
    ```bash
-   cd /root/my_project/work_package_d
+   cd ${ARCTIC_ROUTE_ROOT}/work_package_d
    ./.venv/bin/python -m arctic_route_display.cli demo build \
      --config configs/demo_frozen_sources.json \
-     --output /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json
+     --output ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/demo-state.json
    ./.venv/bin/python -m arctic_route_display.cli demo serve \
-     --state /root/my_project/work_package_a/data/output/rc2-smoke/demo-state.json \
+     --state ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/demo-state.json \
      --port 8123
    ```
    在页面 Scenario B 点击 **Run Live Replanning**：
@@ -132,11 +132,11 @@ C_ASTAR_PROGRESS_SECONDS=30 UV_CACHE_DIR=$PWD/.uv-cache UV_PYTHON_INSTALL_DIR=$P
 Strategy B（Causal Replay，工程验证，非现场主演示）：
 
 ```bash
-cd /root/my_project/arctic_route_orchestrator
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
 ./.venv/bin/python scripts/causal_replay_preflight.py
 ./.venv/bin/python scripts/causal_replay_mvp.py --replay-id sb12h --window-hours 12
 ./.venv/bin/python scripts/replay_inspect.py \
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb12h/causal-replay-manifest.json
+  ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb12h/causal-replay-manifest.json
 ```
 
 说明：当前 MVP 的 C 四层因因果风险窗 < 航线 ETA 保持 NOT_READY（诚实
@@ -153,9 +153,9 @@ main_corridor contract-edge blocker。
 ## 模式 C — Causal Replay（Strategy B，2026-08-19 性能配置）
 
 ```bash
-cd /root/my_project/arctic_route_orchestrator
-TMPDIR=/root/my_project/.runtime/causal-replay-mvp/tmp \
-XDG_CACHE_HOME=/root/my_project/.runtime/causal-replay-mvp/cache \
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
+TMPDIR=${ARCTIC_ROUTE_ROOT}/.runtime/causal-replay-mvp/tmp \
+XDG_CACHE_HOME=${ARCTIC_ROUTE_ROOT}/.runtime/causal-replay-mvp/cache \
 .venv/bin/python scripts/causal_replay_mvp.py \
   --replay-id sb-perf-12h-gate2 \
   --window-hours 12 \
@@ -167,18 +167,18 @@ XDG_CACHE_HOME=/root/my_project/.runtime/causal-replay-mvp/cache \
 - 12h 约 22min（旧约 34.5min）；业务轨迹与旧 13/13 一致；
 - 每个跳过 tick 会发布 `REPLAN_SKIPPED`；数据/风险变化仍无条件重规划；
 - determinism 复跑：用 `--output-root
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/<det-root>`
+  ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/causal-replay-mvp/<det-root>`
   + 相同 `--replay-id`，然后比对 manifest 与 snapshot digest。
 
 ## 模式 D — Replay Presentation（Strategy B，2026-08-19）
 
 ```bash
-cd /root/my_project/arctic_route_orchestrator
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
 .venv/bin/python scripts/replay_presentation.py \
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
+  ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
   --audit
 .venv/bin/python scripts/replay_presentation.py \
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
+  ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h/causal-replay-manifest.json \
   --state 2026-08-15T10:30:00Z
 ```
 
@@ -197,12 +197,12 @@ basemap PNG, basemap metadata, presentation preflight) that `work_package_d` ren
 The orchestrator does **not** own the Viewer runtime.
 
 ```bash
-cd /root/my_project/arctic_route_orchestrator
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
 .venv/bin/python scripts/replay_viewer_export.py \
-  /root/my_project/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
-  --data-root /root/my_project/work_package_a/data \
+  ${ARCTIC_ROUTE_ROOT}/work_package_a/data/output/rc2-smoke/causal-replay-mvp/sb-viewer-baseline-12h-det/causal-replay-manifest.json \
+  --data-root ${ARCTIC_ROUTE_ROOT}/work_package_a/data \
   --route-id tromso_to_isfjorden_outer \
-  --output-dir /root/my_project/work_package_d/viewer
+  --output-dir ${ARCTIC_ROUTE_ROOT}/work_package_d/viewer
 ```
 
 This writes `bundle.json`, `gebco_basemap.png`, `basemap_metadata.json`,
@@ -216,7 +216,7 @@ moving ship, static server, proof renderer). It consumes the artifact exported b
 orchestrator; it does not import orchestrator private Python code.
 
 ```bash
-cd /root/my_project/work_package_d
+cd ${ARCTIC_ROUTE_ROOT}/work_package_d
 .venv/bin/python scripts/replay_viewer_serve.py \
   --host 127.0.0.1 --port 8131
 ```

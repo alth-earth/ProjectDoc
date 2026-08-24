@@ -38,7 +38,7 @@ Last Verified: 2026-08-20
 3. 必要时恢复 contracts/配置。
 4. 运行 doctor：
    ```bash
-   cd /root/my_project/work_package_a
+   cd ${ARCTIC_ROUTE_ROOT}/work_package_a
    ./.venv/bin/python -m arctic_route_data.cli doctor --data-root <恢复后的根目录>
    ```
    预期 `ok:true`。
@@ -83,7 +83,7 @@ git status                 # 确认 working tree 预期
 
 ### 真实恢复记录（本工程已验证）
 
-- 根仓库 `/root/my_project` 的 `.git` 曾丢失；通过**此前制作的 exact-copy 副本**恢复：
+- 根仓库 `${ARCTIC_ROUTE_ROOT}` 的 `.git` 曾丢失；通过**此前制作的 exact-copy 副本**恢复：
   `cp -a` 回 `.git` 后 `git fsck --full` PASS、bundle `verify` PASS、完整 history 保留。
 - 经验：**destructive 操作前必须同时具备 filesystem copy 与 bundle 两套证据**，
   且 bundle 在恢复前要用 `git bundle verify` 确认自包含可用。
@@ -98,5 +98,5 @@ history。优先：
 3. 若需彻底回到迁移前状态且尚未 push，可用 `git reset --hard <pre-migration>`——
    **但本工程禁止对 root recovery repo 与已 push 的 governance history 做此操作**。
 
-> 根仓库 `/root/my_project/.git` 在本轮治理中**刻意保留**作为 recovery / historical
+> 根仓库 `${ARCTIC_ROUTE_ROOT}/.git` 在本轮治理中**刻意保留**作为 recovery / historical
 > safety source，不删除、不重置、不重写。最终 retirement 由人工审核后另行执行。
