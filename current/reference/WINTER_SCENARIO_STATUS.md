@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: winter research scenario configuration, data readiness, identity gate, and downstream acceptance
 Canonical For: current Winter capability, artifact identity, blockers, and next gate
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-08-26
 ---
 
 # Winter Scenario Status
@@ -26,6 +26,35 @@ D_PARALLEL_DEVELOPMENT = READY
 WINTER_COMBINED_PRESENTATION = REAL_E2E_PASS
 WINTER_CAUSAL_REPLAY = NOT_IMPLEMENTED
 ```
+
+## 最新严寒验证与数据源状态（2026-08-26 02:20 +08:00）
+
+- 2026-02-22～02-28 holdout 已使用 Copernicus TOPAZ `originalGrid` 含潮总流完成 A→B→C
+  隔离闭环：A 145 条 total/tide-included current records；B `FORMAL_VALIDATED`、145 帧；C
+  四层三目标 12/12 routes、地理完整性 PASS。结果只写实验目录，不代表生产发布。
+- TOPAZ 原生曲线网格已在 B 增加显式极地立体投影适配；未知投影、单位或轴不满足时仍
+  fail-closed，未改变 RiskFrame、风险公式、C/D 合约。
+- 2026-03-22～03-28 development window 已完成第二个独立严寒样本，复用已有冰浓度/冰厚/
+  波浪筛选数据；GFS 历史直链 404 已留存，气象三要素转用批准的 CARRA winter fallback。A 形成
+  145 条 total/tide-included current records，B/C 在隔离目录完成 145 帧与 12/12 routes。
+  含潮总流继续使用 total-only 硬门禁，detided 不得进入 formal bundle。
+- C P2.1 M2 冻结结论仍为 `FAIL`（单元回归 `5.94% > 5%`），candidate 默认关闭；P3、
+  2.2.2、P5 未启动。本轮严寒实验范围内的 detided 旧 payload 和派生 bundle 已由
+  `/root/my_project/.runtime/experiments/detided-retirement-20260826/cleanup-ledger-v2.json`
+  精确退役（4359 文件、1448 条 manifest rows、1,318,695,475 bytes），冻结备份仅作历史保护。
+
+## Development 严寒窗口收口（2026-08-26 03:51 +08:00）
+
+- development v2 bundle 为 `a-bundle-6fb64bb7470bd026bc9b97ea`，bundle digest
+  `6fb64bb7470bd026bc9b97eaa25f4294bfc5c34350afb2b561d4af3d442d214c`，RunContext
+  `run-6f82124f-8548-4153-b006-6c0a6d6130d1`；A 最终 1212 条记录、145 条 total current，B
+  `FORMAL_VALIDATED`，C 12/12 routes 与 integrity `PASS`。
+- B risk content digest 为 `bdfd7964df96ffcad7dd78d9830394a0a91d7fbbfde16c0649d2ba2fb68a00ab`；C
+  planning/total wall 为 `341.991636/344.788310 s`，peak RSS `200840 KiB`。所有结果只写隔离
+  实验目录，不代表 production publication。
+- P2.1 development shadow 仅 2 次交替筛选：总体 median 改善 `47.339%`、RSS ratio `1.032486`，
+  但 executable fastest/low-risk 筛选回归约 `5.36%/6.42%`，故 screening `FAIL`，M2
+  `NOT_EVALUATED_INSUFFICIENT_REPETITIONS`；不改变正式 M2 `FAIL` 或 candidate 默认关闭状态。
 
 ## Winter Combined Research Viewer（2026-08-23 20:14 +08:00）
 
@@ -169,7 +198,7 @@ intake 发现并修正 Orchestrator 额外的 cutoff equality 门禁，使其与
 |---|---|---|
 | wind / temperature / visibility | C3S/ECMWF CARRA East domain | 49 three-hourly records each through 21T00Z |
 | wave | Copernicus global wave | 49 three-hourly records in frozen window |
-| current / water level | Copernicus Arctic PHY | 145 hourly records each; current uses labelled detided fallback |
+| current / water level | Copernicus Arctic PHY | 当前两个严寒窗口各 145 条 hourly records；current 为 `originalGrid` total-only，detided 仅为历史强制后备且已退役 |
 | sea ice concentration/drift/thickness/type/edge | Copernicus/neXtSIM-derived | 145 hourly records each |
 | land/sea mask | GEBCO-derived static mask | static; `1=sea`, `0=land_or_coast` |
 
