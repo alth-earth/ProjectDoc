@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: whole-project governance + documentation
 Canonical For: project entry point
 Branch: research-validation-system
-Last Verified: 2026-08-24
+Last Verified: 2026-08-30
 ---
 
 # Arctic Route 治理仓库
@@ -94,7 +94,7 @@ JSON/PNG 构件——它从不导入 Orchestrator 的私有 Python 模块。
 | 恢复？ | `current/operations/RECOVERY_RUNBOOK.md` |
 | 技术债？ | `current/reference/TECH_DEBT.md` |
 | 时间模型？ | `current/reference/TIME_MODEL_QUICK_REFERENCE.md` |
-| 治理标准？ | `standards/ENGINEERING_GOVERNANCE_STANDARD.md` |
+| 文档与工程报告治理标准？ | `standards/AGENT_DOCUMENTATION_RULES.md` |
 | RC1 冻结文档？ | `frozen/rc1-main/` |
 | RC2 冻结文档？ | `frozen/rc2-rc2-development/` |
 | 历史报告？ | `reports/` |
@@ -103,7 +103,7 @@ JSON/PNG 构件——它从不导入 Orchestrator 的私有 Python 模块。
 
 ## 文档治理规则
 
-所有文档工作必须遵循 [`standards/ENGINEERING_GOVERNANCE_STANDARD.md`](standards/ENGINEERING_GOVERNANCE_STANDARD.md)。
+所有文档工作与工程运行报告必须遵循 [`standards/AGENT_DOCUMENTATION_RULES.md`](standards/AGENT_DOCUMENTATION_RULES.md)。
 关键规则：
 
 - **SSOT**：每个事实领域恰好只有一份规范文档。
@@ -112,7 +112,8 @@ JSON/PNG 构件——它从不导入 Orchestrator 的私有 Python 模块。
 - **归档三步法**：归档前先回填 → 比对 → 收敛。
 - **历史报告**：永不改写为"看起来是当前"；如需修正则加修正说明。
 - **新标题**：携带真实时间戳，如 `### X.Y 标题（YYYY-MM-DD HH:MM +08:00）`。
-- **状态分类**：ACTIVE_CANONICAL / ACTIVE_SUPPORTING / FROZEN_RC1 / FROZEN_RC2 / HISTORICAL_REPORT / SUPERSEDED / DEPRECATED / ARCHIVED / LOCAL_ONLY。
+- **状态分类**：分开记录文件生命周期（`Overall Status`）、事实角色（`Document Role`）、内容状态（`Content Status`）与验证成熟度。
+- **工程报告**：固定保留 15 个区块、关键增量表、声明矩阵与验证成熟度；未运行项必须如实说明。
 
 ## 新 Agent 快速上手
 

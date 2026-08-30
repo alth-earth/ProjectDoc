@@ -1,6 +1,21 @@
-# 项目文档治理规则（AI Agent 执行规范）
+---
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
+Scope: engineering governance + documentation rules + engineering run report standard
+Canonical For: how AI Agents write, organize, verify, and report engineering work
+Branch: research-validation-system
+Last Verified: 2026-08-30
+Supersedes: ../archive/superseded/ENGINEERING_GOVERNANCE_STANDARD.md
+Related Canonical Docs:
+  - ../DOCUMENTATION_INDEX.md
+---
 
-> 本规范用于约束 AI Agent 在软件项目开发过程中，对 Markdown、设计文档、架构文档、状态文档、计划文档、测试文档、报告、ADR（Architecture Decision Record）等工程文档进行创建、修改、维护、重构和归档时的行为。
+# 项目文档与工程报告治理规则（AI Agent 执行规范）
+
+> 本规范用于约束 AI Agent 在软件项目开发过程中，对 Markdown、设计文档、架构文档、状态文档、计划文档、测试文档、报告、ADR（Architecture Decision Record）等工程文档进行创建、修改、维护、重构和归档时的行为，同时规定工程运行结束时的验证与报告方式。
 >
 > 核心目标：
 >
@@ -8,6 +23,7 @@
 > * 保证代码、架构、测试、数据、计划与文档长期同步。
 > * 避免重复文档、信息漂移和 AI 随意创建大量 Markdown 文件。
 > * 保留历史演化轨迹，但避免历史文档干扰当前工程维护。
+> * 用可复现证据区分“已实现”“测试通过”“真实端到端通过”“权威基线”和“冻结基线”，禁止只报告“完成”。
 
 ---
 
@@ -400,9 +416,11 @@ Production Phase
 
 ---
 
-# Step 2：补全（Completeness Restoration）
+# Step 2：比对与补全（Compare and Completeness Restoration）
 
 规则：
+
+逐项比对旧文档与当前文档，确认仍然唯一有效的信息、结论和证据都已有明确去向。
 
 如果：
 
@@ -464,72 +482,156 @@ Archived Document
 
 ---
 
-# 七、文档状态管理规范
+# 七、文档状态、角色与元数据管理规范
 
-禁止通过复制文件表达状态。
+## 7.1 三类状态必须分开（2026-08-30 20:07 +08:00）
+
+文档的生命周期、文档在事实体系中的角色、文档内部工作项的完成情况是三个不同维度，禁止混用。
+
+### 生命周期状态：Overall Status（2026-08-30 20:07 +08:00）
+
+`Overall Status` 描述文件本身是否仍处于当前维护路径，不表示文件内每个事项都已经完成。
+
+| Overall Status | 含义 |
+| --- | --- |
+| `ACTIVE` | 当前阶段持续维护 |
+| `FROZEN` | 已冻结的基线，只能通过显式基线变更流程修改 |
+| `ARCHIVED` | 作为历史证据保留，不属于当前事实路径 |
+| `DEPRECATED` | 为审计保留，但不得继续遵循其指导内容 |
+| `SUPERSEDED` | 已由明确指定的当前文档取代 |
+| `DRAFT` | 正在编写，尚未成为权威来源 |
+
+### 文档角色：Document Role（2026-08-30 20:07 +08:00）
+
+| Document Role | 含义 |
+| --- | --- |
+| `CANONICAL` | 所声明事实领域的 SSOT |
+| `SUPPORTING` | 当前证据或细节，必须从属于一份规范文档 |
+| `HISTORICAL` | 过往轮次证据，不是当前项目事实 |
+| `LOCAL` | 操作员专用内容，通常由 `.gitignore` 排除 |
+
+### 内容状态：Content Status（2026-08-30 20:07 +08:00）
+
+`Content Status` 可以包含一个或多个值：
+
+```text
+COMPLETED
+FROZEN
+IN_PROGRESS
+PLANNED
+BLOCKED
+DEPRECATED
+ARCHIVED
+```
+
+这些值不互斥。例如，一份冻结文件可以同时记录已完成事项与冻结时仍未完成的事项。
+`IMPLEMENTED`、`UNIT_PASS`、`REAL_E2E_PASS` 等属于验证成熟度，不属于文档元数据；
+`PARTIAL`、`EXPERIMENTAL`、`CANCELLED` 等工作项状态可以出现在章节或能力表中，但不得替代 `Overall Status`。
+
+## 7.2 重要文档的元数据横幅（2026-08-30 20:07 +08:00）
+
+每份重要的当前文档顶部必须包含 YAML 元数据块：
+
+```yaml
+---
+Overall Status: ACTIVE
+Content Status:
+  - COMPLETED
+  - IN_PROGRESS
+Document Role: CANONICAL
+Scope: what the document covers
+Canonical For: what question this answers
+Branch: research-validation-system
+Last Verified: YYYY-MM-DD
+Supersedes: optional
+Related Canonical Docs: optional
+---
+```
+
+冻结文档使用：
+
+```yaml
+---
+Overall Status: FROZEN
+Content Status:
+  - COMPLETED
+  - FROZEN
+Document Role: HISTORICAL
+Branch: main or rc2-development
+Frozen At: YYYY-MM-DD
+Canonical Current State: NO
+---
+```
+
+历史报告使用：
+
+```yaml
+---
+Overall Status: ARCHIVED
+Content Status:
+  - COMPLETED
+  - ARCHIVED
+Document Role: HISTORICAL
+Canonical Current State: NO
+Superseded Claim: optional old claim
+Corrected By: link to canonical correction
+---
+```
+
+字段值必须描述真实状态；不得为了“看起来规范”把未验证文档标成 `COMPLETED`，也不得把历史报告标成当前规范来源。
+
+## 7.3 状态不通过复制文件表达（2026-08-30 20:07 +08:00）
 
 错误：
 
-```
+```text
 plan_v1.md
-
 plan_v2.md
-
 plan_final.md
-
 plan_final_new.md
 ```
 
 正确：
 
-```
+```text
 plan.md
 ```
 
-使用状态标记：
-
-```
-【日期 | 状态】
-```
-
-例如：
-
-```
-【2026-08-22 | ACTIVE】
-
-【2026-08-22 | COMPLETED】
-
-【2026-08-22 | FROZEN】
-
-【2026-08-22 | PARTIAL】
-
-【2026-08-22 | BLOCKED】
-
-【2026-08-22 | DEPRECATED】
-
-【2026-08-22 | SUPERSEDED】
-
-【2026-08-22 | EXPERIMENTAL】
-
-【2026-08-22 | CANCELLED】
-```
+在同一规范文档中维护元数据、章节状态和真实验证证据。只有第五章所列生命周期变化满足时，才允许建立替代文档并归档旧文档。
 
 ---
 
 # 八、标题与章节状态规范
 
-重要阶段、任务节点、小节建议：
+## 8.1 新增标题使用真实时间戳（2026-08-30 20:07 +08:00）
+
+每个新增的二级或更深层级标题必须携带真实的分钟级时间戳，并包含时区：
+
+```markdown
+## 标题（YYYY-MM-DD HH:MM +08:00）
+### 子标题（YYYY-MM-DD HH:MM +08:00）
+```
+
+通过以下命令取得真实系统时间：
+
+```bash
+date '+%Y-%m-%d %H:%M %z'
+```
+
+禁止为了满足格式而批量重打旧标题的时间戳。旧标题维持其历史状态；只给本轮真正新增的标题加本轮时间。
+
+## 8.2 章节工作项状态（2026-08-30 20:07 +08:00）
+
+重要阶段或任务节点需要表达工作项状态时，可以使用：
 
 ```
-## 【日期 | 状态】
+## 【日期 | 状态】标题（YYYY-MM-DD HH:MM +08:00）
 ```
 
 例如：
 
 ```
-## 【2026-08-22 | COMPLETED】
-
-### Replay Engine MVP
+## 【2026-08-22 | COMPLETED】Replay Engine MVP（2026-08-22 16:30 +08:00）
 ```
 
 章节内容：
@@ -548,6 +650,8 @@ plan.md
 遗留：
 
 * ...
+
+章节状态描述局部工作项，不替代第七章的文件级 `Overall Status`、`Document Role` 和 `Content Status`。
 
 ---
 
@@ -603,6 +707,29 @@ AI建议
 ---
 
 # 十、单一事实来源（SSOT）
+
+## 10.1 本仓库事实领域映射（2026-08-30 20:07 +08:00）
+
+本仓库的具体导航以 [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) 为准。以下领域只允许一份规范来源：
+
+| 事实领域 | 规范来源 |
+| --- | --- |
+| 当前状态 | `current/CURRENT_STATUS.md` |
+| 路线图 | `current/CURRENT_ROADMAP.md` |
+| 系统架构 | `current/architecture/ARCTIC_ROUTE_SYSTEM.md` |
+| 回放架构 | `current/architecture/SIMULATION_REPLAY_ARCHITECTURE.md` |
+| 时间模型 | `current/reference/TIME_MODEL_QUICK_REFERENCE.md` |
+| 演示操作 | `current/operations/DEMO_RUNBOOK.md` |
+| 恢复操作 | `current/operations/RECOVERY_RUNBOOK.md` |
+| 技术债 | `current/reference/TECH_DEBT.md` |
+| 文档与工程报告治理 | 本文件 |
+| RC1 冻结证据 | `frozen/rc1-main/` |
+| RC2 冻结证据 | `frozen/rc2-rc2-development/` |
+| 历史运行与审计证据 | `reports/` |
+
+其他文档只能保留必要摘要并链接到对应规范来源，不能复制其完整事实后形成平行维护入口。
+
+## 10.2 重复事实的收敛方式（2026-08-30 20:07 +08:00）
 
 如果多个文档存在相同信息：
 
@@ -744,6 +871,15 @@ Historical Record
 * 原始决策；
 * 替代原因。
 
+历史报告必须保留撰写时的知识状态，禁止把正文静默改写成“看起来像当前”。如果后续证据推翻旧声明：
+
+1. 在历史报告顶部添加第 7.2 节规定的修正元数据；
+2. 在当前规范文档中写入正确结论；
+3. 用 `Superseded Claim` 和 `Corrected By` 建立可追踪关系；
+4. 在本轮工程报告的“意外发现 / 修正”中公开记录变化。
+
+归档前必须完成第六章的回填、补全和收敛。归档不是删除仍然有效的信息。
+
 示例：
 
 文件：
@@ -755,15 +891,17 @@ archive/
 
 顶部：
 
-```
-Status:
-SUPERSEDED
-
-Replaced by:
-docs/design/C_algorithm.md
-
-Reason:
-Architecture changed from static A* to time-dependent A*
+```yaml
+---
+Overall Status: SUPERSEDED
+Content Status:
+  - COMPLETED
+  - ARCHIVED
+Document Role: HISTORICAL
+Canonical Current State: NO
+Corrected By: docs/design/C_algorithm.md
+Reason: Architecture changed from static A* to time-dependent A*
+---
 ```
 
 ---
@@ -937,7 +1075,180 @@ STATUS.md
 
 ---
 
-# 十六、最终行为准则
+## Step 6：新鲜度与链接审计（2026-08-30 20:07 +08:00）
+
+交付前必须检查：
+
+* 当前文档没有已知过时声明；
+* 当前事实没有重复规范来源；
+* 重要活跃文档具备真实元数据横幅；
+* 本轮新增标题具有真实时间戳，旧标题未被批量重打时间；
+* 移动、重命名或替代文件后，仓库内旧路径引用已经更新；
+* 规范链接失效数为 0；
+* 文档中记录的测试、构件、提交与当前证据一致。
+
+写文档前应阅读本规范与 [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md)；移动文件后必须在整个仓库中搜索旧路径，并更新所有当前引用。
+
+---
+
+# 十六、工程运行报告标准
+
+工程运行报告必须让读者快速回答：本轮从哪里开始、改了什么及原因、业务语义如何变化、性能如何变化、有哪些意外发现、证据与验证成熟度是什么、哪些没有做、Git 到哪里、下一轮做什么。
+
+禁止只写“完成”。下面 15 个区块必须按顺序出现；某区块不适用时保留区块名，并填写 `N/A` 或 `NOT RUN` 及原因，不得整块删除。
+
+## 16.1 十五个固定区块（2026-08-30 20:07 +08:00）
+
+1. **执行摘要**：本轮目标、最终 verdict、最重要结果、是否存在 blocker；顶部必须同时包含第十七章的关键增量表与声明矩阵。
+2. **范围 / 非范围**：明确本轮做了什么和没有做什么，防止范围膨胀与错误声明。
+3. **起始基线**：起始 HEAD、起始构件、之前的权威指标、已知限制。
+4. **Git 最终状态**：用表格记录仓库、分支、起始 HEAD、结束 HEAD、origin 跟踪、领先 / 落后、工作树、提交、推送状态。
+5. **文件系统与资源安全**：记录允许根目录外的写入、`free -h` 前值、最低 `MemAvailable`、swap 前值 / 峰值 / 后值、峰值 RSS、OOM、重型任务是否重叠；没有重型任务时明确写 `N/A`。
+6. **代码 / 架构变更**：不能只列文件；每项说明组件、旧行为、新行为和原因。
+7. **语义 / 合约变更**：说明哪些业务语义变化、哪些未变化、兼容性与失败关闭；例如 `REPLAN_DECIDED != REPLAN_ADOPTED`、`pending route != authoritative route`、`snapshot cadence != vessel render cadence`。
+8. **实验 / 备选方案**：记录尝试、结果、采用或未采用及原因，避免下一轮重复踩旧路。
+9. **权威运行 / 真实验证**：如适用，记录 `replay_id`、scenario、window、configuration、duration、关键计数器与 result；未运行时写 `NOT RUN` 及原因。
+10. **性能分解**：即使性能不是主目标，也记录 Before、After、Delta、预期 / 非预期；为获得正确语义而发生的退步必须标为 `EXPECTED REGRESSION` 并解释原因。
+11. **正确性 / 验证**：按适用性列出 unit、integration、smoke、real-data、route integrity、L1、L2、manifest、snapshot、fail-closed。
+12. **确定性 / 可复现性**：明确 `RUN`、`NOT RUN` 或 `INHERITED`，说明哪些 digest 必须一致、哪些 wall-clock 字段允许变化；不得用旧版本确定性结果冒充当前版本。
+13. **构件 / 溯源**：记录构件名称或路径、源数据身份、digest、ignored / tracked 状态与溯源。
+14. **已知限制 / 技术债**：建议使用 `TD-ID / impact / severity / next action`；功能 PASS 不能隐藏限制。
+15. **决策 / 下一阶段**：说明项目状态变化、下一里程碑、推荐下一轮与明确不要做的事项。
+
+## 16.2 适用性与证据边界（2026-08-30 20:07 +08:00）
+
+固定结构不等于强迫运行与任务无关的重型验证。Agent 必须如实区分：
+
+* `RUN`：本轮实际运行并取得新证据；
+* `NOT RUN`：本轮未运行，并说明范围、资源或风险原因；
+* `INHERITED`：继承旧证据，必须给出来源与版本边界，不得表述为本轮验证；
+* `N/A`：该项对本轮任务确实不适用，并说明判断依据。
+
+报告中的 PASS 只能覆盖证据实际证明的范围，不能从单元测试外推到真实数据端到端，也不能从真实端到端外推到冻结基线。
+
+---
+
+# 十七、报告核心证据结构
+
+## 17.1 关键增量表（2026-08-30 20:07 +08:00）
+
+报告顶部必须给出 Before / After 对比；不能只报 After。至少使用以下字段：
+
+| 指标 / 声明 | Before | After | Delta | Verdict / 原因 |
+| --- | --- | --- | --- | --- |
+| 示例：12 小时运行时长 | 21.8m | 34.1m | +12.3m | `EXPECTED REGRESSION`：语义修正成本 |
+| 示例：延期的真实 E2E | `NOT PROVEN` | `PASS` | 新增证据 | `IMPROVED` |
+
+无法取得可比基线时写 `UNKNOWN`，并解释原因，禁止用空值或模糊措辞掩盖缺失。
+
+## 17.2 声明矩阵（2026-08-30 20:07 +08:00）
+
+每项核心声明必须同时给出：
+
+| 声明 | 状态 | 验证等级 | 证据 | 备注 / 限制 |
+| --- | --- | --- | --- | --- |
+| 船舶连续移动 | `PASS` | `REAL_E2E_PASS` | 12 小时查看器基线 | 示例 |
+| 中边延迟采用 | `PASS` | `AUTHORITATIVE_PASS` | rev2–rev5 | 示例 |
+| 最终查看器 | `NOT STARTED` | `NOT_IMPLEMENTED` | - | 示例 |
+
+声明矩阵必须把“结论”“证据等级”和“限制”分开，不能用一个 `accepted` 同时代表候选生成、决策、采用和发布。
+
+## 17.3 验证成熟度（2026-08-30 20:07 +08:00）
+
+验证成熟度按以下顺序递增：
+
+```text
+NOT_IMPLEMENTED
+IMPLEMENTED
+UNIT_PASS
+SMOKE_PASS
+REAL_E2E_PASS
+AUTHORITATIVE_PASS
+FROZEN_BASELINE
+```
+
+| 等级 | 定义 |
+| --- | --- |
+| `NOT_IMPLEMENTED` | 无代码、无实现 |
+| `IMPLEMENTED` | 代码或工具存在，尚无通过验证 |
+| `UNIT_PASS` | 自动化单元测试通过 |
+| `SMOKE_PASS` | 合成数据或小窗真实数据的短链冒烟通过 |
+| `REAL_E2E_PASS` | 真实数据端到端通过 |
+| `AUTHORITATIVE_PASS` | 权威运行或权威构件复现通过 |
+| `FROZEN_BASELINE` | 已冻结并具有防回退约束 |
+
+必须始终保持以下边界：
+
+```text
+unit test PASS != real-data E2E PASS
+real E2E PASS != authoritative baseline
+authoritative PASS != frozen baseline
+```
+
+---
+
+# 十八、意外发现、修正与术语
+
+## 18.1 意外发现 / 修正（2026-08-30 20:07 +08:00）
+
+工程运行报告固定包含 `Unexpected Findings / Corrections`；没有发现时写 `NONE`。发现旧报告或旧假设不准确时，必须记录：
+
+```text
+旧声明
+新证据
+修正后的声明
+受影响的文档 / 代码
+```
+
+不得在事后静默改掉旧结论而不留下修正记录。历史正文的处理遵循第十二章。
+
+## 18.2 术语必须对应真实状态转换（2026-08-30 20:07 +08:00）
+
+禁止含糊使用单一 `accepted`。在适用的规划 / 回放报告中，应区分：
+
+```text
+candidate_generated
+candidate_rejected
+replan_decided
+pending_adoption
+replan_adopted
+```
+
+推荐分别报告：
+
+```text
+C candidates generated
+C candidates rejected
+pre-gate skipped
+replan decisions
+replans adopted in window
+pending at replay end
+```
+
+其他领域也必须采用同一原则：术语应对应可观测的状态或事件，不得用模糊成功词汇跨越中间状态。
+
+---
+
+# 十九、交付前统一审计
+
+## 19.1 最小检查清单（2026-08-30 20:07 +08:00）
+
+文档或工程任务交付前，至少完成：
+
+1. 元数据与生命周期状态真实；
+2. 新信息位于正确的语义章节；
+3. 当前事实只有一个规范来源；
+4. 归档、冻结和历史报告没有被改写成当前事实；
+5. 链接与移动后的路径有效；
+6. 代码、合约、数据、测试、性能、状态与文档互相一致；
+7. 新标题时间戳真实，旧标题没有被批量重打时间；
+8. 报告 15 区块完整，`N/A`、`NOT RUN`、`INHERITED` 均有理由；
+9. 关键声明有证据、成熟度和限制；
+10. Git、构件、digest、推送状态和未执行事项如实报告。
+
+---
+
+# 二十、最终行为准则
 
 AI Agent 必须遵守：
 
@@ -956,5 +1267,12 @@ AI Agent 必须遵守：
 13. 不允许形成多个事实来源。
 14. 代码变化必须同步检查文档。
 15. 重要架构和技术决策必须记录 ADR。
+16. 重要当前文档必须使用真实的元数据横幅。
+17. 新增标题必须使用真实分钟级时间戳，旧标题不得批量重打时间。
+18. 工程运行报告必须保留 15 个固定区块，并如实标记未运行项。
+19. 核心声明必须给出 Before / After、验证成熟度、证据与限制。
+20. 单元测试、真实 E2E、权威运行和冻结基线不得相互冒充。
+21. 发现错误必须留下修正记录，不得静默改写历史证据。
+22. 移动或替代文件后必须更新引用并完成链接审计。
 
 ---

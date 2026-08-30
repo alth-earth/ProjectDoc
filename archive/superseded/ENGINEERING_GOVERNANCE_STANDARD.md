@@ -1,14 +1,19 @@
 ---
-Overall Status: ACTIVE
+Overall Status: ARCHIVED
 Content Status:
   - COMPLETED
-  - IN_PROGRESS
-Document Role: CANONICAL
-Scope: engineering governance + documentation rules + report standard
-Canonical For: how to write, organize, and report documentation
-Branch: research-validation-system
-Last Verified: 2026-08-21
+  - ARCHIVED
+Document Role: HISTORICAL
+Canonical Current State: NO
+Superseded By: ../../standards/AGENT_DOCUMENTATION_RULES.md
+Archived At: 2026-08-30
 ---
+
+> **归档说明（2026-08-30）**
+>
+> 本文件的文档治理与工程运行报告规则已完整整合到
+> [`AGENT_DOCUMENTATION_RULES.md`](../../standards/AGENT_DOCUMENTATION_RULES.md)。
+> 本文件保留原正文用于历史审计，不再是当前规范来源，也不得继续作为执行入口。
 
 # 工程治理标准
 

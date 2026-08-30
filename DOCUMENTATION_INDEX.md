@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: documentation navigation map
 Canonical For: which document to trust for each question
 Branch: research-validation-system
-Last Verified: 2026-08-24
+Last Verified: 2026-08-30
 ---
 
 # 文档索引
@@ -36,8 +36,7 @@ Last Verified: 2026-08-24
 | 合约变更提案模板？ | [standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md](standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md) |
 | 冬季场景就绪状态？ | [current/reference/WINTER_SCENARIO_STATUS.md](current/reference/WINTER_SCENARIO_STATUS.md) |
 | 时间模型？ | [current/reference/TIME_MODEL_QUICK_REFERENCE.md](current/reference/TIME_MODEL_QUICK_REFERENCE.md) |
-| 工程治理 / 报告规则？ | [standards/ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md) |
-| AI 文档写作规则？ | [standards/AGENT_DOCUMENTATION_RULES.md](standards/AGENT_DOCUMENTATION_RULES.md) |
+| 文档治理 / AI 写作 / 工程报告规则？ | [standards/AGENT_DOCUMENTATION_RULES.md](standards/AGENT_DOCUMENTATION_RULES.md) |
 
 ## 二、当前提案（current/proposals/）
 
@@ -54,9 +53,8 @@ Last Verified: 2026-08-24
 
 | 文档 | 角色 |
 |------|------|
-| [ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md) | 工程治理标准：文档治理 + 运行报告标准（15 区块） |
 | [CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md](standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md) | 跨包合约变更提案强制模板 |
-| [AGENT_DOCUMENTATION_RULES.md](standards/AGENT_DOCUMENTATION_RULES.md) | AI/Agent 文档协作规则 |
+| [AGENT_DOCUMENTATION_RULES.md](standards/AGENT_DOCUMENTATION_RULES.md) | 文档治理、AI/Agent 协作与工程运行报告的统一规范 |
 
 ## 四、冻结基线（frozen/，历史基线，勿修改）
 
@@ -216,6 +214,7 @@ Last Verified: 2026-08-24
 | 类别 | 位置 | 说明 |
 |----------|----------|------|
 | 被取代（旧计划等） | [archive/superseded/](archive/superseded/) | 旧冲刺计划、演示状态、交付说明等 |
+| 已整合的旧工程治理标准 | [archive/superseded/ENGINEERING_GOVERNANCE_STANDARD.md](archive/superseded/ENGINEERING_GOVERNANCE_STANDARD.md) | 已整合进统一规范，仅作历史审计 |
 | 治理前归档 | [archive/pre-governance/](archive/pre-governance/) | 治理建立前的系统文档快照 |
 | 已废弃 | [archive/deprecated/](archive/deprecated/README.md) | 当前 N/A |
 | 归档映射与比对表 | [archive/归档文件映射表与全量比对表.md](archive/归档文件映射表与全量比对表.md) | 归档文件映射与全量比对 |
@@ -255,5 +254,5 @@ Last Verified: 2026-08-24
 ## 快速入口
 
 - 新人先读：[README.md](README.md) → 本文档 → [current/CURRENT_STATUS.md](current/CURRENT_STATUS.md) → [current/CURRENT_ROADMAP.md](current/CURRENT_ROADMAP.md)。
-- 写文档前先读：[standards/ENGINEERING_GOVERNANCE_STANDARD.md](standards/ENGINEERING_GOVERNANCE_STANDARD.md)。
+- 写文档或提交工程运行报告前先读：[standards/AGENT_DOCUMENTATION_RULES.md](standards/AGENT_DOCUMENTATION_RULES.md)。
 - 跨包合约变更：[standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md](standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md)。

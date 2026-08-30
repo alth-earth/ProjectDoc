@@ -8,9 +8,8 @@ Canonical For: 哪些 C/D 产物属于当前真相路径，哪些可以安全移
 Branch: research-validation-system
 Last Verified: 2026-08-24
 Related Canonical Docs:
-  - ../standards/ENGINEERING_GOVERNANCE_STANDARD.md
-  - ../standards/AGENT_DOCUMENTATION_RULES.md
-  - ../standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md
+  - ../../standards/AGENT_DOCUMENTATION_RULES.md
+  - ../../standards/CONTRACT_CHANGE_PROPOSAL_TEMPLATE.md
   - ../../../work_package_c/docs/CD_CONTRACT.md
   - ../../../work_package_c/docs/BC_CONTRACT.md
   - ../../../work_package_d/README.md
