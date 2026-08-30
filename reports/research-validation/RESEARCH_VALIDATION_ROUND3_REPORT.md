@@ -75,7 +75,7 @@ Committed-window ingress, all three objectives, four layers, replan windows and
 hard/unavailable fixtures remain promotion gates.
 
 Detailed evidence:
-[C_RISK_SAMPLE_CACHE_EXPERIMENT.md](../../../work_package_c/C_RISK_SAMPLE_CACHE_EXPERIMENT.md).
+[C_RISK_SAMPLE_CACHE_EXPERIMENT.md](../../../work_package_c/docs/archive/performance/C_RISK_SAMPLE_CACHE_EXPERIMENT.md).
 
 ## B-C joint conclusion（2026-08-22 02:34 +08:00）
 
