@@ -4,10 +4,11 @@ Content Status:
   - COMPLETED
   - IN_PROGRESS
 Document Role: CANONICAL
+Applicability: CURRENT
 Scope: engineering governance + documentation rules + engineering run report standard
 Canonical For: how AI Agents write, organize, verify, and report engineering work
 Branch: research-validation-system
-Last Verified: 2026-08-30
+Last Verified: 2026-08-30 21:47 +08:00
 Supersedes: ../archive/superseded/ENGINEERING_GOVERNANCE_STANDARD.md
 Related Canonical Docs:
   - ../DOCUMENTATION_INDEX.md
@@ -484,9 +485,17 @@ Archived Document
 
 # 七、文档状态、角色与元数据管理规范
 
-## 7.1 三类状态必须分开（2026-08-30 20:07 +08:00）
+## 7.1 四类元数据必须分开（2026-08-30 21:47 +08:00）
 
-文档的生命周期、文档在事实体系中的角色、文档内部工作项的完成情况是三个不同维度，禁止混用。
+文档的生命周期、文档在事实体系中的角色、文档内部工作项的完成情况，以及文档当前允许怎样被
+使用，是四个不同维度，禁止混用：
+
+| 维度 | 回答的问题 |
+| --- | --- |
+| `Overall Status` | 文件本身处于什么生命周期，是否仍在维护路径中 |
+| `Document Role` | 文件在事实体系中具有什么权威性 |
+| `Content Status` | 文件内工作项分别处于什么进展状态 |
+| `Applicability` | 文件内容当前允许在哪一种使用范围内生效 |
 
 ### 生命周期状态：Overall Status（2026-08-30 20:07 +08:00）
 
@@ -512,21 +521,74 @@ Archived Document
 
 ### 内容状态：Content Status（2026-08-30 20:07 +08:00）
 
-`Content Status` 可以包含一个或多个值：
+`Content Status` 是文件内部工作项状态的集合摘要，可以包含一个或多个值。它不表示文件生命周期，
+也不自动表示验证成熟度或生产资格。
 
-```text
-COMPLETED
-FROZEN
-IN_PROGRESS
-PLANNED
-BLOCKED
-DEPRECATED
-ARCHIVED
-```
+| Content Status | 含义 |
+| --- | --- |
+| `PROPOSED` | 已提出但尚未批准；不得当作已承诺或已排期的计划 |
+| `PLANNED` | 已批准或已正式记录，尚未开始执行 |
+| `IN_PROGRESS` | 当前正在执行，必须能追溯 owner、下一步或预期证据 |
+| `BLOCKED` | 仍计划继续，但被具体依赖或外部条件阻塞；必须记录阻塞原因和解除条件 |
+| `DEFERRED` | 主动延期，当前不执行；不是因为不可解决的阻塞 |
+| `COMPLETED` | 所声明范围内的工作已完成；不自动代表测试通过、生产资格或发布完成 |
+| `CANCELLED` | 当前范围内已明确终止，不再继续实施 |
+| `FROZEN` | 某项决策、基线或章节已受显式变更控制；不说明它当前是否仍被采用 |
+| `DEPRECATED` | 内容曾经有效，但不应再用于新的工作；允许保留兼容或迁移说明 |
+| `ARCHIVED` | 内容只作为历史证据保存，不属于当前事实路径 |
 
-这些值不互斥。例如，一份冻结文件可以同时记录已完成事项与冻结时仍未完成的事项。
+当 `Content Status` 包含 `FROZEN`、`DEPRECATED` 或 `ARCHIVED` 时，正文必须能定位到对应的
+章节、决策或基线；不得仅凭顶部集合值推断整个文件已进入同名生命周期。若整个文件生命周期
+变化，必须同步修改 `Overall Status`。
+
+相近状态必须按以下边界区分：
+
+- `PROPOSED` 尚未获批，`PLANNED` 已获批或已正式记录；
+- `BLOCKED` 有具体阻塞条件，`DEFERRED` 是主动暂缓；
+- `CANCELLED` 表示工作终止，`DEPRECATED` 表示曾有效但不再建议用于新工作；
+- `DEPRECATED` 仍可保留迁移或兼容说明，`ARCHIVED` 只属于历史证据路径。
+
+这些值不互斥。例如，一份持续维护的 SSOT 可以同时包含 `COMPLETED`、`IN_PROGRESS` 和
+`PLANNED`；一份冻结快照可以记录冻结时已经完成、延期或被阻塞的事项。但
+`Overall Status: FROZEN` 不得把冻结时的历史 `IN_PROGRESS` 冒充为当前仍在执行；这类历史状态
+必须在正文中标记为 `INHERITED` 或“冻结时状态”。
+
 `IMPLEMENTED`、`UNIT_PASS`、`REAL_E2E_PASS` 等属于验证成熟度，不属于文档元数据；
-`PARTIAL`、`EXPERIMENTAL`、`CANCELLED` 等工作项状态可以出现在章节或能力表中，但不得替代 `Overall Status`。
+`PARTIAL`、`EXPERIMENTAL`、`REJECTED` 等声明或候选状态可以出现在章节、ADR 或能力表中，
+但不得替代 `Overall Status`。`FROZEN_BASELINE` 仍属于验证成熟度，不等于文件的
+`Overall Status: FROZEN`，也不表示当前采用关系。
+
+### 适用性：Applicability（2026-08-30 21:47 +08:00）
+
+`Applicability` 描述文档内容现在允许怎样被使用，专门区分“继续沿用的冻结基线”、
+“可条件回退的后备”、“仅保留待评审的方案”和“只供审计的历史证据”。
+
+| Applicability | 含义 |
+| --- | --- |
+| `CURRENT` | 当前正式路径，现在可以且应当遵循 |
+| `TRANSITIONAL` | 当前仍可使用，但已有明确 successor 和退出条件 |
+| `FALLBACK_ONLY` | 不是默认路径，只在明确的 fallback 条件触发时允许使用 |
+| `RESERVE_ONLY` | 当前不使用；只有重新评审并通过门禁后才允许启用 |
+| `RESEARCH_ONLY` | 只允许用于隔离研究或实验，不得进入正式生产路径 |
+| `EVIDENCE_ONLY` | 只供审计、复现和历史取证，不得指导当前实现或运行 |
+
+`FROZEN` 始终只表达变更控制，不再承担采用关系。特别是：
+
+- 现在和以后继续沿用的固化基线使用 `Overall Status: FROZEN` +
+  `Document Role: CANONICAL` + `Applicability: CURRENT`；
+- 可在明确故障条件下使用的后备使用 `Applicability: FALLBACK_ONLY`；
+- 当前不用、只能经过新评审才能启用的后备使用 `Applicability: RESERVE_ONLY`；
+- 现在和以后都不得再用于实现或运行的材料不是“后备”，应使用 `Applicability: EVIDENCE_ONLY`。
+
+以下辅助字段在对应场景中使用：
+
+| 辅助字段 | 使用要求 |
+| --- | --- |
+| `Fallback Trigger` | `FALLBACK_ONLY` 必填；描述允许回退的可观测条件 |
+| `Reactivation Gate` | `RESERVE_ONLY` 必填；描述重新启用前必须满足的审批和证据 |
+| `Successor` | `TRANSITIONAL` 必填；指向将要替代当前内容的明确对象 |
+| `Sunset Condition` | `TRANSITIONAL` 必填；`RESERVE_ONLY` 建议填写，描述何时弃用或归档 |
+| `Review By` | 长期后备或过渡文档建议填写，防止无限期悬置 |
 
 ## 7.2 重要文档的元数据横幅（2026-08-30 20:07 +08:00）
 
@@ -539,16 +601,54 @@ Content Status:
   - COMPLETED
   - IN_PROGRESS
 Document Role: CANONICAL
+Applicability: CURRENT
 Scope: what the document covers
 Canonical For: what question this answers
 Branch: research-validation-system
-Last Verified: YYYY-MM-DD
+Last Verified: YYYY-MM-DD HH:MM +08:00
 Supersedes: optional
 Related Canonical Docs: optional
 ---
 ```
 
-冻结文档使用：
+当前仍持续沿用的冻结基线使用：
+
+```yaml
+---
+Overall Status: FROZEN
+Content Status:
+  - COMPLETED
+  - FROZEN
+Document Role: CANONICAL
+Applicability: CURRENT
+Scope: what the frozen baseline covers
+Canonical For: what current question this frozen baseline answers
+Branch: main or rc2-development
+Frozen At: YYYY-MM-DD HH:MM +08:00
+Canonical Current State: YES
+---
+```
+
+当前不使用、只有重新评审后才可能启用的冻结后备方案使用：
+
+```yaml
+---
+Overall Status: FROZEN
+Content Status:
+  - COMPLETED
+  - FROZEN
+Document Role: SUPPORTING
+Applicability: RESERVE_ONLY
+Branch: research-validation-system
+Frozen At: YYYY-MM-DD HH:MM +08:00
+Canonical Current State: NO
+Reactivation Gate: explicit review and qualification evidence required
+Sunset Condition: deprecate or archive when the named successor qualifies
+Review By: optional YYYY-MM-DD
+---
+```
+
+仅记录冻结时历史事实、不得再指导当前实现的快照使用：
 
 ```yaml
 ---
@@ -557,8 +657,9 @@ Content Status:
   - COMPLETED
   - FROZEN
 Document Role: HISTORICAL
+Applicability: EVIDENCE_ONLY
 Branch: main or rc2-development
-Frozen At: YYYY-MM-DD
+Frozen At: YYYY-MM-DD HH:MM +08:00
 Canonical Current State: NO
 ---
 ```
@@ -572,6 +673,7 @@ Content Status:
   - COMPLETED
   - ARCHIVED
 Document Role: HISTORICAL
+Applicability: EVIDENCE_ONLY
 Canonical Current State: NO
 Superseded Claim: optional old claim
 Corrected By: link to canonical correction
@@ -579,6 +681,24 @@ Corrected By: link to canonical correction
 ```
 
 字段值必须描述真实状态；不得为了“看起来规范”把未验证文档标成 `COMPLETED`，也不得把历史报告标成当前规范来源。
+
+组合约束：
+
+- `Canonical Current State: YES` 只允许用于 `Document Role: CANONICAL` 且
+  `Applicability: CURRENT` 或 `TRANSITIONAL` 的文档；
+- `Overall Status: ARCHIVED`、`DEPRECATED` 或 `SUPERSEDED` 不得与
+  `Applicability: CURRENT` 或 `TRANSITIONAL` 组合；
+- `Document Role: HISTORICAL` 必须使用 `Applicability: EVIDENCE_ONLY`；
+- `FALLBACK_ONLY` 必须提供 `Fallback Trigger`，不得因默认路径失败之外的主观判断自动启用；
+- `RESERVE_ONLY` 必须提供 `Reactivation Gate`，不得静默变成 `CURRENT`；
+- `TRANSITIONAL` 必须提供 `Successor` 和 `Sunset Condition`；
+- `RESEARCH_ONLY` 不得写入正式 ingress、service、合同、formal latest 或 frozen artifact；
+- `Overall Status: FROZEN` 不得把冻结时的历史 `IN_PROGRESS` 表述为当前仍在执行。
+
+迁移规则：从本节更新时间起，新建或发生实质修改的重要文档必须显式填写 `Applicability`。
+既有文档不因格式统一而批量重写，在下一次实质维护时补齐；迁移前继续依据已有
+`Overall Status`、`Document Role` 和 `Canonical Current State` 判断，但自动化不得仅因字段
+缺失而静默写入或推断 `Applicability: CURRENT`。
 
 ## 7.3 状态不通过复制文件表达（2026-08-30 20:07 +08:00）
 
@@ -651,7 +771,8 @@ date '+%Y-%m-%d %H:%M %z'
 
 * ...
 
-章节状态描述局部工作项，不替代第七章的文件级 `Overall Status`、`Document Role` 和 `Content Status`。
+章节状态描述局部工作项，不替代第七章的文件级 `Overall Status`、`Document Role`、
+`Content Status` 和 `Applicability`。
 
 ---
 
@@ -898,6 +1019,7 @@ Content Status:
   - COMPLETED
   - ARCHIVED
 Document Role: HISTORICAL
+Applicability: EVIDENCE_ONLY
 Canonical Current State: NO
 Corrected By: docs/design/C_algorithm.md
 Reason: Architecture changed from static A* to time-dependent A*
@@ -1235,10 +1357,10 @@ pending at replay end
 
 文档或工程任务交付前，至少完成：
 
-1. 元数据与生命周期状态真实；
+1. 元数据、生命周期、文档角色、内容状态与适用性真实；
 2. 新信息位于正确的语义章节；
 3. 当前事实只有一个规范来源；
-4. 归档、冻结和历史报告没有被改写成当前事实；
+4. 归档、冻结、过渡、后备和历史报告没有被改写成当前事实或默认路径；
 5. 链接与移动后的路径有效；
 6. 代码、合约、数据、测试、性能、状态与文档互相一致；
 7. 新标题时间戳真实，旧标题没有被批量重打时间；
