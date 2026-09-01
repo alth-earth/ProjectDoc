@@ -8,10 +8,21 @@ Document Role: CANONICAL
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-09-01
 ---
 
 # 研究验证系统当前状态
+
+## 2026-09-01 Viewer 根因收口
+
+- 默认 Winter package 没有同身份 causal replay；旧路径曾用单路线加 `PLAN_COMPUTED` 占位，
+  现改为无事件并显示 `UNAVAILABLE_IDENTITY_BOUND_CAUSAL_REPLAY_REQUIRED`。只有通过严格
+  `orchestrator.replay-manifest.v1`（观察到 `REPLAN_DECIDED/ADOPTED`、多 revision、身份/时间
+  一致）才发布真实 pending/superseded 状态。
+- “当前路段”不再受原始折线图层开关控制，优先按 C formal `motion_samples` 的 ETA 窗口截取；
+  曲线面板只展示局部放大、最小曲率半径与相对权威航点最大偏离，不改 geometry 或安全门。
+- 风险时域图原因为 344px 下 flex tick 宽度被压到 0px；现保留 145 个小时帧、横向滚动并设置
+  tick/bar 最小宽度，Firefox 344px/528px 回归均通过，绿色/黄色柱值可见。
 
 ## D 风险解释消费者门禁（2026-08-23 21:51 +08:00）
 
@@ -22,8 +33,8 @@ Last Verified: 2026-08-23
 | 身份失败关闭 | PASS | schema、RiskWindow、RiskFrame、网格/坐标不匹配时拒绝 sidecar |
 | 浏览器控制台/网络 | PASS | 0 错误；0 警告；8 个必需资源 HTTP 200 |
 | D 回归 | PASS | `91 passed / 3 causal-replay-only skipped`；Ruff/JS 语法 PASS |
-| B 生产者构件 | NOT_IMPLEMENTED | 仅合成/设计示例 fixture；无真实贡献者声明 |
-| Orchestrator 不可变传输 | NOT_IMPLEMENTED | D 已接受可选字段；正式发布链尚未闭合 |
+| B 生产者构件 | ENGINEERING_CHAIN_PASS / UNCALIBRATED | 同次公式求值 trace + `risk-explanation.v1`；`demo_unvalidated` / `research_unvalidated` |
+| Orchestrator 不可变传输 | ENGINEERING_CHAIN_PASS | `risk-explanation-manifest.v1` content-addressed artifact，SHA/identity readback；D 可选消费 |
 
 D 的 `risk-explanation.v1` 支持是可选、增量且 explanation-scope 失败关闭。sidecar 缺失或
 不匹配时，Viewer 显示 `Explanation unavailable`，基础 Winter RiskFrame、route candidates
@@ -39,13 +50,13 @@ D 的 `risk-explanation.v1` 支持是可选、增量且 explanation-scope 失败
 | 科学标定 | NOT_ESTABLISHED | 无专家/结果/物理阈值验证 |
 | 冬季有限分布 | REAL_ARTIFACT_AUDIT_PASS | 均值 `0.119016`；P95 `0.226415`；93.069778% L1 |
 | 阈值变更 | NOT_APPROVED | `0.2/0.4/0.6/0.8` 保持冻结基线 |
-| 分量归因 | PRODUCER NOT_IMPLEMENTED | RiskFrame 无逐格贡献；D 可选消费者已 BROWSER_E2E_PASS（合成 fixture），sidecar 合约仍为 DRAFT |
+| 分量归因 | PRODUCER ENGINEERING_PASS / UNCALIBRATED | B 同次公式 trace + immutable sidecar 已发布；D 可选消费者 BROWSER_E2E_PASS；RiskFrame 仍不变 |
 | B/C/D 运行时语义 | PRESERVED | 零代码、零构件修改；C 路线响应证据继承 |
 
 当前 `risk_score` 只能解释为加权归一化风险指数，不是事故概率或经过实船结果
 标定的严重度。等宽 level 策略对本冬季分布存在明显压缩，但这不足以单独批准新阈值。
-下一门禁是定义 operational target、建立跨场景 calibration dataset、发布 B-owned shadow
-component contribution，并比较 expert/physics/statistical/outcome-based 方法。
+下一门禁是定义 operational target、建立跨场景 calibration dataset，并比较
+expert/physics/statistical/outcome-based 方法；现有 sidecar 只证明工程归因链，不提升校准等级。
 
 支持证据：
 
@@ -59,15 +70,16 @@ component contribution，并比较 expert/physics/statistical/outcome-based 方�
 | D 冬季研究视图 | REAL_E2E_PASS | Firefox；风险/硬约束/路线/船舶/运行/暂停/图层选择器 |
 | 浏览器控制台/网络 | PASS | 0 错误；0 警告；8 个必需资源 HTTP 200（含可选消费者验证器） |
 | 航行仿真 | EXPERIMENTAL / REAL_E2E_PASS | 3,206 个 1 分钟状态；C 所选路线航路点 ETA 投影 |
-| 冬季因果回放/重规划 | NOT_IMPLEMENTED | 无同身份 manifest/快照/事件；未伪造 |
+| 冬季因果回放/重规划 | SOURCE_REQUIRED / FAIL_CLOSED | Orchestrator 仅接受同身份 causal-replay manifest；当前 Winter 无合格源，默认不发布事件 |
 | A/B/C/合约/冻结构件 | PRESERVED | 本轮零修改、零重算 |
 
 当前 Viewer 已不再混用 Summer replay 与 Winter candidates。Orchestrator 失败关闭绑定
 active DatasetBundle、RunContext、145 帧提交态 RiskWindow、C v3 方案集、12 条路线
 candidate sidecar 与完整性证据；D 再次校验组合身份，并显式显示 scenario、
 DatasetBundle、RunContext、RiskWindow 与 assembly ID。航行时间线来自 C 全航程
-recommended waypoint ETA，`source_replay=null`，因此该里程碑证明冬季研究
-航行仿真，不证明冬季因果回放或动态重规划。
+recommended waypoint ETA，`source_replay=null`，并显式标记需要身份绑定 causal replay；
+因此该里程碑证明冬季研究航行仿真，不证明冬季因果回放或动态重规划。传入合格源后才
+原样展示真实多 revision 与 `REPLAN_DECIDED/ADOPTED`。
 
 支持证据：
 
@@ -84,7 +96,7 @@ recommended waypoint ETA，`source_replay=null`，因此该里程碑证明冬季
 | Orchestrator→D 接口 | STABLE | `presentation.route-candidates.v1` 精确投影；不重排/不重算 |
 | D 研究视图 | IMPLEMENTED / UNIT_PASS | 4 层选择器、3 目标对比、构件指标、候选几何 |
 | 既有冻结 Viewer 回退 | BROWSER_E2E_PASS | Firefox；NOT_PUBLISHED → `SINGLE_ROUTE_FALLBACK`；控制台 0；必需资源 HTTP 200 |
-| 冬季组合 Viewer | NOT_IMPLEMENTED | 尚无同一 Winter 身份的 risk/replay/candidate 组合 bundle |
+| 冬季组合 Viewer | REAL_E2E_PASS / REPLAY_SOURCE_REQUIRED | 同一 Winter risk/route/candidate bundle 已通过；动态重规划需额外同身份 replay 制品 |
 
 D 现在只在完整、scenario 匹配的 12 路线 PUBLISHED 包下启用研究视图；
 用户路线选择是 display-only 高亮，不修改 C 的 `selected_candidate_id`。缺失

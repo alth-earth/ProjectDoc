@@ -127,8 +127,9 @@ equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行
 2. 已增加 run/scenario、RiskFrame schema、grid/frame/candidate-set metadata；DatasetBundle
    identity 等未发布字段明确显示 `not published`，不从私有 artifact 推断。
 3. `risk-explanation.v1` optional consumer 与点击格点面板已通过 Firefox E2E；只显示
-   producer 字段并在缺失/invalid/mismatch 时失败关闭。真实 B producer 与 Orchestrator
-   immutable transport 仍是下一 gate，D 不生成 contributor。
+   producer 字段并在缺失/invalid/mismatch 时失败关闭。B 同次公式 trace、immutable
+   artifact/manifest 与 Orchestrator SHA/identity transport 已闭合；sidecar 仍为
+   `demo_unvalidated` / `research_unvalidated`，D 不生成 contributor。
 4. 保留 Research Validation / Operational Replay / Engineering Debug 三态和单一
    Simulation Clock。
 
