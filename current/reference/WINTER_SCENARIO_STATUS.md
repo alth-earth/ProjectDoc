@@ -8,12 +8,35 @@ Document Role: CANONICAL
 Scope: winter research scenario configuration, data readiness, identity gate, and downstream acceptance
 Canonical For: current Winter capability, artifact identity, blockers, and next gate
 Branch: research-validation-system
-Last Verified: 2026-08-26
+Last Verified: 2026-09-01 23:40 +08:00
 ---
 
 # Winter Scenario Status
 
-## 当前判定（2026-08-23 20:14 +08:00）
+## 当前动态重规划判定（2026-09-02）
+
+```text
+WINTER_REAL_DATA = YES
+WINTER_REPLAY_MODE = RETROSPECTIVE_DYNAMIC_REPLAY
+WINTER_DYNAMIC_REPLANNING = PUBLISHED_RETROSPECTIVE_DYNAMIC_REPLAY
+WINTER_PLAN_REVISIONS = 9 (8 superseded / 1 current / no pending at arrival)
+WINTER_ROUTE_CARDINALITY = 4 layers × 3 objectives × revisions
+WINTER_STRICT_CAUSAL_REPLAY = PENDING / FAIL_CLOSED_ON_ISSUE_TIME
+C_RC2_OBJECTIVE_PARALLELISM = 3 WORKERS / FORMAL PATH / REAL_RUN_EVIDENCE
+B_RISK_EXPLANATION = UNAVAILABLE_FOR_RESTORED_IDENTITY / OPTIONAL_DEGRADATION
+```
+
+当前恢复的 scenario `tromso_isfjorden_february_2026_research_v1` 回放
+`winter-original-frozen-dynamic-v1` 产生 145 个 RiskFrame、25 个 snapshots、119 个事件和
+108 个 objective tasks。9 个 revision 中前 8 个已替代、R9 为到达时 current、无 pending；
+Viewer 以 `PUBLISHED_RETROSPECTIVE_DYNAMIC_REPLAY` 展示，保留原始 issue time。该制品不能
+升级成历史当时可获得信息的 causal replay 或导航资格。当前 RiskWindow 的精确 A source
+trace 已退役，因此 B explanation sidecar 不可诚实重建；D 按 optional consumer 合约显示
+`Explanation unavailable`，不由 D 补齐且不影响基础功能。
+
+## 历史判定（2026-08-23 20:14 +08:00）
+
+> 本节保留当日快照；2026-09-01 当前动态回放、B sidecar 与 RC2 并行状态以上方章节为准。
 
 ```text
 WINTER_DATASET_STATUS = FROZEN_ARTIFACT_READY
@@ -24,7 +47,7 @@ D_WINTER_VISUALIZATION = REAL_E2E_PASS
 C_TO_D_ROUTE_INTERFACE = STABLE
 D_PARALLEL_DEVELOPMENT = READY
 WINTER_COMBINED_PRESENTATION = REAL_E2E_PASS
-WINTER_CAUSAL_REPLAY = NOT_IMPLEMENTED
+WINTER_CAUSAL_REPLAY_AT_CHECKPOINT = NOT_IMPLEMENTED
 ```
 
 ## 最新严寒验证与数据源状态（2026-08-26 02:20 +08:00）
@@ -58,13 +81,16 @@ WINTER_CAUSAL_REPLAY = NOT_IMPLEMENTED
 
 ## Winter Combined Research Viewer（2026-08-23 20:14 +08:00）
 
+> 历史 checkpoint；2026-09-01 最新动态回放判定见本文顶部。当前默认包已接入真实
+> retrospective dynamic replay，旧的 `NOT_IMPLEMENTED` 仅描述当时状态。
+
 ```text
 WINTER_COMBINED_BUNDLE = PUBLISHED_RUNTIME_ARTIFACT
 WINTER_RESEARCH_BROWSER_E2E = REAL_E2E_PASS
 WINTER_RISK_FRAMES = 145
 WINTER_ROUTE_CANDIDATES = 12
 WINTER_NAVIGATION_TIMELINE = 3206_ETA_DRIVEN_SAMPLES
-WINTER_DYNAMIC_REPLANNING = NOT_IMPLEMENTED
+WINTER_DYNAMIC_REPLANNING_AT_CHECKPOINT = NOT_IMPLEMENTED
 ```
 
 combined assembly 严格绑定 active Winter DatasetBundle、RunContext、RiskWindow、C v3

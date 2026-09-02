@@ -8,23 +8,122 @@ Document Role: CANONICAL
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-01
+Last Verified: 2026-09-02 02:40 +08:00
 ---
 
 # 研究验证系统当前状态
 
-## 2026-09-01 Viewer 根因收口
+## 2026-09-02 原始冻结身份恢复与到达态最终收口
 
-- 默认 Winter package 没有同身份 causal replay；旧路径曾用单路线加 `PLAN_COMPUTED` 占位，
-  现改为无事件并显示 `UNAVAILABLE_IDENTITY_BOUND_CAUSAL_REPLAY_REQUIRED`。只有通过严格
-  `orchestrator.replay-manifest.v1`（观察到 `REPLAN_DECIDED/ADOPTED`、多 revision、身份/时间
-  一致）才发布真实 pending/superseded 状态。
+2026-09-01 的 3-snapshot/v7 与后续 holdout/v13 是排障中间包；它们误把另一数据身份设为
+默认，造成风险覆盖、12 路线集合和 selected route 与 2026-08-31 结果不同。当前默认已经
+恢复为原始冻结身份：
+
+- identity：scenario `tromso_isfjorden_february_2026_research_v1`、DatasetBundle
+  `a-bundle-a2146dd0adbaa7db77a6beb7`、RiskWindow
+  `risk-window-sha256-b5bed6bb48893e32620710e8c765dc60ec37a2fc384f0c49014b92f0a1c056b2`；
+  初始 layer-set 为 `layer-set-sha256-4f70866a4a1532c21101a378c63e643563459da7864dd2b93c1d457b4c97d404`，
+  selected route 为 `route-v3-sha256-d2afafc7ad94780e8064d9fb99eb2e68976753dfa575663db87e14272e7d0b53`；
+- replay：`winter-original-frozen-dynamic-v1`，25 snapshots、9 个不可变 plan revision、
+  119 events；`REPLAN_DECIDED/REPLAN_ADOPTED/ROUTE_CHANGED` 各 8 次，终态 `ARRIVED`、
+  pending 为空；每版均为四层×三目标=12 条真实路线；
+- Viewer：assembly
+  `winter-viewer-sha256-a375b431ed7c431487300988a7dc6c298cbecaf3a8e77ec4bc1371cf6be894e7`，
+  145 个 RiskFrame、8,641 个分钟采样、9 个 candidate set、9 个 motion set；
+- motion：正式参数 `max_trim_fraction=0.49`、`sample_spacing_m=250.0`。R1–R4 为
+  `CURVE`；R5–R7 因 `integrated_risk_increased` 回退，R8–R9 因几何条件回退。R1
+  full-voyage 为 982 样本、最小曲率半径约 7,464 m、最大偏离约 723 m，曲线约比 raw
+  RoutePlan 短 2.17 km。6:00 snapshot 中的旧 revision 是 event overlay 问题，不是 B 样条
+  未运行；采用时刻现直接由真实 event 覆盖；
+- execution：RC2 objective-level 三核仍在正式 initial/replan 路径生效，报告为
+  `requested/effective/max=3/3/3`、36 planning calls、108 tasks；tick、四层 barrier、B 和
+  adoption gate 保持串行；
+- explanation：当前原始冻结 RiskWindow 不带 sidecar。其精确 A source record 已在
+  2026-08-26 detided-retirement 中物理退役，无法从最终 RiskFrame 反推同次公式 trace；
+  不能错配后续 holdout sidecar，也不能伪造 contributor。因此 `Explanation unavailable`
+  是诚实降级，不影响 RiskFrame、路线或仿真；
+- Viewer 行为：待采用、已替代、当前路段均由 event/revision/formal motion 驱动；当前路段
+  与 route-polyline 开关解耦；completed track 追加到 22 个权威 waypoint 并在到达后保留；
+  风险格只在 basemap bbox 内绘制；风险时域 344/528 px 均为 145 ticks、8 px 最小 tick、
+  绿色均值/黄色最大值和横向滚动。
+
+当前回归：C `736 passed`、Orchestrator `145 passed`，另 formal integration
+`2 passed, 1 warning`（1009.42 秒、退出码 0）、D unit `107 passed`；三仓所改文件定向
+Ruff 通过，C/O 全仓 Ruff 各被无关既有脚本格式问题阻挡。真实浏览器逐 revision、
+到达态、三目标独立选择、原始折线工程开关、completed-track、console=0 与 344/528 px
+布局均通过。
+这些仍是工程研究仿真证据，不是 strict causal replay、实船标定或导航资格。
+
+## 2026-09-01 22:52 +08:00 holdout 中间基线（已由原始冻结到达态包替代）
+
+本轮已把默认 Viewer 从“静态/单路线 fallback”切换到同一真实 Winter holdout 回放的
+资源链；B-spline 没有改变 C 的航点、ETA、风险、采用门或安全语义。
+
+| 现象 / 声明 | 根因 | 当前证据与状态 |
+|---|---|---|
+| 待采用、已替代、当前路段消失 | 默认 bundle 没有同身份 replay revision 资源；当前路段又受旧路线图层开关影响 | 已解耦；正式 `motion_samples`/revision 状态驱动；DOM 显示 `R2 待采用`、`R2 已采用`、`R3 待采用`，`rev1=superseded / rev2=current / rev3=pending` |
+| 只有一项路线 | 旧 Viewer 入口消费空/单路线 fallback，不是 C 没有生成候选 | 新 manifest 的每个 revision 均为 4 层×3 目标=12 条，D candidate set `PUBLISHED`、12/12 integrity PASS |
+| 风险时域图空、颜色异常 | 344px flex 子项被压缩；最小柱宽和横向滚动缺失 | 145 帧、tick 8px、bar 3.35px、横向滚动；Firefox 344px/528px 均 PASS，绿色均值/黄色最大值可见 |
+| `Explanation unavailable` | 当前恢复的原始冻结身份没有可重建的同次 B trace | 精确 A source record 已退役；不跨身份复用 sidecar、不从 RiskFrame 反推原因；基础风险/路线/仿真保持可用 |
+| 曲线是否“更弯” | 观察窗口/缩放不足，不是 B-spline 破坏航线；几何仍受约束 | 继续展示局部放大、最小曲率半径和最大偏离；不放大平滑幅度、不绕过安全门 |
+
+### Winter holdout 动态回放证据（历史中间包，非当前默认）
+
+- 真实数据源为 `tromso_isfjorden_winter_holdout_20260222_v1`，回放制品为
+  `retrospective_dynamic_replay`；保留原始 `issue_time`，因此这是**事后动态投影**，不是
+  当时可用信息的 causal replay。严格 causal Winter 窗口仍因 issue-time 覆盖不足保持
+  fail-closed。
+- 回放 `winter-retro-holdout-resource-v4`：3 个 6 小时 snapshots、145 个 RiskFrame、
+  3 次候选计算均接受、无 planning blocker；事件实际包含
+  `REPLAN_DECIDED`、`REPLAN_ADOPTED`、`ROUTE_CHANGED`。
+- 真实不可变 plan-revision index 记录 `rev1=superseded`、`rev2=current`、
+  `rev3=pending`；D 默认包状态为 `PUBLISHED_RETROSPECTIVE_DYNAMIC_REPLAY`，时间线为
+  3,145 个 1 分钟仿真时刻，正式 `cd.route-motion-set.v1` gate 有效。
+- B 已对同一 RiskWindow 真实生成并发布 `risk-explanation.v1`：artifact
+  `risk-explanation-sha256-28a2329d38e98540be23e8756d6314874dcb13d4e482c70876cfabb7e31ef39c`，
+  manifest `risk-window-sha256-6ebe9d4560d04dc01b27bba2239af7f0f9a96dc779aaaad0d2ad17619700ee7c`；
+  D v7 已嵌入并通过 readback。145 帧逐格状态为 `COMPLETE=29,433`、`PARTIAL=17,402`、
+  `UNAVAILABLE=2,610`，后两者是源数据缺测的可解释结果，不是 sidecar 整包缺失。
+
+### C RC2 三核并行证据
+
+正式 Orchestrator 初始规划和重规划均重新接入 C 的 objective-level
+`ProcessPoolExecutor`：tick、layer、B 和 adoption gate 保持串行，只并行
+`fastest/low_risk/recommended` 三个目标。真实回放 report 为
+`requested_workers=3`、`effective_workers=3`、`max_parallel_tasks=3`、
+`planning_calls=12`、`tasks_submitted=36`、`parallel_active=true`；worker PID 列表作为
+跨调用 provenance 保留。`ExecutionSpec.v1` 维持 RC2 三 worker 兼容默认，`v2` 可显式记录
+profile。
+
+### B / O 状态边界（v4 中间基线记录）
+
+- B 的 `allowed_region_has_no_grid_node` 是 Murmansk 默认粗网格在窄 destination allowed
+  region 没有节点的既有数据/端点问题；已改为预期 fail-closed 测试，不扩大网格、不伪造
+  节点。Tromsø fine holdout 正向路径通过。
+- 此处曾记录 O 形式化重集成未重跑；2026-09-02 已在最终工作树重新执行两个 formal
+  integration 参数用例并取得 `2 passed, 1 warning`、退出码 0，现行结论以上方最终收口
+  章节为准。
+
+支持证据：
+
+- [Winter 动态重规划与 C RC2 三核并行工程运行报告](../reports/research-validation/WINTER_DYNAMIC_REPLANNING_RC2_PARALLEL_RUN_REPORT.md)
+
+## 2026-09-01 Viewer 根因收口（历史 baseline 与当前默认路径）
+
+- 旧默认 Winter package 没有同身份 replay，曾用单路线加 `PLAN_COMPUTED` 占位；严格 causal
+  入口现在仍在缺源时显示 `UNAVAILABLE_IDENTITY_BOUND_CAUSAL_REPLAY_REQUIRED` 并保持空事件。
+  当前默认路径已显式选择真实 `retrospective_dynamic_replay`（不是 causal），因此在通过
+  identity/index 校验后展示真实 `REPLAN_DECIDED/ADOPTED`、多 revision、pending/superseded
+  状态；不会人工伪造事件。
 - “当前路段”不再受原始折线图层开关控制，优先按 C formal `motion_samples` 的 ETA 窗口截取；
   曲线面板只展示局部放大、最小曲率半径与相对权威航点最大偏离，不改 geometry 或安全门。
 - 风险时域图原因为 344px 下 flex tick 宽度被压到 0px；现保留 145 个小时帧、横向滚动并设置
   tick/bar 最小宽度，Firefox 344px/528px 回归均通过，绿色/黄色柱值可见。
 
 ## D 风险解释消费者门禁（2026-08-23 21:51 +08:00）
+
+> 历史基线章节。当前默认原始冻结身份的 sidecar 缺失状态见本文顶部；本节只保留 optional
+> consumer 的不变边界，以及曾在另一 holdout 身份上通过的生产/传输验证。
 
 | 工作流 | 当前状态 | 证据 |
 |---|---|---|
@@ -39,8 +138,8 @@ Last Verified: 2026-09-01
 D 的 `risk-explanation.v1` 支持是可选、增量且 explanation-scope 失败关闭。sidecar 缺失或
 不匹配时，Viewer 显示 `Explanation unavailable`，基础 Winter RiskFrame、route candidates
 与 ETA simulation 继续工作。`PARTIAL` 不补零或自动生成 reason；`COMPLETE` 仅展示生产者
-字段。浏览器 E2E 的 PARTIAL/COMPLETE 内容是明确标记的合成 B fixture，因此成熟度只
-证明 D 消费者，不证明真实 B 解释已发布或经过科学验证。
+字段。该历史浏览器 E2E 的 PARTIAL/COMPLETE 内容是明确标记的合成 B fixture；当前真实
+Winter v7 sidecar 已另行完成工程链 readback，但仍不证明科学标定或导航资格。
 
 ## B 风险标定研究门禁（2026-08-23 20:45 +08:00）
 
@@ -63,6 +162,9 @@ expert/physics/statistical/outcome-based 方法；现有 sidecar 只证明工程
 - [风险标定研究](../reports/research-validation/RISK_CALIBRATION_RESEARCH_REPORT.md)
 
 ## 冬季组合研究查看器（2026-08-23 20:14 +08:00）
+
+> 历史 checkpoint；2026-09-01 最新动态回放与并行判定见本文顶部，当前默认 Viewer 已使用
+> 真实 retrospective dynamic replay，但严格 causal 仍保持 pending/fail-closed。
 
 | 工作流 | 当前状态 | 证据 |
 |---|---|---|
@@ -320,20 +422,20 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 
 1. Contract ownership registry 已建立；尚待各 owner 对未来 candidate/adaptive
    proposal 逐项审批，registry 本身不等于提案批准。
-2. C→D 已发布一个真实 Winter 12 路线候选集；replay 的 19 个时间修订仍不是
-   19 组候选。多决策候选集时间线尚未定义。
-3. 冬季场景、12 类源行、144 h 最小冻结 bundle、匹配的
-   RunContext/ExecutionSpec、B 145 帧 RiskFrame、C 12 路线验证与 D 组合
-   Browser E2E 已建立。下一缺口是正式 Winter causal replay/replanning（若研究门槛需要）；
-   当前 3,206 状态时间线是 C waypoint ETA projection。
+2. C→D 已发布真实 Winter 12 路线候选集；本轮 replay 还发布了 3 个不可变 revision，
+   每个 revision 均为四层×三目标=12 条路线，并由事件/index 驱动 pending/current/superseded。
+3. 冬季场景、12 类源行、144 h 最小冻结 bundle、匹配的 RunContext/ExecutionSpec、B 145 帧
+   RiskFrame、C 12 路线验证、B explanation transport 与 D 组合 Browser E2E 已建立。下一
+   缺口仅是 issue-time 可追溯的 strict Winter causal replay；当前 3,145 状态时间线来自
+   真实 retrospective replay + C waypoint ETA 延展，不能作 causal 证据。
 4. B 规则模型未标定；正式固定网格 build 已测，但进程 RSS 包含已加载 A window，
    独立增量内存与重复运行方差仍未测；adaptive grid 未实现。
 5. C baseline/medium 联合性能已测；medium exact-sample 50k LRU 已在 default-off
-   基准中取得 14.77% 中位数收益。正式入口/12 路线提升、共享搜索与
-   增量重规划均未实现。
+   基准中取得 14.77% 中位数收益。RC2 三 worker 已接入正式 initial/replan；共享搜索与
+   增量重规划仍未实现。
 6. D 已建立基础专业导航辅助层、研究视图、候选几何、四层三目标对比、
-   冬季组合 Browser E2E 与可选逐格风险解释消费者。真实 B 贡献者
-   生产者、Orchestrator 不可变传输和独立环境因子层合约仍待实现。
+   冬季组合 Browser E2E 与可选逐格风险解释消费者。真实 B 贡献者生产者与
+   Orchestrator 不可变传输已完成；独立环境因子层合约仍待实现。
 
 详细依据见
 [RESEARCH_VALIDATION_GAP_ANALYSIS.md](RESEARCH_VALIDATION_GAP_ANALYSIS.md)。
@@ -343,11 +445,11 @@ ExecutionSpec planning contract。当前 Replay Viewer 消费 `replay.viewer-bun
 | 风险 | 状态 | 处理 |
 |---|---|---|
 | 多人并行前合约所有权不清 | CONTROLLED | registry/模板/目录所有权已建立；breaking 提案仍需 owner 批准 |
-| Winter A/B/C/D 门禁 | D_COMBINED_REAL_E2E_PASS | 正式身份、B 145 帧、C 12 路线 v3 与 D Firefox PASS；causal replay 仍未实现 |
+| Winter A/B/C/D 门禁 | D_DYNAMIC_RETROSPECTIVE_REAL_E2E_PASS | 正式身份、B 145 帧/sidecar、C 每 revision 12 路线与 D Firefox PASS；strict causal 仍 pending |
 | B 网格策略与 C regular-grid 假设耦合 | EXPERIMENTAL EVIDENCE | baseline+medium 的正式有界 build/C 对比已完成；fine 需要显式预算 |
 | C 候选展示 | CONTROLLED / INTERFACE_PASS | 提案已接受；真实 Winter sidecar PASS；冻结 bundle 回退不变 |
 | 当前演示基线回退 | CONTROLLED | 冻结分支/构件不改；研究构件使用新身份 |
-| B Murmansk 默认网格集成预期 | OPEN FINDING | 未筛选 B 套件在 allowed-region 端点映射失败；本轮不改配置语义 |
+| B Murmansk 默认网格集成预期 | EXPECTED_FAIL_CLOSED | 粗网格在窄 allowed-region 无 grid node；已用定向测试固定语义，不扩大网格或伪造节点 |
 
 ## 正式交接验证边界（2026-08-23 01:16 +08:00）
 

@@ -8,11 +8,23 @@ Document Role: CANONICAL
 Scope: system architecture SSOT
 Canonical For: module boundaries, data flow, runtime semantics
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-09-01 23:40 +08:00
 Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_INDEX.md
 ---
 
 # Arctic Route Planning System
+
+## 0.1 当前动态回放与并行证据（2026-09-01 23:40 +08:00）
+
+默认 Winter Viewer 绑定真实 `retrospective_dynamic_replay` 资源链，而不是静态单路线
+fallback：每个 C plan revision 保留四层×三目标的 12 条路线，并由不可变 index 标记
+`superseded/current/pending`。Viewer 的待采用、已替代和当前路段来自事件、revision 状态
+与正式 motion/ETA，不由 B-spline 绘制层生成。
+
+正式 C initial/replan 使用 RC2 三 worker objective-level `ProcessPool`；只并行
+`fastest/low_risk/recommended`，回放 tick、四层 barrier、B 构建与 adoption gate 保持串行。
+真实回放 report 已记录最大同时并发为 3。Winter 模式明确区分 causal 与事后动态投影，
+历史 issue-time 不足时仍 fail closed。
 
 ## 0. Governance（2026-08-21 23:18）
 
@@ -101,10 +113,10 @@ New agents should read: [../../README.md](../../README.md) -> [../../DOCUMENTATI
 |---|---|---|---|
 | `arctic_route_contracts` | 共享走廊、场景、船型、时域和 RunContext | 冻结合同已验证；场景清单当前为 7 个 | 建 ownership/version registry；winter 只提新 identity |
 | A | Environmental Data Acquisition | 12-type public bundle 与 provenance 已验证；当前正式证据为夏季 | 建 winter 12-type artifact，不改变既有 bundle |
-| B | Risk Assessment and Forecast | hourly fixed-grid risk、hard reason 已验证；`demo_unvalidated` | fixed-grid benchmark 后再研究 adaptive grid |
+| B | Risk Assessment and Forecast | hourly fixed-grid risk、hard reason 与同次 component explanation sidecar 已验证；`demo_unvalidated` | fixed-grid benchmark 后再研究 adaptive grid / calibration |
 | C | Risk-aware Navigation Decision | 三目标、四层、12 路线和 replay planning 已验证 | profile/shared-search/incremental proposal |
-| D | Visualization and Validation Platform | 48h artifact Viewer、risk horizon、ship/replanning Firefox E2E PASS | 真实 candidate compare 与研究证据视图 |
-| orchestrator | Pipeline / Artifact / Presentation Adapter | replay、navigation state、preflight、export 已建立 | versioned candidate presentation projection |
+| D | Visualization and Validation Platform | 真实 Winter retrospective replay、risk horizon、ship/replanning 与逐格 explanation Firefox E2E PASS | strict causal candidate/replay 与环境因子 contract |
+| orchestrator | Pipeline / Artifact / Presentation Adapter | replay、navigation state、RC2 3-worker objective parallel、preflight、B/D export 已建立 | versioned candidate presentation projection / strict causal |
 | experimental B | 隔离的反事实实验工程 | 工程卫生待修 | 真实主线完成后再最小修复 |
 
 边界不变：A 不算风险，B 不生成路线，C 不下载环境数据，D 不调用 B/C 内部函数。

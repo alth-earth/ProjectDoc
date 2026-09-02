@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: research validation roadmap
 Canonical For: next work, phase gates, and dependency order
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-09-02 02:40 +08:00
 Supersedes: competition-demo Viewer Product Mainline roadmap
 ---
 
@@ -42,7 +42,7 @@ fixtures、compatibility tests 和 rollback path。
 
 ## P1 Winter Scenario（2026-08-23 10:20 +08:00）
 
-状态：`WINTER_A_B_C_COMPLETED / D_COMBINED_REAL_E2E_PASS`。
+状态：`WINTER_A_B_C_COMPLETED / D_DYNAMIC_RETROSPECTIVE_REAL_E2E_PASS / CAUSAL_REPLAY_PENDING`。
 
 1. CARRA、Copernicus 与 GEBCO 的 12 类真实数据及 1,212-record Winter source set 已冻结；
    不再把数据获取列为当前 blocker。
@@ -59,10 +59,16 @@ fixtures、compatibility tests 和 rollback path。
    endpoint、schema、codec 与 12-route integrity 全部 PASS。
 7. C→D candidate sidecar 已通过 schema 与真实 artifact consumer 验收；同一 Winter
    identity 的 combined risk/route/ETA-simulation package 与 Firefox Browser E2E 已通过。
+8. 原始冻结身份的真实 `retrospective_dynamic_replay` 已发布完整到达态：25 个 snapshots、
+   119 个事件、9 个 revision 资源（每版 4×3=12），并在默认 Viewer 展示 8 轮
+   pending/adopted/superseded 与终态 `ARRIVED`；该模式保留 issue time，明确是事后动态投影。
+9. C RC2 objective-level 三 worker 已接回正式 Orchestrator 初始/重规划路径；真实运行
+   `max_parallel_tasks=3`、36 次 planning call、`tasks_submitted=108`，tick/layer/B/adoption 仍串行。
 
-P1 formal handoff、B 风险分布、C 路线与 D combined visualization 门槛均已满足。当前
-navigation timeline 是 C waypoint ETA 的 presentation projection，不是 causal replay。
-下一 gate 由人工决定：冻结该 package，或另立 Winter causal replay/replanning milestone。
+P1 formal handoff、B 风险分布、C 路线、D combined visualization 与事后动态回放门槛均已
+满足。当前 navigation timeline 由真实 replay 源和 C waypoint ETA 延展组成，但整体仍是
+`retrospective_post_hoc_dynamic_projection`，不升级为 causal replay。下一 gate 是取得
+issue-time 可追溯的 Winter causal window；在此之前不要把该包标为导航级或冻结生产基线。
 
 ## P1.5 B Risk Calibration Protocol（2026-08-23 20:45 +08:00）
 
@@ -105,41 +111,44 @@ tests 和性能收益证据。
 
 ## P3 C Performance Optimization（2026-08-21 23:18）
 
-状态：`EXACT_SAMPLE_PROFILE + BOUNDED_LRU_EXPERIMENT_VALIDATED`。
+状态：`EXACT_SAMPLE_PROFILE + BOUNDED_LRU_EXPERIMENT_VALIDATED + RC2_PARALLEL_FORMAL_PATH_RESTORED`。
 
 真实 medium B frame search 记录 705,469 次 sample 请求，其中 242,992 次精确重复。
 50k default-off LRU 的 3-run median 从 76.281 s 降至 65.012 s（14.77%），额外 sampled
 RSS 约 38.6 MiB，完整规划语义摘要不变。下一步进入 committed ingress、三目标和四层
 equality gate，不直接引入共享搜索。
 
-保留现有 3-worker objective-level ProcessPool 基线。依次评估：重复搜索与 cache
+现已把 3-worker objective-level ProcessPool 接回正式 C initial/replan execution；真实
+Winter replay report 记录 requested/effective/max=3、36 次 planning call、108 tasks 和 worker provenance。并行
+池以单次 C planning invocation 为生命周期，tick/layer/B/adoption 仍串行。继续评估：重复搜索与 cache
 profiling、同 layer 多目标共享 immutable inputs、shared-search feasibility，以及
 incremental replanning proposal。任何优化都必须通过 serial/parallel semantic digest
 equivalence、RSS 上限和 determinism tests；禁止多个 heavy replay 并行。
 
 ## P4 D Professional Navigation Visualization（2026-08-21 23:18）
 
-状态：`WINTER_COMBINED_REAL_E2E_PASS / SUMMER_FALLBACK_PRESERVED`。
+状态：`WINTER_COMBINED_REAL_E2E_PASS / DYNAMIC_RETROSPECTIVE_REPLAY_PUBLISHED / SUMMER_FALLBACK_PRESERVED`。
 
 1. 已接入真实 `presentation.route-candidates.v1`，支持四层 selector、三目标 compare、
    canonical metrics、candidate geometry 与 display-only highlight；空候选继续明确
    `SINGLE_ROUTE_FALLBACK`。
 2. 已增加 run/scenario、RiskFrame schema、grid/frame/candidate-set metadata；DatasetBundle
    identity 等未发布字段明确显示 `not published`，不从私有 artifact 推断。
-3. `risk-explanation.v1` optional consumer 与点击格点面板已通过 Firefox E2E；只显示
-   producer 字段并在缺失/invalid/mismatch 时失败关闭。B 同次公式 trace、immutable
-   artifact/manifest 与 Orchestrator SHA/identity transport 已闭合；sidecar 仍为
-   `demo_unvalidated` / `research_unvalidated`，D 不生成 contributor。
+3. `risk-explanation.v1` optional consumer 与点击格点面板已通过测试；只显示 producer 字段
+   并在缺失/invalid/mismatch 时失败关闭。B 同次公式 trace、immutable artifact/manifest 与
+   Orchestrator SHA/identity transport 已在另一 Winter holdout 身份闭合；当前恢复的原始冻结
+   身份因精确 A source trace 已退役而不带 sidecar，D 诚实显示 unavailable，不生成
+   contributor，也不影响基础风险/路线/仿真。
 4. 保留 Research Validation / Operational Replay / Engineering Debug 三态和单一
    Simulation Clock。
 
-经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示和独立 layer toggle
-已通过 Firefox。同一 Winter identity 的 145-frame risk、12-route candidates 与
-ETA-driven navigation simulation 已由 Orchestrator 组装并通过 Research View Browser
-E2E；现有 Summer frozen fallback 继续保留。下一步不得把该 ETA projection 写成 causal
-replay；如需重规划展示，必须发布真实 Winter replay events。Risk explanation 的下一步必须
-先由 B 发布真实、可追溯 sidecar，再由 Orchestrator 绑定相同 RiskWindow/RiskFrame identity；
-synthetic browser fixture 不能提升 producer 成熟度。
+经纬网格、坐标标签、haversine 中心纬度比例尺、grid-north 指示、独立 layer toggle 与
+344px/528px 风险时域布局已通过 Firefox。同一 Winter identity 的 145-frame risk、每个
+revision 的 12-route candidates、真实 replay events、ETA-driven navigation simulation
+已由 Orchestrator 组装并通过 Research View Browser E2E；现有 Summer frozen fallback
+继续保留。当前动态包明确是 retrospective，不得升级为 causal replay。explanation
+consumer 仍可选且失败关闭；当前原始冻结身份没有 sidecar，其他身份的真实 sidecar 和
+synthetic fixture 都不能提升本包的 producer 成熟度或被跨身份复用。
 
 ## 全局验收与资源规则（2026-08-21 23:18）
 

@@ -8,13 +8,23 @@ Document Role: CANONICAL
 Scope: non-blocking items + NEXT PHASE technical debt
 Canonical For: registered technical debt and next-phase work
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-09-01 23:40 +08:00
 ---
 
 # 技术债登记
 
+## 2026-09-01 当前增量（动态回放与 RC2 并行）
+
+| ID | 事项 | 当前状态 | 说明 / 下一步 |
+|---|---|---|---|
+| TD-66 | Winter dynamic replay source | `RETROSPECTIVE_PUBLISHED / CAUSAL_PENDING` | 原始冻结身份已有 119 events、9 revisions、终态 ARRIVED；issue-time 仍不支持 strict causal，需新窗口 |
+| TD-67 | C RC2 objective parallel formal path | `RESOLVED / REAL_RUN_PASS` | initial/replan 使用 3-worker persistent ProcessPool；真实 `effective/max=3`、108 tasks |
+| TD-68 | Revision resource lifecycle | `RESOLVED / REAL_E2E_PASS` | index 正确呈现 8 个 superseded + R9 current、到达态无 pending；D 按 event/revision 状态消费 |
+| TD-69 | B coarse-grid endpoint finding | `EXPECTED_FAIL_CLOSED` | `allowed_region_has_no_grid_node` 是 Murmansk 粗网格/窄 allowed region 数据问题；不扩大默认网格，保留定向测试 |
+| TD-70 | B explanation sidecar on current Winter package | `OPEN / OPTIONAL_DEGRADATION` | consumer/transport 已验证，但当前原始冻结 RiskWindow 的精确 A source trace 已退役，不能重建或跨身份复用 sidecar；D 显示 unavailable，基础功能不受影响 |
+
 状态：CURRENT（当前）
-最后更新：2026-08-23
+最后更新：2026-09-01 23:40 +08:00
 范围：非阻塞事项 + Research Validation System Enhancement Phase
 
 ## Research Validation 优先级映射（2026-08-21 23:18）
@@ -115,7 +125,7 @@ Last Verified: 2026-08-23
 | TD-44 | 统计口径：REPLAN_DECIDED 的候选/采纳计数 | 中 | **FIXED（2026-08-19）** | 旧 summary 只把 REPLAN_TRIGGERED 计为 accepted；已把 REPLAN_DECIDED 计入 candidate_computed / candidate_accepted（修正后 latest-head 12h：candidate 12 / accepted 6 / rejected 6 / skip 1） | 复跑验证 manifest+13/13 snapshot+risk+route digest 与首次全等 |
 | TD-45 | deferred pending 期间的 interval gate 优化 | 低 | **NEXT（不本轮做）** | deferred adoption 使 accepted plan 在 pending 期间不刷新，interval gate 在更多 tick 放行 C（latest-head 12h 约 34min，vs 旧 immediate 约 21.8min）；可将来在 pending plan 存在且 TIME-only 时跳过 | 本轮按约束不做 Planner 性能优化；下轮若需要可加“pending-plan gate”并保持语义等价 |
 | TD-19 | GEBCO real-world coastline integrity | 高 | **FOUNDATION ESTABLISHED（2026-08-19）** | `replay/geospatial.py`：EPSG:4326 canonical transform、basemap metadata、L2 coastline gate + 本地 GEBCO_2026 land_sea_mask real smoke（水域 PASS / 穿陆 FAIL） | 下一轮并入 demo preflight 作为正式 L2 门禁；data already local |
-| TD-46 | GEBCO `land_sea_mask` 极性误解 | 高 | **CORRECTED（2026-08-19）** | 上一轮 foundation 按 `1=land` 解释；项目规范语义实为 `1=sea, 0=land_or_coast`。已修正 `LandMaskSampler` 与 smoke 描述；真实 12h route L2 = PASS（0 land cell） | 后续所有 L2 / Viewer land overlay 必须沿用 `1=sea` |
+| TD-46 | GEBCO `land_sea_mask` 极性误解 | 高 | **CORRECTED（2026-08-19）** | 上一轮 foundation 将 0/1 海陆极性解释反了；项目规范语义实为 `1=sea, 0=land_or_coast`。已修正 `LandMaskSampler` 与 smoke 描述；真实 12h route L2 = PASS（0 land cell） | 后续所有 L2 / Viewer land overlay 必须沿用 `1=sea` |
 | TD-47 | 受限 sandbox 无法跑浏览器/socket | 中 | **RESOLVED FOR THIS ROUND / BROWSER_E2E_PASS** | 默认受限 profile 仍阻断 daemon/socket；attended run 通过允许的 escalated local Firefox path 完成真实浏览器验证，console/network 均 PASS | 后续 CI 仍需提供可复现浏览器执行环境 |
 | TD-48 | Viewer superseded route 绘制 | 低 | **ESTABLISHED / BROWSER_E2E_PASS（2026-08-20）** | Adapter 输出 `superseded_future_route`，D 以灰色虚线显示，adoption 后保留过去 future segment | 后续可做 richer animation，不改变语义 |
 | TD-49 | Dynamic Risk / Hard Reason overlay | 中 | **CURRENT MVP PASS / BROWSER_E2E_PASS（2026-08-20）** | Orchestrator 输出 presentation-ready current/horizon selections；D 按 Simulation Clock 对齐风险与 hard reason，`unknown != safe` | 当前语义已完成；后续只做视觉 polish |

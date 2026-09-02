@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: documentation navigation map
 Canonical For: which document to trust for each question
 Branch: research-validation-system
-Last Verified: 2026-08-30
+Last Verified: 2026-09-01 23:40 +08:00
 ---
 
 # 文档索引
@@ -163,6 +163,7 @@ Last Verified: 2026-08-30
 | 报告 | 说明 |
 |------|------|
 | [WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md](reports/research-validation/WINTER_COMBINED_VIEWER_INTEGRATION_REPORT.md) | Winter 组合查看器集成（最新 Winter 门禁证据） |
+| [WINTER_DYNAMIC_REPLANNING_RC2_PARALLEL_RUN_REPORT.md](reports/research-validation/WINTER_DYNAMIC_REPLANNING_RC2_PARALLEL_RUN_REPORT.md) | Winter 真实动态回放、revision 生命周期与 C RC2 三核并行工程运行报告 |
 
 ## 六、竞赛演示闭环报告（reports/governance/）
 

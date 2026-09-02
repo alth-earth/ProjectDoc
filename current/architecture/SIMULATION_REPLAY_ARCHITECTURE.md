@@ -7,10 +7,23 @@ Document Role: CANONICAL
 Scope: simulation replay engine + presentation adapter + viewer artifact boundary
 Canonical For: how replay snapshots, digests, presentation export and Viewer handoff work
 Branch: research-validation-system
-Last Verified: 2026-08-20
+Last Verified: 2026-09-01 23:40 +08:00
 ---
 
 # Simulation Replay Architecture（设计 + 实现，2026-08-17 起，经 2026-08-20 治理审计）
+
+## 0.1 Current implementation evidence（2026-09-01 23:40 +08:00）
+
+当前回放引擎支持显式 `causal_replay` 与 `retrospective_dynamic_replay` 两种模式。真实
+Winter holdout 回放 `winter-retro-holdout-resource-v4` 产生 3 个 snapshots、17 个事件
+和 3 个 content-addressed plan revisions；每个 revision 都是四层×三目标（12 条）资源，
+并记录 `REPLAN_DECIDED`、`REPLAN_ADOPTED` 与 `ROUTE_CHANGED`。后者保留原始 issue time，
+只声明事后动态投影；严格 causal 窗口仍按 issue-time 门禁失败关闭。
+
+RC2 objective-level 三核并行已进入正式 Orchestrator 初始/重规划路径：真实 summary 为
+`requested_workers=3`、`effective_workers=3`、`max_parallel_tasks=3`、36 个 objective
+tasks；tick、layer、B 和 adoption gate 继续串行。`worker_pids` 仅作为跨调用 provenance，
+不能解释成同时运行的 9 核。
 
 > 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18） + VIEWER MVP IMPLEMENTED（2026-08-19）**
 > 已实现：replay models/digests/runner/validation/inspector；真实 12h/24h/44h
@@ -357,6 +370,10 @@ SimulationClock tick（1h）
 ```
 
 ## 20. Full 144h Expansion Plan
+
+> 2026-09-01 更新：真实 Winter holdout 已先以明确标注的
+> `retrospective_dynamic_replay` 发布 revision/event 资源并接入 Viewer；以下计划仍适用于
+> 严格 issue-time causal 版本，不能将事后投影升级为 causal replay。
 
 1. 建立 causal-ready 采集（实时 publication evidence / explicit_catalog /
    http_last_modified 保存）；

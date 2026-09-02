@@ -8,10 +8,14 @@ Document Role: CANONICAL
 Scope: phase history and architecture decisions relevant to research validation
 Canonical For: why current boundaries and roadmap priorities exist
 Branch: research-validation-system
-Last Verified: 2026-08-23
+Last Verified: 2026-09-01 23:40 +08:00
 ---
 
 # Research Validation Decisions
+
+> 本文按批次保留历史决策原文；其中关于候选发布、动态回放和 sidecar 的旧状态不覆盖
+> 2026-09-01 当前事实，当前状态以 [`CURRENT_STATUS.md`](../CURRENT_STATUS.md)、
+> [`CURRENT_ROADMAP.md`](../CURRENT_ROADMAP.md) 和本轮运行报告为准。
 
 ## 第1批：RC1 / RC2 冻结与可恢复基线（2026-08-21 23:18）
 
