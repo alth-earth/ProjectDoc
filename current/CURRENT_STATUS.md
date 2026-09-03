@@ -5,10 +5,11 @@ Content Status:
   - IN_PROGRESS
   - PLANNED
 Document Role: CANONICAL
+Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-02 02:40 +08:00
+Last Verified: 2026-09-03 09:09 +08:00
 ---
 
 # 研究验证系统当前状态
@@ -53,6 +54,52 @@ Ruff 通过，C/O 全仓 Ruff 各被无关既有脚本格式问题阻挡。真�
 到达态、三目标独立选择、原始折线工程开关、completed-track、console=0 与 344/528 px
 布局均通过。
 这些仍是工程研究仿真证据，不是 strict causal replay、实船标定或导航资格。
+
+## 2026-09-03 冬季重建与可解释 viewer 包（2026-09-03 09:09 +08:00）
+
+2026-09-02 对 2026-02-15 冬季窗口执行了合规重建，产出**全新身份的正式可解释制品**，
+替代上一节 "Explanation unavailable" 的诚实降级状态（旧 `a-bundle-a2146dd0…` 的
+ocean_current 使用 detided 后备数据，其精确 A source record 已随 2026-08-26 detided
+退役物理删除，无法重建同次 B formula trace）。
+
+- 采集合规：`winter_window_acquisition.py --require-total-current` 对
+  2026-02-15T00Z..2026-02-21T00Z 全窗口重新采集。ocean_current 145 帧全部为
+  `current_component=total`、`tide_included=true`、来源
+  `ARCTIC_ANALYSISFORECAST_PHY_TIDE_002_015`（TOPAZ 含潮总流），无 detided fallback
+  （`source_fallback_reason=None`）。CARRA 三类型 49 帧/类、海冰 5 类与 water_level 145
+  帧、wave 49 帧、land_sea_mask static 全部完整覆盖窗口。数据根
+  `.runtime/winter-rebuild-20260215/data`（新目录，A 正式 data 根未动）。
+- 新身份（无法复现旧 `a2146dd0` digest，属全新 bundle）：
+  - DatasetBundle `a-bundle-fbbbfbb6e14bec5162408046`（digest
+    `fbbbfbb6…473bba`，1,212 记录）；
+  - RunContext `run-bd3c3ba5-015c-4953-97a2-c7e3cfbefc01`（config_digest 按 bundle
+    身份重算，`5258a2e8…`）；
+  - RiskWindow `risk-window-sha256-86bdb614c5137ba9ef9129713b5575423e97bac3522bea9ff89f45f879a03ecb`
+    （145 帧，unknown_navigable_nodes=0）；B 以
+    `build_window_with_explanation_trace` 同次构建并发布 explanation。
+  - plan-set（12 路线）、route-candidates
+    `route-candidates-sha256-df488dcc…`（selected
+    `route-v3-sha256-e677def9…`）、route-motion-set
+    `route-motion-set-sha256-32fe1c26…` + candidate-set。
+- explanation 恢复：`risk-explanation.v1` artifact
+  `risk-explanation-sha256-66bd366e4b3179880b67d8c601c4e48c6e4c50c7e3dbebe8807b97fab03b913a`
+  + manifest（绑定 86bdb614 窗口，artifact_sha256 实测一致）；viewer bundle 已嵌入
+  `risk_explanation` 与 `risk_explanation_transport`（status PUBLISHED）。逐帧逐格状态
+  为源数据缺测的可解释结果。
+- Viewer 包：`work_package_d/output/winter-rebuilt-20260215-viewer-package-v1/`
+  （preflight overall/l2 PASS、12 routes、145 risk frames；checksums 与 A bundle/manifest
+  checksum 全量一致；code-reviewer 验收 6/6 PASS）。
+- 统一发布流程：`publish_viewer_package.py`（orchestrator/scripts）内置
+  `scenario_identity.verify_viewer_identity` 四元组强校验（scenario_id + dataset_bundle
+  + risk_window + selected_candidate），并透传 `--risk-explanation-manifest` 使 viewer
+  包携带同身份 explanation。后续冬季窗口重建应走该统一脚本。
+- 保留语义（非缺陷）：`quality_flag=suspect` 是非权威回溯采集（`authoritative=False`）
+  的保守 provenance 标记，content_qc 为 good；explanation `publication_status=PARTIAL`
+  源自 `demo_unvalidated` 模型标定语义，与全仓历史一致。走廊坐标
+  `tromso_to_isfjorden_outer` v1.2.0 未改动。
+- 本文件只登记当前状态；完整运行证据、资源数据与已知限制见
+  [Winter B 风险验证报告 §12](../reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md)，
+  不在此复制细节。
 
 ## 2026-09-01 22:52 +08:00 holdout 中间基线（已由原始冻结到达态包替代）
 

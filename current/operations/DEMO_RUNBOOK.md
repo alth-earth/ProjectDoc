@@ -229,6 +229,38 @@ scrub, moving ship, route / completed-track / pending-deferred-route rendering.
 > `scripts/replay_viewer_serve.py --root viewer`, or `viewer/embed.py` commands exist
 > anymore — those were handed off to `work_package_d` in the governance round.
 
+## Mode G — Unified Winter rebuild entry (publish_viewer_package, 2026-09-03 09:09 +08:00)
+
+Use this entry to publish a **rebuilt** Winter viewer package with strong
+scenario-identity validation (scenario_id + dataset_bundle + risk_window +
+selected_candidate) and optional explanation transport:
+
+```bash
+cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
+.venv/bin/python scripts/publish_viewer_package.py \
+  --scenario-id tromso_isfjorden_february_2026_research_v1 \
+  --dataset-bundle <experiment>/<route>_winter_<start>T000000Z_min144_bundle.json \
+  --run-context <experiment>/run_context.json \
+  --risk-store-root <experiment>/risk-store \
+  --risk-window-commit <experiment>/risk-store/commits/risk-window-sha256-<digest>.json \
+  --plan-set <experiment>/c-output/winter-four-layer-route-plan-set-v3.json \
+  --route-candidates <experiment>/c-output/route-candidates.json \
+  --route-integrity <experiment>/c-output/route-integrity.json \
+  --risk-frame-index <experiment>/frame-index.json \
+  --route-motion-set <experiment>/motion/route-motion-set.json \
+  --land-mask <data-root>/ready/<route>/land_sea_mask/<yyyy>/<mm>/<dd>/land_sea_mask_*.nc \
+  --risk-explanation-manifest <experiment>/risk-explanation/manifests/risk-window-sha256-<digest>.json \
+  --output-dir <work_package_d>/output/<package-name>
+```
+
+- `--risk-explanation-manifest` is what makes the exported bundle carry
+  `risk_explanation` + `risk_explanation_transport`. Without it the Viewer keeps the
+  previous `Explanation unavailable` behaviour: there is no fallback and no
+  cross-identity sidecar reuse.
+- The output directory is immutable: the command fails closed if the target exists.
+- Rebuild evidence and known limits:
+  `arctic_route_governance/reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md` §12.
+
 ## 故障恢复
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；
