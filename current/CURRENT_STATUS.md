@@ -9,7 +9,7 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-03 20:54 +08:00
+Last Verified: 2026-09-03 20:59 +08:00
 ---
 
 # 研究验证系统当前状态
@@ -57,8 +57,10 @@ Last Verified: 2026-09-03 20:54 +08:00
 - Windows x64 未在 WSL 交叉构建；整合项目已交付原生 Windows PowerShell build/verify、
   ecCodes DLL/definitions 门禁、中文说明和团队 AI 提示词。只有在干净 Windows x64 机器完成
   EXE 自检与 loopback/worker 验收后，才能登记 Windows PASS。
-- 当前控制中心 `28 passed`、A 隔离根 `214 passed, 2 skipped`、D `124 passed`、
-  Orchestrator Viewer/exporter 定向回归 `35 passed`，各自 Ruff PASS。冻结 AppImage 的双凭据
+- 当前控制中心 `28 passed`、A 完整 `make check` `216 passed`、D `124 passed`、
+  Orchestrator Viewer/exporter 定向回归 `35 passed`，各自 Ruff PASS。A 的 causal replay
+  测试对本机历史 manifest 采用 fail-closed 断言，`ready_ticks=0` 不再被错误当作测试失败。
+  冻结 AppImage 的双凭据
   设置、CARRA catalog、控制中心 API、制品库与默认 D Viewer 已经真实 Chromium 冒烟。
 
 能力边界不变：当前默认包是 retrospective dynamic research replay，不是 strict causal、
