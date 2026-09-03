@@ -9,7 +9,7 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-03 16:09 +08:00
+Last Verified: 2026-09-03 20:54 +08:00
 ---
 
 # 研究验证系统当前状态
@@ -25,6 +25,12 @@ Last Verified: 2026-09-03 16:09 +08:00
 - A：界面展示 15 个注册类型，但只允许 12 个正式必需类型和 2 个合同可选类型；
   `vessel_traffic` 保持诊断模拟并在 UI 禁用。共享场景唯一决定时间和模式，frozen template
   只接受显式 UTC materialization anchor；不会再错误叠加 `--start/--end/--mode`。
+- 凭据与独立 CARRA：设置格式保持 v1 向后兼容，同时保存外部 `.env.copernicus` 与
+  `.cdsapirc` 两个绝对路径，分别服务 Marine 与 CDS/CARRA，互不覆盖且不读取/回显内容。
+  正式 `a_carra_acquire`/`acquire-carra` 只接受已登记 East domain 走廊、UTC 3 小时边界、
+  最长 216 小时及风场/温度/能见度；只发布 A manifest/来源证据，不创建 Contracts 场景，
+  也不把 retrospective reanalysis 冒充实时预测或 `frozen_forecast`。一个真实 3 小时
+  temperature 周期完成下载、解析、发布和二次缓存复用；原始缓存与来源快照摘要一致。
 - Orchestrator：长任务使用白名单 job spec 和独立 worker；所有用户输入文件必须位于外部
   `data_root`。统一 Viewer publisher 已改为公开包入口，补齐 dynamic replay、motion candidate
   set、formal motion 强制、strict JSON、完整文件/checksum/preflight/12-route/身份复核、最终目录
@@ -33,22 +39,27 @@ Last Verified: 2026-09-03 16:09 +08:00
 - D：仍是只读 consumer。`artifacts/inbox` 中未完成制品只识别、不提供给 Viewer；通过
   Schema、checksum、PUBLISHED、12 routes、preflight 和 formal motion 后才可原子提升到
   `artifacts/ready`。随包默认只包含当前 `work_package_d/viewer/checksums.json` 所列冻结制品
-  和普通 Web 资源，不包含重复的 self-contained HTML 或历史 output/backup。
+  和普通 Web 资源，不包含重复的 self-contained HTML 或历史 output/backup。运行锁定现在
+  只保护实际 candidate、运动来源、ETA 与“设为运行路线”；路线层、三目标显隐和候选卡片
+  高亮仍可操作，且浏览器回归证明它们不改变同一时刻的船位或运行路线身份。
 - 发行裁剪：不包含 A 23GB 数据、凭据、RC1/RC2/demo-engineering 分支内容、legacy CNN、
   Torch/safetensors、B calibration/grid 实验、C synthetic/legacy CLI 与 experimental cache。
   可写配置、数据、任务、日志、缓存和新制品全部位于 AppImage 外部。
 - Linux x86_64 AppImage 已在 WSL Ubuntu 24.04 构建，产物
   `arctic_route_control_center/release/Arctic_Route_Control_Center-x86_64.AppImage`，SHA256
-  `d8fd5c0732aa896041df847e5043e14902b8fded45fecfb19339a7a044725594`（后续重建会改变）；
+  `cc9fd06f100e777cc43d7e0aac69b6de2662530eeba3946a6d23a7ad49e4acbf`，大小
+  `184113656` bytes（后续重建会改变）；
   冻结自检确认七个包 metadata、ecCodes 2.48.0、当前 12-route Viewer、真实 A worker、
   Orchestrator stage/exporter 内部入口和 HTTP 端点可用。构建来源另以实际源码树摘要记录，
-  PyInstaller 的 `direct_url.json`/`uv_cache.json` 已从发行物移除。
+  PyInstaller 的 `direct_url.json`/`uv_cache.json` 已从发行物移除；最终 AppImage 解包扫描
+  27047 个文件无凭据、原始数据、缓存、未授权实验构件或构建机绝对路径。
   由于构建主机 glibc 2.39，广泛旧 Linux 兼容发布仍应在 Ubuntu 22.04 基线上复建。
 - Windows x64 未在 WSL 交叉构建；整合项目已交付原生 Windows PowerShell build/verify、
   ecCodes DLL/definitions 门禁、中文说明和团队 AI 提示词。只有在干净 Windows x64 机器完成
   EXE 自检与 loopback/worker 验收后，才能登记 Windows PASS。
-- 当前控制中心 `9 passed`、Ruff PASS；Orchestrator publisher `7 passed`。冻结 AppImage 的
-  实际控制中心、A 类型筛选、制品库和默认 D Viewer 已经真实 Chromium 冒烟，console error=0。
+- 当前控制中心 `28 passed`、A 隔离根 `214 passed, 2 skipped`、D `124 passed`、
+  Orchestrator Viewer/exporter 定向回归 `35 passed`，各自 Ruff PASS。冻结 AppImage 的双凭据
+  设置、CARRA catalog、控制中心 API、制品库与默认 D Viewer 已经真实 Chromium 冒烟。
 
 能力边界不变：当前默认包是 retrospective dynamic research replay，不是 strict causal、
 实船标定或导航资格。C formal motion producer 仍传递依赖 research smoothing 源码；首版裁剪
