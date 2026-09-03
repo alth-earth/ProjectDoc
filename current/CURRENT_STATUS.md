@@ -9,10 +9,50 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-03 10:09 +08:00
+Last Verified: 2026-09-03 16:09 +08:00
 ---
 
 # 研究验证系统当前状态
+
+## 2026-09-03 六包控制中心与 Linux AppImage 发行
+
+已新增根级整合项目 `arctic_route_control_center`，不搬移 A/B/C/D 业务所有权。发行入口为
+本地 C/S Web 控制面：启动器保留命令台、后端只监听 loopback，并自动打开默认浏览器。
+
+- Contracts：界面可只读查看 Corridor、Scenario、Vessel；正式任务只开放 6 个显式
+  release allowlist 场景。research、RC2 smoke、winter development、holdout 场景不进入
+  可执行下拉框；Contracts 当前配置总数已由测试从过时的 8 修正为 10。
+- A：界面展示 15 个注册类型，但只允许 12 个正式必需类型和 2 个合同可选类型；
+  `vessel_traffic` 保持诊断模拟并在 UI 禁用。共享场景唯一决定时间和模式，frozen template
+  只接受显式 UTC materialization anchor；不会再错误叠加 `--start/--end/--mode`。
+- Orchestrator：长任务使用白名单 job spec 和独立 worker；所有用户输入文件必须位于外部
+  `data_root`。统一 Viewer publisher 已改为公开包入口，补齐 dynamic replay、motion candidate
+  set、formal motion 强制、strict JSON、完整文件/checksum/preflight/12-route/身份复核、最终目录
+  原子发布，以及冻结程序内部 exporter dispatch。sidecar 派生改为通用包内函数，不再预创建
+  一个下游必然拒绝的输出目录。
+- D：仍是只读 consumer。`artifacts/inbox` 中未完成制品只识别、不提供给 Viewer；通过
+  Schema、checksum、PUBLISHED、12 routes、preflight 和 formal motion 后才可原子提升到
+  `artifacts/ready`。随包默认只包含当前 `work_package_d/viewer/checksums.json` 所列冻结制品
+  和普通 Web 资源，不包含重复的 self-contained HTML 或历史 output/backup。
+- 发行裁剪：不包含 A 23GB 数据、凭据、RC1/RC2/demo-engineering 分支内容、legacy CNN、
+  Torch/safetensors、B calibration/grid 实验、C synthetic/legacy CLI 与 experimental cache。
+  可写配置、数据、任务、日志、缓存和新制品全部位于 AppImage 外部。
+- Linux x86_64 AppImage 已在 WSL Ubuntu 24.04 构建，产物
+  `arctic_route_control_center/release/Arctic_Route_Control_Center-x86_64.AppImage`，SHA256
+  `d8fd5c0732aa896041df847e5043e14902b8fded45fecfb19339a7a044725594`（后续重建会改变）；
+  冻结自检确认七个包 metadata、ecCodes 2.48.0、当前 12-route Viewer、真实 A worker、
+  Orchestrator stage/exporter 内部入口和 HTTP 端点可用。构建来源另以实际源码树摘要记录，
+  PyInstaller 的 `direct_url.json`/`uv_cache.json` 已从发行物移除。
+  由于构建主机 glibc 2.39，广泛旧 Linux 兼容发布仍应在 Ubuntu 22.04 基线上复建。
+- Windows x64 未在 WSL 交叉构建；整合项目已交付原生 Windows PowerShell build/verify、
+  ecCodes DLL/definitions 门禁、中文说明和团队 AI 提示词。只有在干净 Windows x64 机器完成
+  EXE 自检与 loopback/worker 验收后，才能登记 Windows PASS。
+- 当前控制中心 `9 passed`、Ruff PASS；Orchestrator publisher `7 passed`。冻结 AppImage 的
+  实际控制中心、A 类型筛选、制品库和默认 D Viewer 已经真实 Chromium 冒烟，console error=0。
+
+能力边界不变：当前默认包是 retrospective dynamic research replay，不是 strict causal、
+实船标定或导航资格。C formal motion producer 仍传递依赖 research smoothing 源码；首版裁剪
+发行只消费已有 formal motion 制品，不承诺在发行包内从零生成新的 motion。
 
 ## 2026-09-02 原始冻结身份恢复与到达态最终收口
 
