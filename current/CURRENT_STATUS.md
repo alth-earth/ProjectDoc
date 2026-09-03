@@ -9,7 +9,7 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-03 09:09 +08:00
+Last Verified: 2026-09-03 10:09 +08:00
 ---
 
 # 研究验证系统当前状态
@@ -100,6 +100,17 @@ ocean_current 使用 detided 后备数据，其精确 A source record 已随 202
 - 本文件只登记当前状态；完整运行证据、资源数据与已知限制见
   [Winter B 风险验证报告 §12](../reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md)，
   不在此复制细节。
+- Viewer 制品选择器（2026-09-03 10:09 +08:00）：顶栏可选择 `work_package_d/output/`
+  下已完成 viewer 制品包（显示“航线 · 模拟时间”，默认仍为当前 `viewer/bundle.json`）。
+  清单由 `scripts/build_viewer_package_index.py` 生成 `viewer/packages.json`（支持
+  `configs/viewer_package_overrides.json` 手工覆盖），`replay_viewer_serve.py` 新增
+  `--packages-dir` 只读前缀挂载，前端新增 `viewer/package_picker.js|css`（  下拉、右键
+  “属性”弹窗、切换失败自动回退默认）。本地 HTTP 冒烟与静态验收通过；真实浏览器交互
+  验证 `RUN / PASS`（Firefox 155，2026-09-03），含切换、属性弹窗与恶意参数回退，期间修复
+  app.js 钩子未 `await` 的 bug，用法见 DEMO_RUNBOOK Mode H、证据见报告 §12.4。
+- git（本轮）：orchestrator 提交 `15b4c6c`（统一发布脚本 + scenario_identity），
+  governance 提交 `6f0cae0`（重建登记）；未 push；并发 agent（codex）的 3 个
+  工作树改动未被混入提交。
 
 ## 2026-09-01 22:52 +08:00 holdout 中间基线（已由原始冻结到达态包替代）
 

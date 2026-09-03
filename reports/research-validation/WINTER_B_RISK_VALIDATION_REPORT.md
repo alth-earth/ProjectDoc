@@ -7,7 +7,7 @@ Applicability: CURRENT
 Scope: first formal Winter B scientific validation run, Summer/Winter comparison, and the 2026-09-03 compliant rebuild run evidence (§12)
 Canonical/Supporting: Supporting milestone report; canonical status is current/reference/WINTER_SCENARIO_STATUS.md and current/CURRENT_STATUS.md
 Branch: research-validation-system
-Last Verified: 2026-09-03 09:09 +08:00
+Last Verified: 2026-09-03 10:09 +08:00
 ---
 
 # Winter B Risk Validation 报告
@@ -355,3 +355,32 @@ explanation / motion）必须逐字一致，已记录于第 13 项；`generated_
   content_qc 为 good。
   修正后声明：suspect 是 provenance 保守标记，不代表数据质量缺陷。
   受影响：状态口径（已在 `CURRENT_STATUS.md` 登记）。
+
+### 12.4 Viewer 制品选择器与提交记录（2026-09-03 10:09 +08:00）
+
+随本轮交付的 Viewer 顶栏制品选择器允许操作员在多个已完成 viewer 制品包之间浏览切换，
+默认身份不变：
+
+- 实现：`work_package_d/scripts/build_viewer_package_index.py`（扫描 `output/` 生成
+  `viewer/packages.json`，schema `d.viewer-package-index.v1`，支持
+  `configs/viewer_package_overrides.json` 手工覆盖显示名/排序/隐藏）、
+  `scripts/replay_viewer_serve.py` 新增 `--packages-dir` 只读前缀挂载、前端
+  `viewer/package_picker.js|css`（下拉显示“航线·模拟时间”、右键“属性”弹窗、
+  切换失败自动回退默认）。用法见 DEMO_RUNBOOK Mode H。
+- 验证：本地 HTTP 冒烟 PASS（默认包与 `packages/<pkg>/bundle.json` 200；
+  `..` 与 `%2e%2e` 编码穿越、不存在包、`packages/playwright` 一律 404）；
+  code-reviewer 静态验收 7/7 PASS（serve 三层越界防护、app.js 为单点 fail-closed
+  钩子、无 innerHTML 注入面、清单健壮、未改默认身份、无凭据/绝对路径泄漏）。
+- 浏览器交互验证：`RUN / PASS`（Firefox 155，playwright，2026-09-03 12:44 +08:00）。
+  默认包加载、下拉显示“航线·模拟时间”并可解释标记、切换至 `winter-rebuilt` 包后
+  Viewer 正常初始化且 `riskExplanation` API 返回 `publication_status`、右键“属性”弹窗
+  展示完整 digest（bundle `fbbbfbb6…` / window `86bdb614…` / explanation `66bd366e…`）、
+  恶意 `?package=../`（`%2e%2e` 编码）被白名单拒绝并回退默认——均 PASS。
+  验证期间修复 app.js 钩子 `async` IIFE 未 `await` 导致的 `bundle.replay is undefined`
+  （Promise 被赋给 bundle 变量）。截图 `work_package_d/output/playwright/viewer-picker-firefox.png`。
+- 已知限制：app.js 钩子块约 26 行（单一逻辑点，偏宽但不跨目标）；与并发编辑存在
+  中低冲突面（依赖 `formalMotionTools` 与 `start()`）；清单对“缺 bundle 但 manifest
+  在”的目录已改判 `incomplete`。
+- Git：本轮提交 orchestrator `15b4c6c`（统一发布脚本 + scenario_identity）、
+  governance `6f0cae0`（重建登记）；未 push；并发 agent（codex）的 3 个工作树改动
+  未混入。

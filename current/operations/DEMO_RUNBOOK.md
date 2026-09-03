@@ -261,6 +261,50 @@ cd ${ARCTIC_ROUTE_ROOT}/arctic_route_orchestrator
 - Rebuild evidence and known limits:
   `arctic_route_governance/reports/research-validation/WINTER_B_RISK_VALIDATION_REPORT.md` §12.
 
+## Mode H — Viewer artifact picker (2026-09-03 10:09 +08:00)
+
+在 Viewer 顶栏选择已发布制品包，可切换浏览不同航线 / 不同重建身份的已完成包；
+默认仍加载当前 `viewer/bundle.json`（不切换默认身份）。
+
+### 生成制品清单（新增或更新 `output/` 下包后执行）
+
+```bash
+cd ${ARCTIC_ROUTE_ROOT}/work_package_d
+python scripts/build_viewer_package_index.py        # -> viewer/packages.json
+```
+
+- 清单只含摘要元数据（航线、模拟时间窗、风险帧 / 路线数、可解释标记、各身份 digest），不载入包体；
+- 手工覆盖显示名 / 排序 / 隐藏：`configs/viewer_package_overrides.json`；
+- 损坏或缺 `bundle.json` 的包标记 `incomplete` 并在列表中灰显，不中断整体生成。
+
+### 启动（挂载制品目录）
+
+```bash
+cd ${ARCTIC_ROUTE_ROOT}/work_package_d
+.venv/bin/python scripts/replay_viewer_serve.py \
+  --root viewer --packages-dir output --host 127.0.0.1 --port 8131
+```
+
+- 不传 `--packages-dir` 时行为与旧版完全一致（不挂载制品目录）；
+- `packages/<pkg>/` 为只读前缀；路径穿越（含编码形式）一律 404。
+
+### 使用
+
+- 顶栏下拉每项显示“航线 · 模拟时间”，当前项带青色指示条；选择后整页以
+  `?package=<pkg>` 加载对应包，“（当前默认）”项回到 `viewer/bundle.json`；
+- 右键制品（或列表项）→“属性”弹窗展示完整身份溯源（bundle / risk window / run /
+  motion set digest、可解释制品 artifact 等，支持整行复制）；
+- 目标包 preflight 失败时自动回退默认制品并提示，不留下半初始化界面；
+- `index_self_contained.html`（内嵌单包分发）不支持切换，仅作单包只读视图。
+
+> 真实浏览器交互验证已通过（Firefox 155 + playwright，2026-09-03 12:44 +08:00）：
+> 默认加载、下拉切换至“冬季重建（可解释）”、右键“属性”弹窗（含 bundle / risk window /
+> explanation digest）、恶意 `?package=../` 参数回退默认均 PASS；验证期间修复 app.js
+> 钩子 `async` IIFE 未 `await` 导致的 `bundle.replay is undefined`。本地 HTTP 冒烟
+> （默认 / 挂载包 200、越界 404）与 code-reviewer 静态验收 7/7 通过。截图：
+> `work_package_d/output/playwright/viewer-picker-firefox.png`；详细证据见
+> `WINTER_B_RISK_VALIDATION_REPORT.md` §12.4。
+
 ## 故障恢复
 
 - **Live 计算超时**：真实 worker watchdog 在约 110s 终止并写入 TIMEOUT 结果；
