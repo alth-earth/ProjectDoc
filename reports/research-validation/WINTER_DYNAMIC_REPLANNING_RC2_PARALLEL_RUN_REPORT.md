@@ -58,7 +58,7 @@ adoption 精确时刻。v4 的运行路线为身份绑定 `CURVE`；R2–R6 的�
 | C `work_package_c` | `680e085`（起始 `9a57289`） | 已本地提交 `fix: preserve formal motion waypoint topology`；未 push |
 | Orchestrator | `c0cbc92` | clean；本轮无代码修改、未新增提交 |
 | D `work_package_d` | `53a7f3c`（起始 `e2428c7`） | 已本地提交 `fix: keep viewer motion and display layers aligned`；未 push |
-| Governance | `d926375`（本报告提交） | 已本地提交 v4 治理与交付记录；未 push |
+| Governance | `current HEAD`（本报告随最终提交更新） | 已本地提交 v4 治理与交付记录；未 push |
 | Control Center | `91687eb` | 已本地提交 `docs: update winter v4 release handoff`；release 二进制为外部构件，未 push |
 
 #### 5. 文件系统与资源安全
