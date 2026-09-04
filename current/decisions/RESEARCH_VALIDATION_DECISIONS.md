@@ -8,7 +8,7 @@ Document Role: CANONICAL
 Scope: phase history and architecture decisions relevant to research validation
 Canonical For: why current boundaries and roadmap priorities exist
 Branch: research-validation-system
-Last Verified: 2026-09-01 23:40 +08:00
+Last Verified: 2026-09-04 22:17 +08:00
 ---
 
 # Research Validation Decisions
@@ -207,6 +207,36 @@ ScenarioRunGroup 做外层验证。
 
 **影响。** Shadow infrastructure 可用于复现实验设计和证据门禁，但当前 Winter 单场景结果
 仍是 `DIAGNOSTIC_ONLY_NOT_EXTERNAL_CALIBRATION`，不得批准正式 threshold 变化。
+
+## 第13批：Winter v4 路线连续性与展示平滑边界（2026-09-04 22:17 +08:00）
+
+**背景。** v3 浏览器证据暴露了首段路线偏离权威航点、revision 切换时船位大跳跃和候选
+比较线与正式运行线混淆。用户同时质疑 D 的平滑绘制是否把路线写死。
+
+**审计结论。** 原始 R1 的前八个航点经度固定为 `18.4`、纬度递增，北向拓扑正确；D 中没有
+Winter 经纬度或 route ID 常量。当前 `route_visual_smoothing.js` 是通用、数据驱动的
+screen-space 二次 Bezier paint layer，读取每个制品 candidate 的 `geometry.coordinates`。
+20 CSS px 圆角、40% trim 上限等只是可测试的展示策略；该层不读取或改变 motion、ETA、风险、
+运行 candidate 或 adoption。formal active path 与船位只来自 C `motion_samples`。历史
+`route_smoothing.js` 和 research sidecar 不在默认 Viewer 加载路径。
+
+**决策。** C producer 默认关闭 AnyAngle shortcut，并把所有 raw waypoint 保留为 formal
+motion anchor；修正 adaptive trust 的 candidate↔raw 距离方向。D 增加 2 km waypoint binding、
+25 km formal/timeline continuity gate，候选 overlay 永不替换 active formal path，并在真实
+`REPLAN_ADOPTED` 事件时间更新 active revision。保持所有海陆、unknown、时间、走廊、操纵性、
+自交、最大速度、ETA 和风险非劣化硬门禁，不用展示平滑掩盖规划问题。
+
+**证据。** 不重新下载 A/B 数据生成不可变 v4；R2–R6 均为身份绑定 `CURVE` adoption，最大
+相邻 adoption 位置差约 0.710 km，超过 25 km 的瞬移为 false，终态 `ARRIVED`。v4 assembly 为
+`winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad`；
+bundle/checksums SHA-256 分别为 `f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a` /
+`92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33`。v3 已撤回到外部
+`artifacts/invalid/`，但源码、交付压缩包和历史结论保留；当前 AppImage 已重建以包含 D
+连续性修正。
+
+**后果。** v4 是 `retrospective_post_hoc_dynamic_projection` 的工程展示，不是 strict causal、
+实时预测、导航级或实船资格。后续若改变平滑策略，必须先验证其输入来自当前制品并证明
+`authoritative_semantics_unchanged=true`；不得新增第二条运行几何来源。
 
 ## 第12批：Winter v3 动态重规划与 Viewer 发布边界（2026-09-04 19:17 +08:00）
 

@@ -8,11 +8,23 @@ Document Role: CANONICAL
 Scope: system architecture SSOT
 Canonical For: module boundaries, data flow, runtime semantics
 Branch: research-validation-system
-Last Verified: 2026-09-01 23:40 +08:00
+Last Verified: 2026-09-04 22:17 +08:00
 Related Canonical Docs: CURRENT_STATUS.md, CURRENT_ROADMAP.md, DOCUMENTATION_INDEX.md
 ---
 
 # Arctic Route Planning System
+
+## 0.0.1 Winter v4 geometry authority correction（2026-09-04 22:17 +08:00）
+
+Winter Viewer v4 继续遵循 A→B→C→Orchestrator→D 的 producer/consumer 边界。C 发布的 formal
+`motion_samples` 是 active route、船位、航向、trail 和 ETA 的唯一运行几何来源；D 的
+`route_visual_smoothing.js` 只读取制品 candidate 的 `geometry.coordinates`，进行屏幕空间
+展示平滑，不写死 Winter 坐标、不改变 route identity 或运行语义。历史 `route_smoothing.js`
+和 research sidecar 不进入默认加载链。
+
+v3 暴露的 AnyAngle 航点跳过、formal/candidate overlay 混淆和 revision continuity 问题已在
+C/D v4 修正；所有安全硬门禁仍保持 fail-closed。当前 v4 仍是
+`retrospective_post_hoc_dynamic_projection`，不升级为 causal、实时预测、导航级或实船资格。
 
 ## 0.1 当前动态回放与并行证据（2026-09-01 23:40 +08:00）
 

@@ -9,10 +9,53 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-04 19:59 +08:00
+Last Verified: 2026-09-04 22:17 +08:00
 ---
 
 # 研究验证系统当前状态
+
+## 2026-09-04 22:17 +08:00 Winter Viewer v4 连续性修正与发布
+
+上一轮 v3 的严重偏航现象已定位并修正；v3 不再作为可选运行制品，保留其源码、压缩包和
+审计记录供追溯。根因不是 D 把 Winter 经纬度写死，而是 v3 的 C AnyAngle 路径跳过了部分
+权威航点，叠加候选比较层与正式运行层在特定 revision 的视觉重叠，以及失配 formal curve
+未被及时切回 timeline。原始 R1 起点及前八个航点仍为同一经度、纬度递增的北向拓扑。
+
+- C producer 默认关闭 AnyAngle shortcut；正式 motion 保留全部 raw waypoint anchor，并修正
+  adaptive trust 的双向距离计算。旧配置向后兼容，只有显式开启 shortcut 才允许研究性跳点。
+- D 对 formal motion 与 candidate geometry 做 2 km 航点绑定；候选 geometry 永远只是比较层，
+  不替换 active formal path；formal curve 与 authoritative timeline 偏差超过 25 km 时 fail-closed
+  回退，动态 adoption event 按真实事件时间覆盖 active revision，避免船位或路线跨 revision 跳变。
+- D 的当前平滑绘制层 `viewer/route_visual_smoothing.js` 是数据驱动的 screen-space 自适应二次
+  Bezier：输入当前制品的 `candidate.geometry.coordinates`，输出仅用于 Canvas paint 的命令。
+  20 CSS px 圆角、40% 相邻线段上限等是可测试的展示策略常量，不是 Winter 经纬度、route ID、
+  船位或 ETA 的硬编码；正式船位、航向、轨迹和运行路线只使用 C 发布的 `motion_samples`。
+  历史 `route_smoothing.js` 与 research sidecar 不在默认 Viewer 加载路径。
+- 新不可变制品 `winter-rebuilt-20260215-viewer-package-v4` 已发布到外部运行时目录
+  `/root/.local/share/arctic-route-control-center/artifacts/ready/`。assembly 为
+  `winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad`；
+  `bundle.json` SHA-256 为 `f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a`，
+  `checksums.json` SHA-256 为 `92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33`。
+  压缩交付物为 `deliveries/winter-rebuilt-20260215-viewer-package-v4.tar.gz`，SHA-256 为
+  `12c5ff2525ae9c0787f2cd6df679d5883ea730634d01bfa1555e8893ced4a89a`。
+- v3 已可恢复地移入 `artifacts/invalid/winter-rebuilt-20260215-viewer-package-v3-withdrawn-20260904/`；
+  v2 仍位于此前的 retired invalid 目录。v1 不在当前外部制品库中。v3 原始输出和历史摘要没有
+  删除，避免把错误结论从审计链中抹去。
+- 为使当前 D `app.js` 的连续性保护和精确 adoption 时间逻辑进入 release，Linux x86_64
+  AppImage 已重建。最终文件为
+  `arctic_route_control_center/release/Arctic_Route_Control_Center-x86_64.AppImage`，
+  SHA-256 `9fca146f0e8f57219724562d07488999d78862ddf34b10b7002160584ef7934d`，大小
+  `184134136` bytes。自检、27047 文件解包扫描、D/C/控制中心测试均通过；Orchestrator
+  `191 passed`，宿主唯一 warning 是未找到 host ecCodes，打包自检确认内置 ecCodes 2.48.0。
+- 当前 AppImage 浏览器回归确认：重新扫描发现 v4；运行后路线层、三目标筛选和候选高亮仍可操作；
+  R2–R6 的真实 adoption 均切换到身份绑定 `CURVE`，最大相邻 adoption 位置差约 0.710 km，
+  不存在超过 25 km 的瞬移；终态为 `ARRIVED`。截图和证据在
+  `work_package_d/output/playwright/winter-rebuilt-20260215-current-standard-v4/`，并绑定
+  v4 assembly、bundle/checksums 与最终 AppImage 摘要。
+
+本 v4 仍是 `retrospective_post_hoc_dynamic_projection`，不表示历史因果回放、实时预测、导航级、
+实船或生产资格；所有硬掩膜、unknown fail-closed、时间、走廊、操纵性、ETA 和风险非劣化门禁
+保持不变。
 
 ## 2026-09-04 19:17 +08:00 Winter 动态重规划 Viewer v3 收口
 

@@ -7,12 +7,33 @@ Document Role: CANONICAL
 Scope: simulation replay engine + presentation adapter + viewer artifact boundary
 Canonical For: how replay snapshots, digests, presentation export and Viewer handoff work
 Branch: research-validation-system
-Last Verified: 2026-09-04 19:17 +08:00
+Last Verified: 2026-09-04 22:17 +08:00
 ---
 
 # Simulation Replay Architecture（设计 + 实现，2026-08-17 起，经 2026-08-20 治理审计）
 
 ## 0.1 Current implementation evidence（2026-09-01 23:40 +08:00）
+
+### 2026-09-04 22:17 +08:00 v4 continuity correction
+
+v3 的路线/船位错乱已归因于 C formal motion 的 AnyAngle 跳点、D 候选 overlay 与正式运行层
+的几何混淆，以及失配 formal curve 未及时回退；不是 Viewer 把路线坐标写死，也不是
+纬经度投影反转。v4 的 C producer 默认保留完整 raw waypoint sequence，D 在消费时执行
+2 km waypoint binding、25 km formal/timeline continuity gate，并按 `REPLAN_ADOPTED`
+真实事件时间切换 active revision。
+
+回放的 authoritative path 仍是 producer 发布的 `cd.route-motion-set.v1.motion_samples`；
+船位、航向、trail、ETA 和 completed-track 与同一 formal motion 同源。Research candidate
+比较层的 `route_visual_smoothing.js` 只读取 bundle 中的 `candidate.geometry.coordinates`，
+将已投影点转换为 screen-space 二次 Bezier paint commands。其圆角/trim 数值是可测试的展示
+策略，而非 Winter 航点、候选 ID 或船位常量；历史 `route_smoothing.js` 与 research sidecar
+不在默认加载链，也不能成为 formal motion fallback。
+
+v4 外部制品为 `winter-rebuilt-20260215-viewer-package-v4`，assembly
+`winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad`，
+AppImage 已重建并通过解包扫描。R2–R6 adoption 均为绑定 `CURVE`，最大相邻 adoption 位置
+差约 0.710 km，超过 25 km 的大跳跃为 false；终态 `ARRIVED`。v3 已从 ready 撤回但其源包
+和历史证据保留，v4 仍只声明 `retrospective_post_hoc_dynamic_projection`。
 
 当前回放引擎支持显式 `causal_replay` 与 `retrospective_dynamic_replay` 两种模式。真实
 Winter holdout 回放 `winter-retro-holdout-resource-v4` 产生 3 个 snapshots、17 个事件

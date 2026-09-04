@@ -7,11 +7,31 @@ Document Role: CANONICAL
 Scope: research validation roadmap
 Canonical For: next work, phase gates, and dependency order
 Branch: research-validation-system
-Last Verified: 2026-09-04 19:17 +08:00
+Last Verified: 2026-09-04 22:17 +08:00
 Supersedes: competition-demo Viewer Product Mainline roadmap
 ---
 
 # Research Validation System Roadmap
+
+## P1.1.1 Winter Viewer v4 连续性修正（2026-09-04 22:17 +08:00）
+
+状态：`COMPLETED / REAL_BROWSER_REGRESSION_PASS / CAUSAL_PENDING`。
+
+v3 的 AnyAngle 跳点和 formal/candidate 展示层失配已纠正。C 默认保留全部权威 raw waypoint
+anchor；D 以 formal `motion_samples` 驱动运行路线和船位，候选平滑只读取制品中的
+`candidate.geometry.coordinates` 并生成屏幕绘制命令。该展示算法没有 Winter 坐标或 route ID
+常量；旧 `route_smoothing.js` 不在默认加载链。D 额外执行 2 km 航点绑定、25 km formal/timeline
+连续性回退、运行候选排除和 adoption event 精确时刻覆盖。
+
+不可变 v4 已进入外部 `artifacts/ready/`，v3 已撤回到 `artifacts/invalid/` 但源包与历史证据
+保留。当前 AppImage 已重建以包含 D 连续性修正；C `761 passed`、D `125 passed`、控制中心
+`28 passed`、Orchestrator `191 passed`，最终 Chromium 回归确认重新扫描、运行锁定后的路线层/三
+目标筛选/候选高亮及 R2–R6 实际采用路线。动态回放仍只声明
+`retrospective_post_hoc_dynamic_projection`，不得升级为 causal、实时预测、导航级或实船资格。
+
+下一 gate 仍是 issue-time 可追溯的 Winter causal window；在该证据取得前，不再通过修改 D 平滑
+参数或放宽 C 硬门禁来“修饰”路线。任何后续路线算法变化必须先做 C producer 审计和 waypoint/
+motion identity 验收，再重新发布 Viewer 制品。
 
 ## 阶段目标（2026-08-21 23:18）
 

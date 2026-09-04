@@ -19,6 +19,124 @@ Related Canonical Docs:
 
 ## 0. 2026-09-02 原始冻结身份最终到达态增量（取代下文 v4/v7/v13 中间数值）
 
+### 2026-09-04 22:17 +08:00 v4 连续性修正与最终 Viewer 交付
+
+本节是 v3 发现严重路线/船位不一致后的更正记录；下方 v3 及更早内容保留为历史证据，
+不代表当前 ready 默认制品。
+
+#### 1. 执行摘要
+
+Verdict：`v4 PUBLISHED / REAL_BROWSER_REGRESSION_PASS / CAUSAL_PENDING`。C 修正了 AnyAngle
+跳过权威航点和 adaptive trust 距离方向，D 修正了候选 overlay、formal/timeline 连续性和
+adoption 精确时刻。v4 的运行路线为身份绑定 `CURVE`；R2–R6 的采用事件真实消费，未观察到
+超过 25 km 的瞬移。不存在把 Winter 经纬度写死在 D 平滑代码中的做法。
+
+| 指标 / 声明 | Before（v3） | After（v4） | Delta | Verdict / 原因 |
+| --- | --- | --- | --- | --- |
+| R1 初始拓扑 | AnyAngle 可跳过中间航点，首段视觉偏离 | 保留全部 raw waypoint anchor，首段同经度北向 | 修正 | `C AUTHORITATIVE PASS` |
+| active route 绘制 | 候选比较线可能覆盖正式线 | 候选永不替换 formal motion | 修正 | `D SEMANTIC PASS` |
+| formal curve 连续性 | 失配曲线可能造成大跳跃 | 超过 25 km 回退权威 timeline | 新增门禁 | `FAIL-CLOSED PASS` |
+| 动态采用 | 稀疏 timeline 可能晚一帧切换 | 按真实 `REPLAN_ADOPTED.t` 切换 | 修正 | `REAL_E2E PASS` |
+
+#### 2. 范围 / 非范围
+
+范围是本地现有 Winter A/B 数据上的 C 重新规划、正式 motion、Orchestrator replay、D Viewer
+导出与浏览器回归。不重新下载数据、不改变 B 风险公式、不放宽海陆/unknown/走廊/操纵性/ETA/
+风险非劣化门禁，不声明 causal replay、实时预测、导航级或实船资格。
+
+#### 3. 起始基线
+
+起始制品为外部 ready 中的 v3；其首段 R1 geometry 的前八个航点为
+`(18.4,70.3333) → … → (18.4,72.9)`，原始拓扑本身是向北的。v3 的偏差来自 C AnyAngle
+和 D 展示/连续性边界，不是纬经度互换。C 起始 HEAD `9a57289`，D 起始 HEAD `e2428c7`；
+当前控制中心 AppImage 为包含修正后的二进制。
+
+#### 4. Git 最终状态
+
+| 仓库 | HEAD | 工作树 / 提交 / 推送 |
+| --- | --- | --- |
+| C `work_package_c` | `9a57289` | producer 与 unit test 有未提交修改；未 commit、未 push |
+| Orchestrator | `c0cbc92` | clean；本轮无代码修改 |
+| D `work_package_d` | `e2428c7` | app.js、route_motion.js 与 navigation test 有未提交修改；未 commit、未 push |
+| Control Center | `19da562` | clean；release 二进制为外部构件 |
+
+#### 5. 文件系统与资源安全
+
+重型 replay 串行执行；Orchestrator 全量测试 wall time 263.37 s，未与其他重型任务重叠。
+本次最终 AppImage 解包扫描目录和临时构建目录均在验证后清理；凭据、原始 GRIB/NC 和缓存
+未进入包。清理前 `/` 可用空间约 850 GB，`MemAvailable` 约 4.2 GiB；无 OOM。
+
+#### 6. 代码 / 架构变更
+
+- C `motion/producer.py` 增加向后兼容 `allow_any_angle_shortcuts=False`，默认过滤到完整
+  raw waypoint 序列；局部窗口曲线平滑只在 producer 侧生成并保留 anchor。
+- D `route_motion.js` 将每个 formal motion 与所有 waypoint 绑定误差限制为 2 km；`app.js`
+  排除 operational candidate overlay，formal/timeline 偏差超过 25 km 时切回线性 timeline，
+  并在真实 adoption event 时间更新 active revision。
+- D `route_visual_smoothing.js` 未写入路线数据；它读取当前 candidate 的 `geometry`，把已投影
+  点变成 display-only Canvas quadratic commands。20 CSS px、40% trim 等是可测试显示策略，
+  不是航线、船位、ETA 或 route ID。
+
+#### 7. 语义 / 合约变更
+
+正式 vessel position、heading、trail、ETA 和 active route 继续由 C `motion_samples` 与
+authoritative timeline 驱动；候选平滑不改变 geometry、metrics、ranking、adoption 或合同。
+`REPLAN_DECIDED` 仍不等于 `REPLAN_ADOPTED`；事件切换不跳船位。v4 标签仍为
+`retrospective_post_hoc_dynamic_projection`。
+
+#### 8. 实验 / 备选方案
+
+历史 AnyAngle shortcut、`route_smoothing.js` B-spline 和 research sidecar 未进入默认生产
+绘制链；它们保留为历史/隔离实验。未用“放宽门禁”伪造曲线；未采用的比较候选仍保留真实
+RAW/失败原因。
+
+#### 9. 权威运行 / 真实验证
+
+窗口 `2026-02-15T00:00:00Z → 2026-02-21T00:00:00Z`，v4 replay 复用同一 Winter A/B 身份，
+25 snapshots、6 revisions、5 adopted chains、终态 `ARRIVED`。R2–R6 adoption 均为 formal
+`CURVE`，一秒前到 adoption 的最大位置差为 0.710 km；大于 25 km 的 teleport 为 false。
+
+#### 10. 性能分解
+
+未改变时间窗口和 tick 预算。新增 waypoint binding、连续性计算和候选过滤属于预期小额展示/
+校验开销；未重新运行性能基准，性能增量记为 `NOT BENCHMARKED`，不以旧数据冒充新结果。
+
+#### 11. 正确性 / 验证
+
+C `761 passed`；D `125 passed`；控制中心 `28 passed`；Orchestrator `191 passed`（退出码 0，
+仅有 host `cfgrib` 找不到 ecCodes 的 warning）；AppImage 自检内置 ecCodes `2.48.0`，解包
+扫描 `27047` 文件 `PASS`。最终 Chromium console errors/warnings 均为 0，重新扫描发现 v4，
+运行后 route layer、目标筛选和候选高亮均可操作。
+
+#### 12. 确定性 / 可复现性
+
+v4 publisher 的包内 JSON/checksum 校验通过；完整 replay 第二次确定性重型运行本轮记为
+`NOT RUN`，不得继承 v3 证据冒充 v4。截图与 evidence 文件绑定本轮 v4 assembly、bundle、
+checksums 和 AppImage SHA-256。
+
+#### 13. 构件 / 溯源
+
+v4 source：`work_package_d/output/winter-rebuilt-20260215-viewer-package-v4/`；外部 ready：
+`/root/.local/share/arctic-route-control-center/artifacts/ready/winter-rebuilt-20260215-viewer-package-v4/`。
+assembly `winter-viewer-sha256-f3113a19243bce88f712717ad91bddd9d3c76d93c6d84ac3c57e930496dff1ad`；
+bundle SHA `f993ac113ac7280e9378710fdc84a825338ebd6ea4b5193ce8679aeb5c3b114a`；checksums SHA
+`92ca583e52d41d277d22750631f083b0de798cb5ce8f9b105ef7a1d0123f7d33`；AppImage SHA
+`9fca146f0e8f57219724562d07488999d78862ddf34b10b7002160584ef7934d`。v3 移至 invalid withdrawn
+目录但源码、历史摘要和交付 archive 保留。
+
+#### 14. 已知限制 / 技术债
+
+`TD-WINTER-CAUSAL-001 / high`：issue-time 可追溯 causal window 仍未建立；继续标记 post-hoc。
+`TD-APPIMAGE-GLIBC-001 / medium`：本构建机 glibc 2.39，广泛旧 Linux 兼容性需在 Ubuntu 22.04
+基线复建。`TD-V4-DETERMINISM-001 / medium`：完整第二次 v4 replay 未运行，保留为下一轮门禁。
+
+#### 15. 决策 / 下一阶段
+
+当前默认外部制品切换为 v4；v3 不可选但不删除历史证据。后续只在 C producer 审计、formal
+motion identity 和真实 browser regression 均通过后发布新制品；不得用 D 平滑层掩盖规划几何，
+不得放宽硬门禁来制造动态事件。下一阶段是 causal data feasibility 审计或按授权执行 Git 本地提交，
+仍不 push、不修改冻结 RC1/RC2。
+
 ### 2026-09-04 19:17 +08:00 v3 Winter 重建与 Viewer 动态回放收口
 
 本小节是本报告当前最新结论；下方原有 2026-09-02 原始冻结身份表格及第 1–15 节保留为
