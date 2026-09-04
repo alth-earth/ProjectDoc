@@ -55,10 +55,11 @@ adoption 精确时刻。v4 的运行路线为身份绑定 `CURVE`；R2–R6 的�
 
 | 仓库 | HEAD | 工作树 / 提交 / 推送 |
 | --- | --- | --- |
-| C `work_package_c` | `9a57289` | producer 与 unit test 有未提交修改；未 commit、未 push |
-| Orchestrator | `c0cbc92` | clean；本轮无代码修改 |
-| D `work_package_d` | `e2428c7` | app.js、route_motion.js 与 navigation test 有未提交修改；未 commit、未 push |
-| Control Center | `19da562` | clean；release 二进制为外部构件 |
+| C `work_package_c` | `680e085`（起始 `9a57289`） | 已本地提交 `fix: preserve formal motion waypoint topology`；未 push |
+| Orchestrator | `c0cbc92` | clean；本轮无代码修改、未新增提交 |
+| D `work_package_d` | `53a7f3c`（起始 `e2428c7`） | 已本地提交 `fix: keep viewer motion and display layers aligned`；未 push |
+| Governance | `2bed940` | 已本地提交 `docs: record winter viewer v4 correction`；未 push |
+| Control Center | `91687eb` | 已本地提交 `docs: update winter v4 release handoff`；release 二进制为外部构件，未 push |
 
 #### 5. 文件系统与资源安全
 
