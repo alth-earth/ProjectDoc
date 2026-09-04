@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: simulation replay engine + presentation adapter + viewer artifact boundary
 Canonical For: how replay snapshots, digests, presentation export and Viewer handoff work
 Branch: research-validation-system
-Last Verified: 2026-09-01 23:40 +08:00
+Last Verified: 2026-09-04 19:17 +08:00
 ---
 
 # Simulation Replay Architecture（设计 + 实现，2026-08-17 起，经 2026-08-20 治理审计）
@@ -24,6 +24,34 @@ RC2 objective-level 三核并行已进入正式 Orchestrator 初始/重规划路
 `requested_workers=3`、`effective_workers=3`、`max_parallel_tasks=3`、36 个 objective
 tasks；tick、layer、B 和 adoption gate 继续串行。`worker_pids` 仅作为跨调用 provenance，
 不能解释成同时运行的 9 核。
+
+### 2026-09-04 19:17 +08:00 Winter v3 dynamic replay evidence
+
+最新的 2026-02-15 Winter 重建回放位于
+`.runtime/replays/winter-rebuilt-20260215-retro-dynamic-v3/`，并通过
+`winter-rebuilt-20260215-viewer-package-v3` 投影到外部 Viewer。它复用同一 A Bundle、145
+帧 RiskWindow 和同身份 Risk Explanation，回放窗口为
+`2026-02-15T00:00:00Z → 2026-02-21T00:00:00Z`，6 小时 tick，共 25 snapshots、6 个 plan
+revisions 和 5 组真实 `REPLAN_DECIDED → REPLAN_ADOPTED → ROUTE_CHANGED`；最终
+`ship_state.status=ARRIVED` 且 `pending_route=null`。
+
+该运行明确标记为 `retrospective_post_hoc_dynamic_projection`，保留原始 `issue_time`，不
+表示严格 causal replay、实时预测或导航/实船资格。C 使用
+`winter_motion_reserve_5pct`（规划速度预留 5%，不改船模最大速度/环境速度）和
+`winter_dynamic_replay`（6h interval、1% gain、1% hysteresis、最大风险回退容差 0%）；
+Orchestrator 通过命名 CLI 参数传播 profile 与 digest，worker 不重新读取默认配置。初始
+三个 full-voyage 候选和实际采用路线均为 `CURVE`；R1–R6 六套 candidate-motion transport
+均已绑定。未采用的 R3 executable/fastest `RAW` 仅保留为比较层和真实
+`minimum_radius_exceeded` 失败证据。
+
+v3 assembly 为
+`winter-viewer-sha256-1a50c77c012285404d96d3de1cdb0cd563214371911c6ae0c066c3280f5e8afd`；
+`bundle.json` 和 `checksums.json` 的 SHA-256 分别为
+`3772a5d621bd058ef58d6b8aadc0254a15f3bd44cc027b7e10c4c63ceacf58ed` 和
+`a96c61138f089a962e21dbaa481521db3213376f2bcbcb90aafe8ce2cb2627ff`。发布器只写包内相对
+引用/摘要，20 个白名单文件中 `publish-summary.json` 与其余 18 个数据/manifest 文件均由
+checksum 覆盖（不含 checksums 自身）；当前 AppImage 不重建，外部导入流程负责
+`inbox → validation → ready`。
 
 > 状态：**DESIGN + ENGINE MVP IMPLEMENTED（2026-08-18） + VIEWER MVP IMPLEMENTED（2026-08-19）**
 > 已实现：replay models/digests/runner/validation/inspector；真实 12h/24h/44h
@@ -131,12 +159,26 @@ risk_valid_time, data_revision, risk_revision, ...}`：
 - `risk_valid_time` 前推 → TIME 候选；
 - 未触发 → C 复用当前 plan_revision。
 
+Winter v3 的受控 profile `winter_dynamic_replay` 将最小间隔设为 6 小时、路线收益阈值设为
+1%、风险迟滞设为 1%，并将最大风险回退容差固定为 0%。因此候选最大风险不得恶化；这些
+参数只改变是否进入 Switch Gate，不绕过海陆、unknown、时间覆盖、走廊、操纵性或 ETA 等
+正式门禁。v3 全窗口实际产生 5 组 `REPLAN_DECIDED → REPLAN_ADOPTED → ROUTE_CHANGED`；
+中边决定保留到下一执行节点采用，船位不跳跃。
+
 ## 9. C Plan Revision
 
 - 只在 replan policy 触发时重算；
 - 重算只重做被触发目标（MVP：recommended；扩展：四层 × 三目标）；
 - 每次发布获得新 `plan_revision` 与 layer-set digest；
 - `ROUTE_CHANGED / EXECUTABLE_ROUTE_CHANGED` 事件按需产生。
+
+Winter v3 的 `PlannerConfig` 通过向后兼容的
+`operational_speed_reserve_fraction` 设为 0.05，仅在 ETA 规划时使用预留后的速度；船模
+最大速度、环境可用速度和正式安全门禁不被修改。命名 profile 为
+`winter_motion_reserve_5pct`，serial/parallel worker 使用同一 config digest。该运行发布 6
+个不可变 revision，每版保留四层×三目标=12 条候选；初始三个 full-voyage 候选及所有实际
+采用路线的 formal motion 均为 `CURVE`。若某一未采用 comparison candidate 只有 RAW，必须
+保留其真实状态（v3 的 R3/R4 executable 即如此），不得通过 D 改标。
 
 ## 10. Snapshot Model
 
@@ -176,19 +218,26 @@ available_modes, provenance
 
 Viewer 流程：`Manifest → Snapshot(t) → Presentation Resources`，不自行猜帧。
 
+Winter v3 manifest 记录 `planner_name=winter_motion_reserve_5pct`、
+`replanning_name=winter_dynamic_replay` 及各自摘要，且包含 25 个 snapshot 资源和 113 个
+事件；manifest semantic digest 为
+`bbe77ec8caa07364959d1436ad4675f87a3f66c7c9c068153265514c8c1d0b6b`。plan revision index
+为 `planning-revisions/index-6920b194a63e6cb8c55298fd9fc5f45482b94f1b8955cb61698b61c2b28ad55c.json`，
+由 Viewer exporter 以包内相对引用传输，不能携带构建机绝对路径。
+
 ## 12. Event Model
 
 | event | 状态 |
 |---|---|
-| `CLOCK_TICK` | DERIVABLE（每 tick 存在；当前无事件流） |
+| `CLOCK_TICK` | CURRENTLY AVAILABLE（v3 25 个 tick 均写入 manifest/snapshot） |
 | `DATA_BECAME_VISIBLE` | DERIVABLE（A 可见集合变化可推出） |
 | `DATA_REVISION_CHANGED` | DERIVABLE（digest 变化） |
 | `B_UPDATED` | DERIVABLE（risk commit 变化） |
 | `RISK_REVISION_CHANGED` | DERIVABLE（commit_id 变化） |
-| `PLAN_COMPUTED` | CURRENTLY AVAILABLE（run-report 阶段记录） |
-| `ROUTE_CHANGED` | DERIVABLE（layer-set digest / waypoints 对比） |
+| `PLAN_COMPUTED` | CURRENTLY AVAILABLE（v3 初始 revision 已记录） |
+| `ROUTE_CHANGED` | CURRENTLY AVAILABLE（v3 5 次，并与 adopted revision 绑定） |
 | `EXECUTABLE_ROUTE_CHANGED` | DERIVABLE（executable_0_6h digest） |
-| `REPLAN_TRIGGERED` | CURRENTLY AVAILABLE（ReplanDecision.reasons） |
+| `REPLAN_TRIGGERED` | CURRENTLY AVAILABLE（由 `REPLAN_DECIDED` 的真实原因记录） |
 | `LIVE_REPLAN_STARTED / COMPLETED` | CURRENTLY AVAILABLE（demo serve API） |
 
 ## 13. Ship State
@@ -234,7 +283,12 @@ Viewer（只消费 presentation state + 60 FPS 平滑，不猜业务速度）
 - `REPLAN_SKIPPED` / `PLAN_REUSED` 不渲染成 route 变化；`REPLAN_ADOPTED` /
   `ROUTE_CHANGED` 才是 adopted-route 切换。
 
-真实 latest-head 12h 审计：0 `IMMEDIATE`、4 `NEXT_WAYPOINT_DEFERRED`
+Winter v3 的 6 小时回放实际记录 5 次 deferred adoption；每次决定、到达执行节点后的采用
+和路线变化都带 revision 身份，最终快照为 `ARRIVED` 且 `pending_route=null`。Viewer 的
+运行锁只固定实际运行 candidate、motion、ETA 与路线来源；路线层、三目标显隐和候选卡片
+高亮属于展示状态，不得改变运行身份或船位。
+
+此前 latest-head 12h 审计（历史证据）：0 `IMMEDIATE`、4 `NEXT_WAYPOINT_DEFERRED`
 （rev2–5，另有 rev6 22:00 决策窗口外待生效）、决策时刻全部 mid-edge、
 跨 adoption 无跳变。
 
@@ -307,6 +361,11 @@ one-shot B full window → initial → +6h suffix replan
 FROZEN_VALIDATED / RETROSPECTIVE BEST ESTIMATE 标识
 ```
 
+Winter v3 使用更明确的 `retrospective_post_hoc_dynamic_projection` 标识：它可以由真实 C
+重算、Switch Gate 和 replay event 展示多个 revision/adoption，但因为保留的 source
+`issue_time` 晚于仿真起点，不能解释为当时可用信息驱动的 causal 决策。该模式不自动获得
+实时预测、导航级或实船资格。
+
 ## 17. Causal Replay Mode（Mode B）
 
 ```text
@@ -318,6 +377,9 @@ CAUSAL 标识
 
 当前历史证据只能支持末期短窗（A 19h / B 44h）→ MVP 从
 `2026-08-15T10:00Z`（Scenario B）开始。
+
+Winter v3 不属于 Mode B；严格 causal 版本仍需一个 issue-time、publication-time 和完整
+12 类覆盖均可审计的输入窗口，未满足前保持 fail-closed。
 
 ## 17.1 Performance Hardening（2026-08-19）
 
@@ -374,6 +436,10 @@ SimulationClock tick（1h）
 > 2026-09-01 更新：真实 Winter holdout 已先以明确标注的
 > `retrospective_dynamic_replay` 发布 revision/event 资源并接入 Viewer；以下计划仍适用于
 > 严格 issue-time causal 版本，不能将事后投影升级为 causal replay。
+
+2026-09-04 的 v3 已在原始 Winter 重建身份上完成 144h retrospective dynamic replay（25
+ snapshots、6 revisions、5 adopted chains、ARRIVED），因此本节后续工作只针对严格 causal
+ 版本，不再重复下载或重建已有 A 数据。
 
 1. 建立 causal-ready 采集（实时 publication evidence / explicit_catalog /
    http_last_modified 保存）；

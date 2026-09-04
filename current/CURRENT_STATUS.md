@@ -9,10 +9,58 @@ Applicability: CURRENT
 Scope: whole-project current state
 Canonical For: current phase, capability evidence, blockers, and ownership
 Branch: research-validation-system
-Last Verified: 2026-09-03 20:59 +08:00
+Last Verified: 2026-09-04 19:59 +08:00
 ---
 
 # 研究验证系统当前状态
+
+## 2026-09-04 19:17 +08:00 Winter 动态重规划 Viewer v3 收口
+
+2026-02-15 Winter 窗口已在不重新下载 A 数据、不过度放宽安全门禁的前提下，重新执行
+C 规划、正式 motion 和 Orchestrator 动态回放，并发布不可变 Viewer 制品
+`winter-rebuilt-20260215-viewer-package-v3`。v2 未被覆盖；v1 不在当前外部制品库中。
+本包的展示模式为 `retrospective_post_hoc_dynamic_projection`：它保留真实 source
+`issue_time`，用于事后动态投影，不是历史因果回放、实时预测、导航级或实船资格。
+
+- 身份保持闭合：A `a-bundle-fbbbfbb6e14bec5162408046`（bundle digest
+  `fbbbfbb6e14bec5162408046781cd64eb6659f22b0b07d6005b0acf70e473bba`）、RiskWindow
+  `risk-window-sha256-86bdb614c5137ba9ef9129713b5575423e97bac3522bea9ff89f45f879a03ecb`、
+  场景 `tromso_isfjorden_february_2026_research_v1` 与同次 replay 均一致。
+- C 使用命名配置 `winter_motion_reserve_5pct`（规划 ETA 速度预留 5%，只作用于规划）和
+  `winter_dynamic_replay`（6 小时最小间隔、1% route gain、1% hysteresis、最大风险回退
+  容差 0%）；Orchestrator CLI 显式传播配置名/摘要，worker 不再偷偷加载默认配置。
+- 完整回放为 2026-02-15T00:00Z→2026-02-21T00:00Z、6 小时 tick、25 snapshots、6 个
+  plan revisions、5 组 `REPLAN_DECIDED → REPLAN_ADOPTED → ROUTE_CHANGED`，终态
+  `ARRIVED` 且 `pending_route=null`。3 个持久 worker 的可审计 summary 为
+  `requested/effective/max=3/3/3`、36 次 planning call、108 个 objective tasks。
+- v3 初始三个 full-voyage candidate 和每一条实际采用路线均为正式 `CURVE` motion；R1–R6
+  六套 candidate-motion transport 均已随包绑定。R3 的 executable/fastest `RAW` 记录只作为
+  未采用的比较层，保留真实 `minimum_radius_exceeded` 失败原因，不被伪装为曲线或当前运行
+  路线。硬掩膜、unknown fail-closed、时间覆盖、走廊、操纵性、自交、最大船速、ETA 和风险
+  非劣化门禁未放宽。
+- v3 assembly 为
+  `winter-viewer-sha256-1a50c77c012285404d96d3de1cdb0cd563214371911c6ae0c066c3280f5e8afd`；
+  `bundle.json` SHA-256 为
+  `3772a5d621bd058ef58d6b8aadc0254a15f3bd44cc027b7e10c4c63ceacf58ed`，
+  `checksums.json` SHA-256 为
+  `a96c61138f089a962e21dbaa481521db3213376f2bcbcb90aafe8ce2cb2627ff`。包共 20 个文件，含
+  `publish-summary.json`，checksum 覆盖其余 19 个文件；仅含白名单数据/manifest/preflight，
+  不复制 D 的 HTML/CSS/JS；扫描、严格 JSON、allowlist 与全量 checksum 通过，第二次发布逐
+  文件确定性比对也通过。
+- 当前 AppImage 未重建，仍使用
+  `arctic_route_control_center/release/Arctic_Route_Control_Center-x86_64.AppImage`；v3
+  已通过当前 AppImage 的 `artifacts/inbox → 重新扫描 → 提升为 ready` 流程进入
+  `/root/.local/share/arctic-route-control-center/artifacts/ready/`。旧 v2 已移入
+  `artifacts/invalid/winter-rebuilt-20260215-viewer-package-v2-retired-20260904/`，其原始
+  D 输出与历史摘要保留作审计证据。
+- 截图已在最终 v3 二进制上重新生成并绑定最终 assembly、bundle/checksums 摘要，目录为
+  `output/playwright/winter-rebuilt-20260215-current-standard-v3/`；浏览器回归确认运行后
+  路线层、三目标筛选、候选高亮仍可操作，锁定只保护实际运行 candidate/motion/ETA。Risk
+  Explanation 保留真实 `PARTIAL/COMPLETE/UNAVAILABLE` 语义。
+
+该 v3 只更新外部 Viewer 制品和 replay 证据，不改变 D `app.js`，也不把 C 的研究 motion
+模型提升为导航资格。严格 causal Winter 版本仍需 issue-time 可追溯数据窗口；未完成该门禁
+前不得将 v3 标记为 causal 或生产冻结基线。
 
 ## 2026-09-03 六包控制中心与 Linux AppImage 发行
 

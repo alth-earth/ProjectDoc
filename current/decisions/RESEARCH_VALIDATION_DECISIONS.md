@@ -207,3 +207,45 @@ ScenarioRunGroup 做外层验证。
 
 **影响。** Shadow infrastructure 可用于复现实验设计和证据门禁，但当前 Winter 单场景结果
 仍是 `DIAGNOSTIC_ONLY_NOT_EXTERNAL_CALIBRATION`，不得批准正式 threshold 变化。
+
+## 第12批：Winter v3 动态重规划与 Viewer 发布边界（2026-09-04 19:17 +08:00）
+
+**背景。** v2 Viewer 制品虽已可导入，但运行路线仍可能显示 `RAW_PASSTHROUGH`，且缺少
+完整的动态 replay、revision、motion 身份绑定。用户要求在不重新下载数据、不重建 AppImage
+的前提下获得可审计的动态重规划展示。
+
+**决策。** 复用 2026-02-15 Winter A Bundle、145 帧 RiskWindow 和同身份 Risk Explanation，
+使用 C 的 `winter_motion_reserve_5pct`（规划速度预留 5%，不修改船模最大速度或环境可用
+速度）及 `winter_dynamic_replay`（最小间隔 6 小时、路线收益阈值 1%、风险迟滞 1%、最大
+风险回退容差 0%）重新生成 C plan/motion，并由 Orchestrator 以显式
+`--planner-name`/`--replanning-name` 完成全窗口回放。新建不可变
+`winter-rebuilt-20260215-viewer-package-v3`，不覆盖 v2；通过当前 AppImage 的外部
+`inbox → 重新扫描 → ready` 流程导入。
+
+**证据。** 回放窗口为 2026-02-15T00:00Z→2026-02-21T00:00Z，6 小时 tick、25 snapshots、
+6 revisions；存在 5 组真实 `REPLAN_DECIDED → REPLAN_ADOPTED → ROUTE_CHANGED`，终态
+`ARRIVED` 且 `pending_route=null`。三个持久 worker 的 summary 为
+`requested/effective/max=3/3/3`、36 planning calls、108 objective tasks。v3 初始三个
+full-voyage 候选及全部实际采用路线为正式 `CURVE`；R1–R6 六套 candidate-motion transport
+均已绑定，R3 executable/fastest `RAW` 仅作为未采用比较层，保留真实
+`minimum_radius_exceeded` 原因。v3 assembly 为
+`winter-viewer-sha256-1a50c77c012285404d96d3de1cdb0cd563214371911c6ae0c066c3280f5e8afd`，
+`bundle.json` SHA-256 为 `3772a5d621bd058ef58d6b8aadc0254a15f3bd44cc027b7e10c4c63ceacf58ed`，
+`checksums.json` SHA-256 为 `a96c61138f089a962e21dbaa481521db3213376f2bcbcb90aafe8ce2cb2627ff`；包共 20 个
+白名单文件，`publish-summary.json` 也纳入其余 19 个文件的 checksum。
+
+**替代方案。** 不采用以下方案：沿用 v2 的 raw fallback；在 D 伪造 replan/event 或把比较
+层 RAW 改标为 CURVE；放宽海陆、unknown、时间覆盖、走廊、操纵性、自交、最大速度、ETA 或
+风险非劣化门禁；重新下载已有 A 数据；重建 AppImage 以掩盖外部制品问题；把 retrospective
+reanalysis 改名为 causal 或实时预测。
+
+**理由。** C 的 formal motion 与 Switch Gate 必须继续是 producer；D 只能消费并投影版本化
+资源。命名配置和 digest 写入 replay manifest，可证明 worker 使用同一参数；延迟采用事件保留
+中边决策与无跳跃船位；仅实际采用路线必须取得 CURVE，未采用比较层保留 RAW 才符合事实。
+
+**后果。** 当前 v3 具备工程级动态 Viewer 回放和身份闭合证据，但仍标记为
+`retrospective_post_hoc_dynamic_projection`，不具备严格因果、实时预测、导航级或实船资格。
+AppImage 二进制保持不变；v2 外部 ready 目录已退役到
+`artifacts/invalid/winter-rebuilt-20260215-viewer-package-v2-retired-20260904`，v2 原始输出
+与历史摘要保留作审计证据。截图必须在修正后的 v3 上重新生成并绑定 assembly、bundle 和
+checksums 摘要；严格 causal Winter window 仍是下一 gate。

@@ -7,7 +7,7 @@ Document Role: CANONICAL
 Scope: research validation roadmap
 Canonical For: next work, phase gates, and dependency order
 Branch: research-validation-system
-Last Verified: 2026-09-02 02:40 +08:00
+Last Verified: 2026-09-04 19:17 +08:00
 Supersedes: competition-demo Viewer Product Mainline roadmap
 ---
 
@@ -69,6 +69,40 @@ P1 formal handoff、B 风险分布、C 路线、D combined visualization 与事�
 满足。当前 navigation timeline 由真实 replay 源和 C waypoint ETA 延展组成，但整体仍是
 `retrospective_post_hoc_dynamic_projection`，不升级为 causal replay。下一 gate 是取得
 issue-time 可追溯的 Winter causal window；在此之前不要把该包标为导航级或冻结生产基线。
+
+## P1.1 Winter v3 动态重规划制品（2026-09-04 19:17 +08:00）
+
+状态：`COMPLETED / REAL_RETROSPECTIVE_E2E_PASS / CAUSAL_PENDING`。
+
+在不重新下载 Winter A 数据、不覆盖 v2、也不重建 AppImage 的条件下，使用新的 C/Orchestrator
+配置重新完成 2026-02-15T00:00Z→2026-02-21T00:00Z 全窗口回放，并发布不可变
+`winter-rebuilt-20260215-viewer-package-v3`。C planner profile 为
+`winter_motion_reserve_5pct`（`operational_speed_reserve_fraction=0.05`，只影响规划 ETA），
+replanning profile 为 `winter_dynamic_replay`（6h interval、1% gain、1% hysteresis、最大
+风险回退 0%）；Orchestrator CLI 通过 `--planner-name`/`--replanning-name` 显式记录和传播
+配置摘要，worker 不加载默认配置。
+
+- 回放以 6 小时 tick 产生 25 snapshots、6 个 plan revisions；真实事件包含 5 组
+  `REPLAN_DECIDED → REPLAN_ADOPTED → ROUTE_CHANGED`，终态 `ARRIVED`，最终
+  `pending_route=null`。3 worker 的 summary 为 `requested/effective/max=3/3/3`、36 次
+  planning calls、108 个 objective tasks。
+- v3 初始 full-voyage 三个运行候选与实际采用路线均为 `CURVE`；R1–R6 六套
+  candidate-motion transport 已全部绑定；R3 的 executable/fastest `RAW` 只保留为未采用
+  比较层及真实 `minimum_radius_exceeded` 证据。海陆、unknown、时间覆盖、走廊、操纵性、自交、
+  最大速度、ETA 和风险非劣化门禁保持不变。
+- 包 assembly 为 `winter-viewer-sha256-1a50c77c012285404d96d3de1cdb0cd563214371911c6ae0c066c3280f5e8afd`；
+  `bundle.json` SHA-256 为 `3772a5d621bd058ef58d6b8aadc0254a15f3bd44cc027b7e10c4c63ceacf58ed`，
+  `checksums.json` SHA-256 为 `a96c61138f089a962e21dbaa481521db3213376f2bcbcb90aafe8ce2cb2627ff`；20 个白名单
+  文件中含 `publish-summary.json`，覆盖其余 19 个文件的 checksum。
+  包扫描、严格 JSON 和全量 checksum 通过，未打包 D 的 HTML/CSS/JS。
+- v3 已经当前 AppImage 的外部 `artifacts/inbox → 重新扫描 → ready` 流程验证；v2 从
+  外部 ready 退役到 `invalid/winter-rebuilt-20260215-viewer-package-v2-retired-20260904`，
+  原始 v2 输出与历史摘要仍保留。AppImage 本身保持原二进制，Windows EXE 仍由 Windows
+  团队执行原生构建和验收。
+
+本阶段的 v3 结论只覆盖工程回放与 Viewer 展示能力。下一 gate 仍是 issue-time 完整可追溯的
+Winter causal window；在该门禁通过前，不得把 post-hoc 投影标记为 causal、实时预测、导航
+级或实船资格。
 
 ## P1.5 B Risk Calibration Protocol（2026-08-23 20:45 +08:00）
 

@@ -8,7 +8,7 @@ Applicability: CURRENT
 Scope: Winter 真实动态回放、Viewer revision 传输与 C RC2 三核并行恢复
 Canonical For: 本轮工程变更、验证证据、限制与下一阶段门禁
 Branch: research-validation-system
-Last Verified: 2026-09-02 02:40 +08:00
+Last Verified: 2026-09-04 19:59 +08:00
 Related Canonical Docs:
   - ../../current/CURRENT_STATUS.md
   - ../../current/CURRENT_ROADMAP.md
@@ -18,6 +18,97 @@ Related Canonical Docs:
 # Winter 动态重规划与 C RC2 三核并行工程运行报告（2026-09-01 22:52 +08:00）
 
 ## 0. 2026-09-02 原始冻结身份最终到达态增量（取代下文 v4/v7/v13 中间数值）
+
+### 2026-09-04 19:17 +08:00 v3 Winter 重建与 Viewer 动态回放收口
+
+本小节是本报告当前最新结论；下方原有 2026-09-02 原始冻结身份表格及第 1–15 节保留为
+前一轮工程证据，不被静默改写。目标是修复 v2 的 `RAW_PASSTHROUGH` 运行路线和缺失的
+动态 replay/revision/motion 身份绑定，同时保留正式 producer、Switch Gate 与失败关闭边界。
+
+#### Before / After（2026-09-04 19:17 +08:00）
+
+| 指标 / 声明 | Before（v2/旧回放） | After（v3） | Delta | Verdict / 原因 |
+|---|---|---|---|---|
+| Viewer 动态 replay | 运行路线可落到 `RAW_PASSTHROUGH`；动态采用资源不完整 | 真实 replay manifest、snapshots、revision 和采用事件均可消费 | 补齐 | `REAL_RETROSPECTIVE_E2E_PASS` |
+| C plan revision | 旧资源无法与采用 motion 完整绑定 | 6 个不可变 revision，每版四层×三目标=12 条 | +6 revisions | `AUTHORITATIVE_PASS`（C 生产者范围） |
+| replan adoption | 无法证明多次真实采用 | 5 组 `DECIDED → ADOPTED → ROUTE_CHANGED`，均有 revision 身份 | +5 chains | `REAL_E2E_PASS`（事后动态投影） |
+| replay 时间线 | 旧包缺动态时间线或为静态 fallback | 6h tick、25 snapshots，最终 `ARRIVED`、`pending_route=null` | +25 snapshots | `REAL_E2E_PASS` |
+| 初始/采用 motion | 初始运行路线可显示 raw fallback | 三个初始 full-voyage 候选和所有实际采用路线为 `CURVE` | 回退消除（采用路径） | `FORMAL_MOTION_PASS`；未采用 RAW 仍如实保留 |
+| AppImage | 当前 Linux x86_64 二进制可运行 | 二进制保持不变，仅外部导入 v3 | 无重建 | `UNCHANGED / COMPATIBLE` |
+
+#### 运行与配置事实（2026-09-04 19:17 +08:00）
+
+- 输入身份未重新下载：DatasetBundle 为
+  `a-bundle-fbbbfbb6e14bec5162408046`（digest
+  `fbbbfbb6e14bec5162408046781cd64eb6659f22b0b07d6005b0acf70e473bba`），RiskWindow 为
+  `risk-window-sha256-86bdb614c5137ba9ef9129713b5575423e97bac3522bea9ff89f45f879a03ecb`，
+  scenario 为 `tromso_isfjorden_february_2026_research_v1`。
+- 回放根为
+  `.runtime/replays/winter-rebuilt-20260215-retro-dynamic-v3/`，窗口为
+  `2026-02-15T00:00:00Z → 2026-02-21T00:00:00Z`，模式为
+  `retrospective_dynamic_replay`，对外能力标签为
+  `retrospective_post_hoc_dynamic_projection`。共 25 snapshots、6 revisions、113 个
+  manifest events；终态 `ship_state.status=ARRIVED`，`pending_route=null`，无待采用路线。
+- C 使用 `winter_motion_reserve_5pct`，`operational_speed_reserve_fraction=0.05` 只用于
+  规划 ETA；replanning 使用 `winter_dynamic_replay`：最小间隔 6h、route gain 1%、hysteresis
+  1%、最大风险回退容差 0%。Orchestrator replay CLI 增加显式
+  `--planner-name`/`--replanning-name`，命名 profile、摘要和 worker 传播写入 manifest，
+  worker 不加载默认配置。
+- 3 个持久 worker 的真实 summary 为 `requested/effective/max=3/3/3`、36 planning calls、
+  108 objective tasks；tick、四层 barrier、B、Switch/Adoption Gate 仍串行。R1–R6 六套
+  candidate-motion transport 均已绑定；R3 的 executable/fastest `RAW` 只作为未采用比较层
+  和真实 `minimum_radius_exceeded` 证据，不伪装为 `CURVE`。
+
+#### 制品、发布与浏览器证据（2026-09-04 19:17 +08:00）
+
+- v3 包路径为
+  `work_package_d/output/winter-rebuilt-20260215-viewer-package-v3/`，assembly 为
+  `winter-viewer-sha256-1a50c77c012285404d96d3de1cdb0cd563214371911c6ae0c066c3280f5e8afd`；
+  `bundle.json` SHA-256 为
+  `3772a5d621bd058ef58d6b8aadc0254a15f3bd44cc027b7e10c4c63ceacf58ed`，
+  `checksums.json` SHA-256 为
+  `a96c61138f089a962e21dbaa481521db3213376f2bcbcb90aafe8ce2cb2627ff`。发布器输出只保留
+  包内相对引用/摘要，20 个白名单文件中 `publish-summary.json` 及其余 18 个文件均由
+  checksum 覆盖（不含 checksums 自身）；严格 JSON、allowlist、确定性逐文件比对与解包扫描
+  通过，包不含 D HTML/CSS/JS、凭据、原始 GRIB/NC、缓存或绝对路径。
+- v3 已复制到当前 AppImage 外部数据根的 `artifacts/inbox/`，经“重新扫描”及校验后原子
+  提升到 `/root/.local/share/arctic-route-control-center/artifacts/ready/`；v2 已退役到
+  `artifacts/invalid/winter-rebuilt-20260215-viewer-package-v2-retired-20260904/`，v2 原始
+  输出和历史摘要保留。现有 AppImage
+  `arctic_route_control_center/release/Arctic_Route_Control_Center-x86_64.AppImage` 未重建，
+  当前 SHA-256 仍为 `cc9fd06f100e777cc43d7e0aac69b6de2662530eeba3946a6d23a7ad49e4acbf`。
+- 浏览器截图在最终 R1–R6 完整 v3 包上重新生成，目录为
+  `output/playwright/winter-rebuilt-20260215-current-standard-v3/`，不复用旧二进制证据：
+  `viewer-v3-r2-adopted.png`（SHA-256
+  `72650104cb6e3c613d1b092d8cfe0e1713862a6d81cb516aa812b51b1ffd5f29`）、
+  `viewer-v3-r6-active.png`（SHA-256
+  `9dd3e749148e2f17904ca01cfeba000a96a6b0ce9d1be0648e686490c605ff6a`）和
+  `control-center-ready-v3.png`（SHA-256
+  `f4610122030e150783e2fa832f4edef40c122706fd1453de9b09f9babf3b16ce`）。回归确认路线层、
+  三目标筛选和候选卡片高亮在运行锁定后仍可操作；运行锁只保护运行 candidate/motion/ETA，
+  控制台错误/警告为 0。
+
+#### 验证成熟度与边界（2026-09-04 19:17 +08:00）
+
+| 能力 | 本轮成熟度 | 证据边界 |
+|---|---|---|
+| C formal motion / Switch Gate | `PASS` | 初始及实际采用路线为 CURVE；R3/R4 未采用 RAW 保留真实状态 |
+| Orchestrator replay | `REAL_E2E_PASS` | 25 snapshots、6 revisions、5 adopted chains；不证明 causal 可得性 |
+| Viewer package | `PUBLISHED / CHECKSUM_PASS` | v3 可导入当前 AppImage 外部 ready；不重建 AppImage |
+| Risk Explanation | `PARTIAL`（逐格仍可 COMPLETE/UNAVAILABLE） | 继续消费 producer 字段，不由 D 反推 reason |
+| 科学标定、实时预测、导航/实船资格 | `NOT ESTABLISHED / PROHIBITED` | `demo_unvalidated` 与 retrospective post-hoc 限制仍有效 |
+
+#### Unexpected Findings / Corrections（2026-09-04 19:17 +08:00）
+
+- 首次 v3 exporter 输出漏带 Risk Explanation；该失败包已隔离，随后补入同身份 explanation
+  transport，重新计算 assembly/manifest/summary/checksum，并对最终包做确定性逐文件比对。
+- 第二次发布前审计发现初始修正版只携带 R1 candidate-motion set；该 exporter-only 包也已
+  隔离，随后用同一 replay 的 R2–R6 C motion 产物补齐六版 candidate-motion，并重新完成
+  发布器校验。最终 v3 才是当前 ready 制品。
+- v3 最终包中的 `adoption_status=DEFERRED` 只描述最后一次 deferred 模式；正式终态依据是
+  `status=ARRIVED` 且 `pending_route=null`，不能把该字段误读为残留待采用。
+- 截图哈希已在最终 R1–R6 完整 v3 二进制上重新绑定；旧截图不作为本轮证据。严格 causal Winter 仍因
+  issue-time 覆盖不足保持 fail-closed。
 
 下文 3 snapshots、17 events、3 revisions 和 Viewer v7 是排障过程中的可审计中间基线；
 最终发布链已恢复 2026-08-31 原始冻结身份并继续运行至到达，不应再把那些计数或后续
